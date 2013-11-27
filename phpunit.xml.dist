@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="League Test Suite">
+            <directory>tests/League</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/Silex</directory>
+            <directory suffix=".php">src/League</directory>
+        </whitelist>
+    </filter>
+</phpunit>
