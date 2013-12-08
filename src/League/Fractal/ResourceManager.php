@@ -51,13 +51,22 @@ class ResourceManager
         return $scopeInstance;
     }
 
-    protected function fireProcessor($resource, $scope, $data)
+    protected function getCallableProcessor(ResourceInterface $resource)
     {
         $processor = $resource->getProcessor();
 
+        if (is_callable($processor)) {
+            return $processor;
+        }
+
+        return new $processor;
+    }
+
+    protected function fireProcessor($processor, Scope $scope, $data)
+    {
         // Fire Main Processor
         if (is_callable($processor)) {
-            $processedData = call_user_func($processor, $scope, $data);
+            $processedData = call_user_func($processor, $data);
 
         } else {
             $processedData = call_user_func([$processor, 'process'], $data);
@@ -77,12 +86,13 @@ class ResourceManager
 
     protected function processItem($scope, ItemResource $resource)
     {
-        return $this->fireProcessor($resource->getProcessor(), $scope, $resource->getData());
+        $processor = $this->getCallableProcessor($resource);
+        return $this->fireProcessor($processor, $scope, $resource->getData());
     }
 
     protected function processCollection($scope, CollectionResource $resources)
     {
-        $processor = $resources->getProcessor();
+        $processor = $this->getCallableProcessor($resources);
 
         $data = [];
         foreach ($resources->getData() as $itemData) {
@@ -93,7 +103,7 @@ class ResourceManager
 
     protected function processPaginator($scope, PaginatorResource $resources)
     {
-        $processor = $resources->getProcessor();
+        $processor = $this->getCallableProcessor($resources);
 
         $data = [];
         foreach ($resources->getData() as $itemData) {
