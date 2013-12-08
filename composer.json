@@ -19,6 +19,9 @@
     "require-dev": {
         "silex/silex": "~1.0"
     },
+    "suggests": {
+        "illuminate/pagination": "~4.0"
+    },
     "autoload": {
         "psr-0": {
             "League": ["src", "tests"],
