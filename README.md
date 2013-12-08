@@ -52,7 +52,7 @@ only accepts an instance of `Illuminate\Pagination\Paginator` at this point
 
 The `ItemResource` and `CollectionResource` constructors will take any kind of data you wish to send it 
 as the first argument, and then a "processor" as the second argument. This can be callable or a string 
-containing a fully-qualified class name. The processor will have to arguments passed to it, which will 
+containing a fully-qualified class name. The processor will have two arguments passed to it, which will 
 be a `$scope` (explained later) and an iteration of your data.
 
 So if you passed an instance of `BookModel` into an `ItemResource` then you can expect this instance to 
