@@ -24,7 +24,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "dev-master"
+        "league/fractal": "0.1.*"
     }
 }
 ```
@@ -141,8 +141,8 @@ This is still in concept stage, and these issues are left to explore:
 - [ ] Discuss the class names and file structure with others
 - [ ] Should Processors be called Presenters?
 - [ ] Simplify the assosciation of nested items. Move to a register method? 
-- [ ] Implement HATEOAS/HAL links. Suggestions welcome
-- [ ] Support other pagination systems, not just `Illuminate\Pagination`.
+- [ ] Implement HATEOAS/HAL links
+- [ ] Support other pagination systems, not just `Illuminate\Pagination`
 
 
 ## Testing
