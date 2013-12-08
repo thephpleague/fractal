@@ -92,10 +92,10 @@ $resource = new Fractal\PaginatorResource($books, BookProcessor::class);
 ### Embedding (a.k.a Nesting) Data
 
 Your processor at this point is mainly just giving you a method to handle array conversion from 
-youe custom data format to a simple array. Embedding data in an intelligent way can be tricky as 
-data can have all sorts of relationships. Many developers try to find a perfect balance between 
-not making too many HTTP requests and not downloading more data than they need to, so flexibility 
-us also important. 
+you data source (or whatever your model is returning) to a simple array. Embedding data in an 
+intelligent way can be tricky as data can have all sorts of relationships. Many developers try to 
+find a perfect balance between not making too many HTTP requests and not downloading more data than 
+they need to, so flexibility is also important. 
 
 Sticking with the book example, the `BookProcessor` might contain an optional embed for an author.
 
