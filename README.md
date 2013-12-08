@@ -62,8 +62,9 @@ of `BookModel` instances then this process method will be run on each of those i
 ``` php
 $resource = new Fractal\CollectionResource($books, function($scope, BookModel $book) {
     return [
-        'foo' => (int) $book->id,
-        'bar' => $book->other_field
+        'id' => (int) $book->id,
+        'title' => $book->title,
+        'year' => $book->yr,
     ];
 });
 ```
@@ -100,10 +101,48 @@ they need to, so flexibility is also important.
 Sticking with the book example, the `BookProcessor` might contain an optional embed for an author.
 
 ``` php
-    if ($scope->isRequested('author')) {
-        $resource = new Fractal\ItemResource($book->author, CategoryProcessor::class);
-        $data['author'] = $scope->embedChildScope('author', $resource);
+<?php namespace App\Processor;
+
+use Book;
+use League\Fractal\ProcessorAbstract;
+
+class BookProcessor extends ProcessorAbstract
+{
+    /**
+     * List of resources possible to embed via this processor
+     *
+     * @var array
+     */
+    protected $availableEmbeds = [
+        'place'
+    ];
+
+    /**
+     * Turn this item object into a generic array
+     *
+     * @return array
+     */
+    public function process(Book $book)
+    {
+        return [
+            'id'    => (int) $book->id,
+            'title' => $book->title,
+            'year'  => $book->yr,
+        ];
     }
+
+    /**
+     * Embed Place
+     *
+     * @return League\Fractal\ItemResource
+     */
+    public function embedAuthor(Book $book)
+    {
+        $author = $book->author;
+
+        return $this->itemResource($author, AuthorProcessor::class);
+    }
+}
 ```
 
 So if a client application were to call the URL `/books?embed=author` then they would see author data in the 
@@ -140,7 +179,7 @@ This is still in concept stage, and these issues are left to explore:
 
 - [ ] Discuss the class names and file structure with others
 - [ ] Should Processors be called Presenters?
-- [ ] Simplify the assosciation of nested items. Move to a register method? 
+- [X] Simplify the assosciation of nested items. Move to a register method? 
 - [ ] Implement HATEOAS/HAL links
 - [ ] Support other pagination systems, not just `Illuminate\Pagination`
 
