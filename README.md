@@ -7,7 +7,7 @@
 
 When building an API one of the most overlooked aspects is outputting the data. Most folks just grab stuff 
 from the database and pass it straight off to `json_encode()` which is fine for trivial APIs but if they are 
-in use by the public, or you have an iPhone application you definitey cannot just go around changing your 
+in use by the public, or you have an iPhone application you definitely cannot just go around changing your 
 output willy nilly.
 
 This package aims to do a few simple things:
@@ -41,6 +41,8 @@ $fractal = new Fractal\ResourceManager();
 $fractal->setRequestedScopes(explode(',', $_GET['embed']));
 ```
 
+### Creating Resources and Processors
+
 In your controllers you can then create "resources", of which there are three types:
 
 * **League\Fractal\ItemResource** - A singular resource, probably one entry in a data store
@@ -58,7 +60,7 @@ be `BookModel`. If you passed an array or a collection (an object implementing [
 of `BookModel` instances then this process method will be run on each of those instances.
 
 ``` php
-$resource = new Fractal\CollectionResource($categories, function($scope, BookModel $book) {
+$resource = new Fractal\CollectionResource($books, function($scope, BookModel $book) {
     return [
         'foo' => (int) $book->id,
         'bar' => $book->other_field
@@ -71,9 +73,18 @@ Assuming you use an autoloader of course. These classes must extend `League\Frac
 contain a process method, much like the callback example: `public function process($scope, Foo $foo)`.
 
 ``` php
-$resource = new Fractal\ItemResource($categories[0], 'Acme\Processor\CategoryProcessor');
-$resource = new Fractal\CollectionResource($categories, 'Acme\Processor\CategoryProcessor');
-$resource = new Fractal\PaginatorResource($categories, 'Acme\Processor\CategoryProcessor');
+// PHP 5.3+
+$resource = new Fractal\ItemResource($books[0], 'Acme\Processor\BookProcessor');
+$resource = new Fractal\CollectionResource($books, 'Acme\Processor\BookProcessor');
+$resource = new Fractal\PaginatorResource($books, 'Acme\Processor\BookProcessor');
+
+// Alternative for PHP 5.5+
+use Acme\Processor\BookProcessor;
+
+$resource = new Fractal\ItemResource($books[0], BookProcessor::class);
+$resource = new Fractal\CollectionResource($books, BookProcessor::class);
+$resource = new Fractal\PaginatorResource($books, BookProcessor::class);
+
 ```
 
 [ArrayIterator]: http://php.net/ArrayIterator
@@ -86,14 +97,23 @@ data can have all sorts of relationships. Many developers try to find a perfect 
 not making too many HTTP requests and not downloading more data than they need to, so flexibility 
 us also important. 
 
-If we were in a 
+Sticking with the book example, the `BookProcessor` might contain an optional embed for an author.
 
 ``` php
-    if ($scope->isRequested('category')) {
-        $resource = new Fractal\ItemResource($opp->category, CategoryProcessor::class);
-        $data['category'] = $scope->embedChildScope('category', $resource);
+    if ($scope->isRequested('author')) {
+        $resource = new Fractal\ItemResource($book->author, CategoryProcessor::class);
+        $data['author'] = $scope->embedChildScope('author', $resource);
     }
 ```
+
+So if a client application were to call the URL `/books?embed=author` then they would see author data in the 
+response. These can be nested with dot notation, as far as you like. 
+
+**E.g:** `/books?embed=author,publishers,publishers.somethingelse`
+
+This example happens to be using the lazy-loading functionality of an ORM for `$book->author`, but there is no 
+reason that eager-loading could not also be used by inspecting the $_GET['embed'] list of requested scopes. This 
+would just be a translation array, turning scopes into eager-loading requirements.
 
 ### Outputting Processed Data
 
