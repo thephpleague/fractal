@@ -23,6 +23,7 @@ class ResourceManager
     {
         $scopeInstance = new Scope($this, $scopeIdentifier);
 
+        // Update scope history
         if ($parentScopeInstance !== null) {
             
             // This will be the new childs list of partents (parents parents, plus the parent)
@@ -31,6 +32,7 @@ class ResourceManager
 
             $scopeInstance->setParentScopes($scopeArray);
         }
+
 
         // if's n shit
         if ($resource instanceof ItemResource) {
@@ -43,48 +45,62 @@ class ResourceManager
             throw new Exceptions('No idea what type of resource format this is');
         }
 
+        // So, this data is the current scope data
         $scopeInstance->setCurrentData($data);
 
         return $scopeInstance;
     }
 
-    protected function getCallableProcessor(ResourceInterface $resource)
+    protected function fireProcessor($resource, $scope, $data)
     {
         $processor = $resource->getProcessor();
 
+        // Fire Main Processor
         if (is_callable($processor)) {
-            return $processor;
-        }
+            $processedData = call_user_func($processor, $scope, $data);
 
-        return [new $processor, 'process'];
+        } else {
+            $processedData = call_user_func([$processor, 'process'], $data);
+
+            // If its an object, process potential embeded resources
+            if ($processor instanceof ProcessorAbstract) {
+                $embededData = $processor->processEmbededResources($scope, $data);
+
+                // Push the new embeds in with the main data
+                $processedData = array_merge($processedData, $embededData);
+            }
+        }
+        
+        return $processedData;
     }
+
 
     protected function processItem($scope, ItemResource $resource)
     {
-        $callable = $this->getCallableProcessor($resource);
-        return call_user_func($callable, $scope, $resource->getData());
+        return $this->fireProcessor($resource->getProcessor(), $scope, $resource->getData());
     }
 
     protected function processCollection($scope, CollectionResource $resources)
     {
-        $callable = $this->getCallableProcessor($resources);
+        $processor = $resources->getProcessor();
 
         $data = [];
         foreach ($resources->getData() as $itemData) {
-            $data []= call_user_func($callable, $scope, $itemData);
+            $data []= $this->fireProcessor($processor, $scope, $itemData);
         }
         return $data;
     }
 
     protected function processPaginator($scope, PaginatorResource $resources)
     {
-        $callable = $this->getCallableProcessor($resources);
+        $processor = $resources->getProcessor();
 
         $data = [];
         foreach ($resources->getData() as $itemData) {
-            $data []= call_user_func($callable, $scope, $itemData);
+            $data []= $this->fireProcessor($processor, $scope, $itemData);
         }
         return $data;
     }
+
 
 }
