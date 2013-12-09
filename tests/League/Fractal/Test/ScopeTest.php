@@ -80,7 +80,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new ResourceManager();
         $scope = new Scope($manager, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
         $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
         });
         
@@ -90,6 +89,46 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
         $this->assertEquals($grandChildScope->getParentScopes(), array('book', 'author'));
     }
+
+    /**
+     * @covers League\Fractal\Scope::isRequested
+     */
+    public function testIsRequested()
+    {
+        $manager = new ResourceManager();
+        $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
+
+        $scope = new Scope($manager, 'book');
+        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        });
+        
+        $this->assertTrue($scope->isRequested('foo'));
+        $this->assertTrue($scope->isRequested('bar'));
+        $this->assertTrue($scope->isRequested('baz.bart'));
+        $this->assertFalse($scope->isRequested('nope'));
+
+        $childScope = $scope->embedChildScope('baz', $resource);
+        $this->assertTrue($childScope->isRequested('bart'));
+        $this->assertFalse($childScope->isRequested('foo'));
+        $this->assertFalse($childScope->isRequested('bar'));
+        $this->assertFalse($childScope->isRequested('baz'));
+    }
+
+    /**
+     * @covers League\Fractal\Scope::pushParentScope
+     */
+    public function testPushParentScope()
+    {
+        $manager = new ResourceManager();
+        $scope = new Scope($manager);
+
+        $this->assertEquals($scope->pushParentScope('book'), 1);
+        $this->assertEquals($scope->pushParentScope('author'), 2);
+        $this->assertEquals($scope->pushParentScope('profile'), 3);
+        
+        $this->assertEquals($scope->getParentScopes(), array('book', 'author', 'profile'));
+    }
+
 
     public function tearDown()
     {
