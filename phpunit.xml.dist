@@ -25,10 +25,10 @@
                       <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
                     </element>
                     <element key="namespace">
-                        <string>Your\Package\Namespace</string>
+                        <string>League\Fractal</string>
                     </element>
                     <element key="repo_token">
-                        <string>YourCoverallsRepoToken</string>
+                        <string>SWXV74M3EDTakDezlQvrc12eH4ODwk0bV</string>
                     </element>
                     <element key="target_url">
                         <string>https://coveralls.io/api/v1/jobs</string>
