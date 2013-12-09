@@ -48,6 +48,13 @@ abstract class TransformerAbstract
         return new PaginatorResource($data, $transformer);
     }
 
+    public function embedStructure(Scope $scope)
+    {
+        return array(
+            'data' => $scope->toArray(),
+        );
+    }
+
     public function processEmbededResources(Scope $scope, $data)
     {
         if ($this->availableEmbeds === null) {
@@ -72,7 +79,9 @@ abstract class TransformerAbstract
 
             $resource = call_user_func(array($this, $methodName), $data);
 
-            $embededData[$potentialEmbed] = $scope->embedChildScope($potentialEmbed, $resource);
+            $childScope = $scope->embedChildScope($potentialEmbed, $resource);
+
+            $embededData[$potentialEmbed] = $this->embedStructure($childScope);
         }
 
         return $embededData;

@@ -53,7 +53,9 @@ class ResourceManager
         } elseif ($resource instanceof PaginatorResource) {
             $data = $this->processPaginator($scopeInstance, $resource);
         } else {
-            throw new Exceptions('No idea what type of resource format this is');
+            throw new \InvalidArgumentException(
+                'Argument $resource should be an instance of ItemResource, CollectionResource or PaginatorResource'
+            );
         }
 
         // So, this data is the current scope data
