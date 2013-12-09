@@ -23,10 +23,11 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTransformer()
     {
-        $resource = new ItemResource($this->simpleItem, function (array $data) {
-            return $data;
+        $resource = new ItemResource($this->simpleItem, function () {
         });
-
         $this->assertTrue(is_callable($resource->getTransformer()));
+
+        $resource = new ItemResource($this->simpleItem, 'SomeClass');
+        $this->assertEquals($resource->getTransformer(), 'SomeClass');
     }
 }

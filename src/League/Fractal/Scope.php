@@ -27,7 +27,7 @@ class Scope
         $this->currentScope = $currentScope;
     }
 
-    
+
     public function embedChildScope($scopeIdentifier, $resource)
     {
         return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
@@ -76,20 +76,6 @@ class Scope
         return $this->parentScopes;
     }
     
-    /**
-     * Setter for parentScopes
-     *
-     * @param mixed $parentScopes Value to set
-     *
-     * @return self
-     */
-    public function setParentScopes($parentScopes)
-    {
-        $this->parentScopes = $parentScopes;
-        return $this;
-    }
-    
-    
     public function isRequested($checkScopeSegment)
     {
         if ($this->parentScopes) {
@@ -111,11 +97,34 @@ class Scope
         return array_push($this->parentScopes, $newScope);
     }
 
+    /**
+     * Setter for parentScopes
+     *
+     * @param mixed $parentScopes Value to set
+     *
+     * @return self
+     */
+    public function setParentScopes($parentScopes)
+    {
+        $this->parentScopes = $parentScopes;
+        return $this;
+    }
+
+    /**
+     * Convert the current data for this scope to an array
+     *
+     * @return array
+     */
     public function toArray()
     {
         return (array) $this->currentData;
     }
 
+    /**
+     * Convert the current data for this scope to JSON
+     *
+     * @return string
+     */
     public function toJson()
     {
         return json_encode($this->toArray());
