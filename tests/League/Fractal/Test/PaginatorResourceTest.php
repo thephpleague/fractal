@@ -9,10 +9,10 @@ use Mockery as m;
 
 class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleCollection = [
-        ['foo' => 'bar'],
-        ['baz' => 'ban'],
-    ];
+    protected $simpleCollection = array(
+        array('foo' => 'bar'),
+        array('baz' => 'ban'),
+    );
 
     /**
      * @covers League\Fractal\PaginatorResource::getData

@@ -4,7 +4,7 @@ use League\Fractal\ItemResource;
 
 class ItemResourceTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleItem = ['foo' => 'bar'];
+    protected $simpleItem = array('foo' => 'bar');
 
     /**
      * @covers League\Fractal\ItemResource::getData

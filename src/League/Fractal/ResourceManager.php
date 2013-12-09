@@ -2,7 +2,7 @@
 
 class ResourceManager
 {
-    protected $requestedScopes = [];
+    protected $requestedScopes = array();
     
     public function getRequestedScopes()
     {
@@ -94,7 +94,7 @@ class ResourceManager
     {
         $processor = $this->getCallableProcessor($resources);
 
-        $data = [];
+        $data = array();
         foreach ($resources->getData() as $itemData) {
             $data []= $this->fireProcessor($processor, $scope, $itemData);
         }
@@ -105,7 +105,7 @@ class ResourceManager
     {
         $processor = $this->getCallableProcessor($resources);
 
-        $data = [];
+        $data = array();
         foreach ($resources->getData() as $itemData) {
             $data []= $this->fireProcessor($processor, $scope, $itemData);
         }
