@@ -8,7 +8,7 @@ class Scope
 
     protected $manager;
 
-    protected $parentScopes = [];
+    protected $parentScopes = array();
 
     public function __construct(ResourceManager $resourceManager, $currentScope)
     {
@@ -74,9 +74,9 @@ class Scope
     
     public function embedChildScope($scopeIdentifier, $resource)
     {
-        return [
+        return array(
             'data' => $this->resourceManager->createData($resource, $scopeIdentifier, $this)->toArray(),
-        ];
+        );
     }
     
     public function isRequested($checkScopeSegment)
@@ -85,7 +85,7 @@ class Scope
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->currentScope, $checkScopeSegment);
         } else {
-            $scopeArray = [$checkScopeSegment];
+            $scopeArray = array($checkScopeSegment);
         }
 
         $scopeString = implode('.', (array) $scopeArray);
