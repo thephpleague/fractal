@@ -69,7 +69,7 @@ class ResourceManager
             $processedData = call_user_func($processor, $data);
 
         } else {
-            $processedData = call_user_func([$processor, 'process'], $data);
+            $processedData = call_user_func(array($processor, 'process'), $data);
 
             // If its an object, process potential embeded resources
             if ($processor instanceof ProcessorAbstract) {
