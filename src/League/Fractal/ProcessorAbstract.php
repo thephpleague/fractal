@@ -59,7 +59,7 @@ abstract class ProcessorAbstract
                 ));
             }
 
-            $resource = call_user_func([$this, $methodName], $data);
+            $resource = call_user_func(array($this, $methodName), $data);
 
             $embededData[$potentialEmbed] = $scope->embedChildScope($potentialEmbed, $resource);
         }
