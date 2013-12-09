@@ -26,6 +26,12 @@ class Scope
         $this->resourceManager = $resourceManager;
         $this->currentScope = $currentScope;
     }
+
+    
+    public function embedChildScope($scopeIdentifier, $resource)
+    {
+        return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
+    }
     
     /**
      * Setter for currentData
@@ -83,12 +89,6 @@ class Scope
         return $this;
     }
     
-    public function embedChildScope($scopeIdentifier, $resource)
-    {
-        return array(
-            'data' => $this->resourceManager->createData($resource, $scopeIdentifier, $this)->toArray(),
-        );
-    }
     
     public function isRequested($checkScopeSegment)
     {
