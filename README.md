@@ -177,7 +177,7 @@ check against the `Accept` header.
 
 This is still in concept stage, and these issues are left to explore:
 
-- [X] Should Transformers be called Presenters? (Went with Transformers)
+- [X] Should Processors be called Presenters? (Went with Transformers)
 - [X] Simplify the assosciation of nested items. Move to a register method? 
 - [ ] Switch return array to use instance properties in `transform()`
 - [ ] Implement HATEOAS/HAL links
