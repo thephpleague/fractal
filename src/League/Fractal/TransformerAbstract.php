@@ -11,7 +11,7 @@
 
 namespace League\Fractal;
 
-abstract class ProcessorAbstract
+abstract class TransformerAbstract
 {
     protected $availableEmbeds;
     protected $manager;
@@ -33,19 +33,19 @@ abstract class ProcessorAbstract
         return $this->scopeIdentifier;
     }
 
-    protected function itemResource($data, $processor)
+    protected function itemResource($data, $transformer)
     {
-        return new ItemResource($data, $processor);
+        return new ItemResource($data, $transformer);
     }
 
-    protected function collectionResource($data, $processor)
+    protected function collectionResource($data, $transformer)
     {
-        return new CollectionResource($data, $processor);
+        return new CollectionResource($data, $transformer);
     }
 
-    protected function paginatorResource($data, $processor)
+    protected function paginatorResource($data, $transformer)
     {
-        return new PaginatorResource($data, $processor);
+        return new PaginatorResource($data, $transformer);
     }
 
     public function processEmbededResources(Scope $scope, $data)

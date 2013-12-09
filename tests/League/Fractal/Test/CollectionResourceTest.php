@@ -22,14 +22,14 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\CollectionResource::getProcessor
+     * @covers League\Fractal\CollectionResource::getTransformer
      */
-    public function testGetProcessor()
+    public function testGetTransformer()
     {
         $resource = new CollectionResource($this->simpleCollection, function (array $data) {
             return $data;
         });
 
-        $this->assertTrue(is_callable($resource->getProcessor()));
+        $this->assertTrue(is_callable($resource->getTransformer()));
     }
 }

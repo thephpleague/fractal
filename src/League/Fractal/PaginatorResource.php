@@ -16,13 +16,13 @@ use Illuminate\Pagination\Paginator;
 class PaginatorResource implements ResourceInterface
 {
     protected $paginator;
-    protected $processor;
+    protected $transformer;
     protected $data;
 
-    public function __construct(Paginator $paginator, $processor)
+    public function __construct(Paginator $paginator, $transformer)
     {
         $this->paginator = $paginator;
-        $this->processor = $processor;
+        $this->transformer = $transformer;
         $this->data = $paginator->getCollection();
     }
     
@@ -36,8 +36,8 @@ class PaginatorResource implements ResourceInterface
         return $this->paginator;
     }
 
-    public function getProcessor()
+    public function getTransformer()
     {
-        return $this->processor;
+        return $this->transformer;
     }
 }

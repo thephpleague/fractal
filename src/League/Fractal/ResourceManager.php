@@ -62,29 +62,29 @@ class ResourceManager
         return $scopeInstance;
     }
 
-    protected function getCallableProcessor(ResourceInterface $resource)
+    protected function getCallableTransformer(ResourceInterface $resource)
     {
-        $processor = $resource->getProcessor();
+        $transformer = $resource->getTransformer();
 
-        if (is_callable($processor)) {
-            return $processor;
+        if (is_callable($transformer)) {
+            return $transformer;
         }
 
-        return new $processor;
+        return new $transformer;
     }
 
-    protected function fireProcessor($processor, Scope $scope, $data)
+    protected function fireTransformer($transformer, Scope $scope, $data)
     {
-        // Fire Main Processor
-        if (is_callable($processor)) {
-            $processedData = call_user_func($processor, $data);
+        // Fire Main Transformer
+        if (is_callable($transformer)) {
+            $processedData = call_user_func($transformer, $data);
 
         } else {
-            $processedData = call_user_func(array($processor, 'process'), $data);
+            $processedData = call_user_func(array($transformer, 'transform'), $data);
 
             // If its an object, process potential embeded resources
-            if ($processor instanceof ProcessorAbstract) {
-                $embededData = $processor->processEmbededResources($scope, $data);
+            if ($transformer instanceof TransformerAbstract) {
+                $embededData = $transformer->processEmbededResources($scope, $data);
 
                 // Push the new embeds in with the main data
                 $processedData = array_merge($processedData, $embededData);
@@ -97,28 +97,28 @@ class ResourceManager
 
     protected function processItem($scope, ItemResource $resource)
     {
-        $processor = $this->getCallableProcessor($resource);
-        return $this->fireProcessor($processor, $scope, $resource->getData());
+        $transformer = $this->getCallableTransformer($resource);
+        return $this->fireTransformer($transformer, $scope, $resource->getData());
     }
 
     protected function processCollection($scope, CollectionResource $resources)
     {
-        $processor = $this->getCallableProcessor($resources);
+        $transformer = $this->getCallableTransformer($resources);
 
         $data = array();
         foreach ($resources->getData() as $itemData) {
-            $data []= $this->fireProcessor($processor, $scope, $itemData);
+            $data []= $this->fireTransformer($transformer, $scope, $itemData);
         }
         return $data;
     }
 
     protected function processPaginator($scope, PaginatorResource $resources)
     {
-        $processor = $this->getCallableProcessor($resources);
+        $transformer = $this->getCallableTransformer($resources);
 
         $data = array();
         foreach ($resources->getData() as $itemData) {
-            $data []= $this->fireProcessor($processor, $scope, $itemData);
+            $data []= $this->fireTransformer($transformer, $scope, $itemData);
         }
         return $data;
     }
