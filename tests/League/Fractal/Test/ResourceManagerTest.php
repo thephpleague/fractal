@@ -20,7 +20,7 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Fractal\ResourceManager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
-        $this->assertEquals($manager->getRequestedScopes(), ['foo', 'bar', 'baz.bart']);
+        $this->assertEquals($manager->getRequestedScopes(), array('foo', 'bar', 'baz.bart'));
     }
 
     /**
