@@ -9,9 +9,6 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
         array('baz' => 'ban'),
     );
 
-    /**
-     * @covers League\Fractal\CollectionResource::getData
-     */
     public function testGetData()
     {
         $resource = new CollectionResource($this->simpleCollection, function (array $data) {
@@ -21,9 +18,6 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resource->getData(), $this->simpleCollection);
     }
 
-    /**
-     * @covers League\Fractal\CollectionResource::getTransformer
-     */
     public function testGetTransformer()
     {
         $resource = new CollectionResource($this->simpleCollection, function () {

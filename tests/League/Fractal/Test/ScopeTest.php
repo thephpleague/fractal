@@ -7,9 +7,6 @@ use Mockery as m;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers League\Fractal\Scope::embedChildScope
-     */
     public function testEmbedChildScope()
     {
         $manager = new ResourceManager();
@@ -23,7 +20,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::embedChildScope
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an 
      *   instance of ItemResource, CollectionResource or PaginatorResource
@@ -56,9 +52,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($scope->getCurrentData(), array('foo' => 'bar'));
     }
 
-    /**
-     * @covers League\Fractal\Scope::getCurrentScope
-     */
     public function testGetCurrentScope()
     {
         $manager = new ResourceManager();
@@ -73,9 +66,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($grandChildScope->getCurrentScope(), 'profile');
     }
 
-    /**
-     * @covers League\Fractal\Scope::getParentScopes
-     */
     public function testGetParentScopes()
     {
         $manager = new ResourceManager();
@@ -90,9 +80,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($grandChildScope->getParentScopes(), array('book', 'author'));
     }
 
-    /**
-     * @covers League\Fractal\Scope::isRequested
-     */
     public function testIsRequested()
     {
         $manager = new ResourceManager();
@@ -114,9 +101,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($childScope->isRequested('baz'));
     }
 
-    /**
-     * @covers League\Fractal\Scope::pushParentScope
-     */
     public function testPushParentScope()
     {
         $manager = new ResourceManager();
