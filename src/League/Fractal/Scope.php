@@ -92,6 +92,13 @@ class Scope
         return in_array($scopeString, $checkAgainstArray);
     }
 
+    /**
+     * Push a scope identifier into parentScopes
+     *
+     * @param string $newScope
+     *
+     * @return int Returns the new number of elements in the array.
+     */
     public function pushParentScope($newScope)
     {
         return array_push($this->parentScopes, $newScope);
