@@ -52,7 +52,11 @@ abstract class ProcessorAbstract
 
             $methodName = 'embed'.ucfirst($potentialEmbed);
             if (! method_exists($this, $methodName)) {
-                throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class($this), $methodName));
+                throw new \BadMethodCallException(sprintf(
+                    'Call to undefined method %s::%s()',
+                    get_called_class($this),
+                    $methodName
+                ));
             }
 
             $resource = call_user_func([$this, $methodName], $data);
