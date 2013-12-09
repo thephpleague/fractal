@@ -45,6 +45,8 @@ class CollectionResource implements ResourceInterface
     }
     
     /**
+     * Getter for data
+     *
      * @return array|ArrayIterator
      */
     public function getData()
@@ -53,6 +55,8 @@ class CollectionResource implements ResourceInterface
     }
 
     /**
+     * Getter for processor
+     *
      * @return callable|string
      */
     public function getProcessor()
