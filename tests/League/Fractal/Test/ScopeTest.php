@@ -12,7 +12,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = m::mock('League\Fractal\ResourceManager');
         $scope = new Scope($manager, 'book');
-        $this->assertInstanceOf('League\Fractal\Scope', $scope->setCurrentData(['foo' => 'bar']));
+        $this->assertInstanceOf('League\Fractal\Scope', $scope->setCurrentData(array('foo' => 'bar')));
     }
 
     /**
@@ -22,7 +22,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = m::mock('League\Fractal\ResourceManager');
         $scope = new Scope($manager, 'book');
-        $scope->setCurrentData(['foo' => 'bar']);
-        $this->assertEquals($scope->getCurrentData(), ['foo' => 'bar']);
+        $scope->setCurrentData(array('foo' => 'bar'));
+        $this->assertEquals($scope->getCurrentData(), array('foo' => 'bar'));
     }
 }

@@ -10,8 +10,7 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
     public function testSetRequestedScopes()
     {
         $manager = new Fractal\ResourceManager();
-        $foo = $manager->setRequestedScopes(['foo', 'bar', 'baz.bart']);
-        $this->assertInstanceOf('League\Fractal\ResourceManager', $foo);
+        $this->assertInstanceOf('League\Fractal\ResourceManager', $manager->setRequestedScopes(array('foo')));
     }
 
     /**
@@ -20,7 +19,7 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetRequestedScopes()
     {
         $manager = new Fractal\ResourceManager();
-        $manager->setRequestedScopes(['foo', 'bar', 'baz.bart']);
+        $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
         $this->assertEquals($manager->getRequestedScopes(), ['foo', 'bar', 'baz.bart']);
     }
 
@@ -31,13 +30,13 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Fractal\ResourceManager();
 
-        $resource = new Fractal\ItemResource(['foo' => 'bar'], function (array $data) {
+        $resource = new Fractal\ItemResource(array('foo' => 'bar'), function (array $data) {
             return $data;
         });
 
         $rootScope = $manager->createData($resource);
         
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
-        $this->assertEquals($rootScope->toArray(), ['foo' => 'bar']);
+        $this->assertEquals($rootScope->toArray(), array('foo' => 'bar'));
     }
 }
