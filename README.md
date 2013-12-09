@@ -24,7 +24,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.1.*"
+        "league/fractal": "0.2.*"
     }
 }
 ```
@@ -52,15 +52,15 @@ only accepts an instance of `Illuminate\Pagination\Paginator` at this point
 
 The `ItemResource` and `CollectionResource` constructors will take any kind of data you wish to send it 
 as the first argument, and then a "processor" as the second argument. This can be callable or a string 
-containing a fully-qualified class name. The processor will have two arguments passed to it, which will 
-be a `$scope` (explained later) and an iteration of your data.
+containing a fully-qualified class name. 
 
-So if you passed an instance of `BookModel` into an `ItemResource` then you can expect this instance to 
-be `BookModel`. If you passed an array or a collection (an object implementing [ArrayIterator][]) 
-of `BookModel` instances then this process method will be run on each of those instances.
+The processor will the raw data passed back into it, so if you pass an instance of `BookModel` into an 
+`ItemResource` then you can expect this instance to be `BookModel`. If you passed an array or a collection 
+(an object implementing [ArrayIterator][]) of `BookModel` instances then this process method will be run 
+on each of those instances.
 
 ``` php
-$resource = new Fractal\CollectionResource($books, function($scope, BookModel $book) {
+$resource = new Fractal\CollectionResource($books, function(BookModel $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
@@ -71,7 +71,7 @@ $resource = new Fractal\CollectionResource($books, function($scope, BookModel $b
 
 If you want to reuse your processors (recommended) then create classes somewhere and pass in the name.
 Assuming you use an autoloader of course. These classes must extend `League\Fractal\ProcessorAbstract` and 
-contain a process method, much like the callback example: `public function process($scope, Foo $foo)`.
+contain a process method, much like the callback example: `public function process(Foo $foo)`.
 
 ``` php
 // PHP 5.3+
@@ -114,7 +114,7 @@ class BookProcessor extends ProcessorAbstract
      * @var array
      */
     protected $availableEmbeds = [
-        'place'
+        'author'
     ];
 
     /**
