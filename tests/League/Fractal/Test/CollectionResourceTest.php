@@ -4,10 +4,10 @@ use League\Fractal\CollectionResource;
 
 class CollectionResourceTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleCollection = [
-        ['foo' => 'bar'],
-        ['baz' => 'ban'],
-    ];
+    protected $simpleCollection = array(
+        array('foo' => 'bar'),
+        array('baz' => 'ban'),
+    );
 
     /**
      * @covers League\Fractal\CollectionResource::getData
