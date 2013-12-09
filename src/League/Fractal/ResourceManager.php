@@ -26,11 +26,6 @@ class ResourceManager
         return $this;
     }
 
-    public function createRootData($resource)
-    {
-        return $this->createData($resource);
-    }
-
     public function createData($resource, $scopeIdentifier = null, $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $scopeIdentifier);
@@ -68,7 +63,7 @@ class ResourceManager
     {
         $transformer = $resource->getTransformer();
 
-        if (is_callable($transformer)) {
+        if (is_callable($transformer) or is_object($transformer)) {
             return $transformer;
         }
 
