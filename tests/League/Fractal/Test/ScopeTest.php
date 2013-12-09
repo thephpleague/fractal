@@ -15,13 +15,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new ResourceManager();
         $scope = new Scope($manager, 'book');
         $this->assertEquals($scope->getCurrentScope(), 'book');
-
-        $resource = new ItemResource(array('name' => 'Larry Ullman'), function (array $data) {
-            return $data;
+        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
         });
-
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals($childScope->getCurrentScope(), 'author');
+
+        $this->assertInstanceOf('League\Fractal\Scope', $childScope);
     }
 
     /**
@@ -59,16 +57,43 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::getCurrentData
+     * @covers League\Fractal\Scope::getCurrentScope
      */
-    // public function testGetCurrentScope()
-    // {
-    //     $manager = new ResourceManager();
-    //     $scope = new Scope($manager, 'book');
+    public function testGetCurrentScope()
+    {
+        $manager = new ResourceManager();
+        $scope = new Scope($manager, 'book');
+        $this->assertEquals($scope->getCurrentScope(), 'book');
+        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        });
+        $childScope = $scope->embedChildScope('author', $resource);
+        $this->assertEquals($childScope->getCurrentScope(), 'author');
 
+        $grandChildScope = $childScope->embedChildScope('profile', $resource);
+        $this->assertEquals($grandChildScope->getCurrentScope(), 'profile');
+    }
 
-    //     $scope->embedChildScope($scope);
+    /**
+     * @covers League\Fractal\Scope::getParentScopes
+     */
+    public function testGetParentScopes()
+    {
+        $manager = new ResourceManager();
+        $scope = new Scope($manager, 'book');
+        $this->assertEquals($scope->getCurrentScope(), 'book');
+        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        });
+        
+        $childScope = $scope->embedChildScope('author', $resource);
+        $this->assertEquals($childScope->getParentScopes(), array('book'));
 
-    //     $this->assertEquals($scope->getCurrentScope(), 'book');
-    // }
+        $grandChildScope = $childScope->embedChildScope('profile', $resource);
+        $this->assertEquals($grandChildScope->getParentScopes(), array('book', 'author'));
+    }
+
+    public function tearDown()
+    {
+        m::close();
+    }
+
 }

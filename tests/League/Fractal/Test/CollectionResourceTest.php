@@ -26,10 +26,11 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTransformer()
     {
-        $resource = new CollectionResource($this->simpleCollection, function (array $data) {
-            return $data;
+        $resource = new CollectionResource($this->simpleCollection, function () {
         });
-
         $this->assertTrue(is_callable($resource->getTransformer()));
+
+        $resource = new CollectionResource($this->simpleCollection, 'SomeClass');
+        $this->assertEquals($resource->getTransformer(), 'SomeClass');
     }
 }
