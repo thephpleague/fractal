@@ -1,6 +1,7 @@
 # Fractal
 
 [![Build Status](https://travis-ci.org/php-loep/fractal.png?branch=master)](https://travis-ci.org/php-loep/fractal)
+[![Coverage Status](https://coveralls.io/repos/php-loep/fractal/badge.png)](https://coveralls.io/r/php-loep/fractal)
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
 [![Latest Unstable Version](https://poser.pugx.org/league/fractal/v/unstable.png)](https://packagist.org/packages/league/fractal)
