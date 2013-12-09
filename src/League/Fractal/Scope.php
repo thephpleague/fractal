@@ -30,6 +30,16 @@ class Scope
     }
 
     /**
+     * Getter for currentData
+     *
+     * @return mixed
+     */
+    public function getCurrentData()
+    {
+        return $this->currentData;
+    }
+
+    /**
      * Getter for currentScope
      *
      * @return mixed
