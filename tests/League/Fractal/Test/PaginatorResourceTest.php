@@ -14,9 +14,6 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         array('baz' => 'ban'),
     );
 
-    /**
-     * @covers League\Fractal\PaginatorResource::getData
-     */
     public function testGetData()
     {
         $paginator = m::mock('Illuminate\Pagination\Paginator');
@@ -29,9 +26,6 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resource->getData(), $this->simpleCollection);
     }
 
-    /**
-     * @covers League\Fractal\PaginatorResource::getPaginator
-     */
     public function testGetPaginator()
     {
         $paginator = m::mock('Illuminate\Pagination\Paginator');
@@ -42,9 +36,6 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Illuminate\Pagination\Paginator', $resource->getPaginator());
     }
 
-    /**
-     * @covers League\Fractal\PaginatorResource::getTransformer
-     */
     public function testGetTransformer()
     {
         $paginator = m::mock('Illuminate\Pagination\Paginator');
