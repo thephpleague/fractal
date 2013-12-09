@@ -111,6 +111,4 @@ class ResourceManager
         }
         return $data;
     }
-
-
 }
