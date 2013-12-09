@@ -14,6 +14,7 @@ abstract class ProcessorAbstract
     public function setManager($manager)
     {
         $this->manager = $manager;
+        return $this;
     }
 
     public function getScopeIdentifier()

@@ -17,7 +17,9 @@
         }
     ],
     "require-dev": {
-        "silex/silex": "~1.0"
+        "illuminate/pagination": "~4.0",
+        "mockery/mockery": "dev-master@dev",
+        "silex/silex": "~1.1"
     },
     "suggests": {
         "illuminate/pagination": "~4.0"

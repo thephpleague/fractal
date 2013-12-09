@@ -12,6 +12,7 @@ class ResourceManager
     public function setRequestedScopes(array $requestedScopes)
     {
         $this->requestedScopes = $requestedScopes;
+        return $this;
     }
 
     public function createRootData($resource)
@@ -32,7 +33,6 @@ class ResourceManager
 
             $scopeInstance->setParentScopes($scopeArray);
         }
-
 
         // if's n shit
         if ($resource instanceof ItemResource) {
