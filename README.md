@@ -88,8 +88,6 @@ $resource = new Fractal\PaginatorResource($books, BookTransformer::class);
 
 ```
 
-[ArrayIterator]: http://php.net/ArrayIterator
-
 ### Embedding (a.k.a Nesting) Data
 
 Your transformer at this point is mainly just giving you a method to handle array conversion from 
@@ -132,7 +130,7 @@ class BookTransformer extends TransformerAbstract
     }
 
     /**
-     * Embed Place
+     * Embed Author
      *
      * @return League\Fractal\ItemResource
      */
@@ -151,7 +149,7 @@ response. These can be nested with dot notation, as far as you like.
 **E.g:** `/books?embed=author,publishers,publishers.somethingelse`
 
 This example happens to be using the lazy-loading functionality of an ORM for `$book->author`, but there is no 
-reason that eager-loading could not also be used by inspecting the $_GET['embed'] list of requested scopes. This 
+reason that eager-loading could not also be used by inspecting the `$_GET['embed']` list of requested scopes. This 
 would just be a translation array, turning scopes into eager-loading requirements.
 
 ### Outputting Processed Data
@@ -207,3 +205,5 @@ Please see [CONTRIBUTING](https://github.com/php-loep/fractal/blob/master/CONTRI
 ## License
 
 The MIT License (MIT). Please see [License File](https://github.com/php-loep/fractal/blob/master/LICENSE) for more information.
+
+[ArrayIterator]: http://php.net/ArrayIterator
