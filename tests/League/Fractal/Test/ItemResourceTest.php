@@ -19,14 +19,14 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\ItemResource::getProcessor
+     * @covers League\Fractal\ItemResource::getTransformer
      */
-    public function testGetProcessor()
+    public function testGetTransformer()
     {
         $resource = new ItemResource($this->simpleItem, function (array $data) {
             return $data;
         });
 
-        $this->assertTrue(is_callable($resource->getProcessor()));
+        $this->assertTrue(is_callable($resource->getTransformer()));
     }
 }

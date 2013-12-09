@@ -25,7 +25,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.2.*"
+        "league/fractal": "0.3.*"
     }
 }
 ```
@@ -42,7 +42,7 @@ $fractal = new Fractal\ResourceManager();
 $fractal->setRequestedScopes(explode(',', $_GET['embed']));
 ```
 
-### Creating Resources and Processors
+### Creating Resources and Transformers
 
 In your controllers you can then create "resources", of which there are three types:
 
@@ -52,12 +52,12 @@ In your controllers you can then create "resources", of which there are three ty
 only accepts an instance of `Illuminate\Pagination\Paginator` at this point
 
 The `ItemResource` and `CollectionResource` constructors will take any kind of data you wish to send it 
-as the first argument, and then a "processor" as the second argument. This can be callable or a string 
+as the first argument, and then a "transformer" as the second argument. This can be callable or a string 
 containing a fully-qualified class name. 
 
-The processor will the raw data passed back into it, so if you pass an instance of `BookModel` into an 
+The transformer will the raw data passed back into it, so if you pass an instance of `BookModel` into an 
 `ItemResource` then you can expect this instance to be `BookModel`. If you passed an array or a collection 
-(an object implementing [ArrayIterator][]) of `BookModel` instances then this process method will be run 
+(an object implementing [ArrayIterator][]) of `BookModel` instances then this transform method will be run 
 on each of those instances.
 
 ``` php
@@ -70,22 +70,21 @@ $resource = new Fractal\CollectionResource($books, function(BookModel $book) {
 });
 ```
 
-If you want to reuse your processors (recommended) then create classes somewhere and pass in the name.
-Assuming you use an autoloader of course. These classes must extend `League\Fractal\ProcessorAbstract` and 
-contain a process method, much like the callback example: `public function process(Foo $foo)`.
+If you want to reuse your transformers (recommended) then create classes somewhere and pass in the name.
+Assuming you use an autoloader of course. These classes must extend `League\Fractal\TransformerAbstract` and 
+contain a transform method, much like the callback example: `public function transform(Foo $foo)`.
 
 ``` php
 // PHP 5.3+
-$resource = new Fractal\ItemResource($books[0], 'Acme\Processor\BookProcessor');
-$resource = new Fractal\CollectionResource($books, 'Acme\Processor\BookProcessor');
-$resource = new Fractal\PaginatorResource($books, 'Acme\Processor\BookProcessor');
+$resource = new Fractal\ItemResource($books[0], 'Acme\Transformer\BookTransformer');
+$resource = new Fractal\CollectionResource($books, 'Acme\Transformer\BookTransformer');
+$resource = new Fractal\PaginatorResource($books, 'Acme\Transformer\BookTransformer');
 
 // Alternative for PHP 5.5+
-use Acme\Processor\BookProcessor;
-
-$resource = new Fractal\ItemResource($books[0], BookProcessor::class);
-$resource = new Fractal\CollectionResource($books, BookProcessor::class);
-$resource = new Fractal\PaginatorResource($books, BookProcessor::class);
+use Acme\Transformer\BookTransformer;
+$resource = new Fractal\ItemResource($books[0], BookTransformer::class);
+$resource = new Fractal\CollectionResource($books, BookTransformer::class);
+$resource = new Fractal\PaginatorResource($books, BookTransformer::class);
 
 ```
 
@@ -93,24 +92,24 @@ $resource = new Fractal\PaginatorResource($books, BookProcessor::class);
 
 ### Embedding (a.k.a Nesting) Data
 
-Your processor at this point is mainly just giving you a method to handle array conversion from 
+Your transformer at this point is mainly just giving you a method to handle array conversion from 
 you data source (or whatever your model is returning) to a simple array. Embedding data in an 
 intelligent way can be tricky as data can have all sorts of relationships. Many developers try to 
 find a perfect balance between not making too many HTTP requests and not downloading more data than 
 they need to, so flexibility is also important. 
 
-Sticking with the book example, the `BookProcessor` might contain an optional embed for an author.
+Sticking with the book example, the `BookTransformer` might contain an optional embed for an author.
 
 ``` php
-<?php namespace App\Processor;
+<?php namespace App\Transformer;
 
 use Book;
-use League\Fractal\ProcessorAbstract;
+use League\Fractal\TransformerAbstract;
 
-class BookProcessor extends ProcessorAbstract
+class BookTransformer extends TransformerAbstract
 {
     /**
-     * List of resources possible to embed via this processor
+     * List of resources possible to embed via this transformer
      *
      * @var array
      */
@@ -123,7 +122,7 @@ class BookProcessor extends ProcessorAbstract
      *
      * @return array
      */
-    public function process(Book $book)
+    public function transform(Book $book)
     {
         return [
             'id'    => (int) $book->id,
@@ -141,7 +140,7 @@ class BookProcessor extends ProcessorAbstract
     {
         $author = $book->author;
 
-        return $this->itemResource($author, AuthorProcessor::class);
+        return $this->itemResource($author, AuthorTransformer::class);
     }
 }
 ```
@@ -158,13 +157,15 @@ would just be a translation array, turning scopes into eager-loading requirement
 ### Outputting Processed Data
 
 When ready to output this data, you must convert the "resource" back into data. Calling 
-`$fractal->createData();` with a resource argument will run the processors (any any 
-nested processor calls) and convert everything to an array for you to output:
+`$fractal->createData();` with a resource argument will run the transformers (any any 
+nested transformer calls) and convert everything to an array for you to output:
 
 ``` php
+// Play with the array
 $data = $fractal->createData($resource)->toArray();
 
-echo json_encode($data);
+// Straight to JSON
+$json = $fractal->createData($resource)->toJson();
 ```
 
 Grab a beverage, you're done. If you want to use something other than JSON then you'll need to 
@@ -179,7 +180,7 @@ check against the `Accept` header.
 This is still in concept stage, and these issues are left to explore:
 
 - [ ] Discuss the class names and file structure with others
-- [ ] Should Processors be called Presenters?
+- [X] Should Transformers be called Presenters? (Went with Transformers)
 - [X] Simplify the assosciation of nested items. Move to a register method? 
 - [ ] Implement HATEOAS/HAL links
 - [ ] Support other pagination systems, not just `Illuminate\Pagination`

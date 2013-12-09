@@ -32,16 +32,16 @@ class CollectionResource implements ResourceInterface
      *
      * @var callable|string
      */
-    protected $processor;
+    protected $transformer;
 
     /**
      * @param array|ArrayIterator $data
-     * @param callable|string $processor
+     * @param callable|string $transformer
      */
-    public function __construct($data, $processor)
+    public function __construct($data, $transformer)
     {
         $this->data = $data;
-        $this->processor = $processor;
+        $this->transformer = $transformer;
     }
     
     /**
@@ -55,12 +55,12 @@ class CollectionResource implements ResourceInterface
     }
 
     /**
-     * Getter for processor
+     * Getter for transformer
      *
      * @return callable|string
      */
-    public function getProcessor()
+    public function getTransformer()
     {
-        return $this->processor;
+        return $this->transformer;
     }
 }
