@@ -6,7 +6,7 @@ use League\Fractal\Scope;
 class ProcessorAbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers League\Fractal\ProcessorAbstract::setRequestedScopes
+     * @covers League\Fractal\ProcessorAbstract::setManager
      */
     public function testsetManager()
     {
@@ -16,7 +16,7 @@ class ProcessorAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\ProcessorAbstract::getRequestedScopes
+     * @covers League\Fractal\ProcessorAbstract::getManager
      */
     public function testGetManager()
     {
