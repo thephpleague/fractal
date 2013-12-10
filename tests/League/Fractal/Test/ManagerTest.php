@@ -48,10 +48,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals($this->simpleItem, $scope->getCurrentData());
+        $this->assertEquals(array('data' => $this->simpleItem), $scope->toArray());
     }
 
     public function testCreateDataWithClassCollection()
@@ -61,10 +62,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals(array(array('foo' => 'bar')), $scope->getCurrentData());
+
+        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
     }
 
     public function testCreateDataWithClassPagination()
@@ -74,13 +77,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
 
         $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->once()->andReturn(array(array('foo' => 'bar')));
 
         $resource = new PaginatedCollection($paginator, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals(array(array('foo' => 'bar')), $scope->getCurrentData());
+        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
     }
 
     public function tearDown()

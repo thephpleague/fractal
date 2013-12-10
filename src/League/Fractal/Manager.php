@@ -11,10 +11,6 @@
 
 namespace League\Fractal;
 
-use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\PaginatedCollection;
-
 class Manager
 {
     protected $requestedScopes = array();
@@ -32,7 +28,7 @@ class Manager
 
     public function createData($resource, $scopeIdentifier = null, $parentScopeInstance = null)
     {
-        $scopeInstance = new Scope($this, $scopeIdentifier);
+        $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 
         // Update scope history
         if ($parentScopeInstance !== null) {
@@ -44,71 +40,8 @@ class Manager
             $scopeInstance->setParentScopes($scopeArray);
         }
 
-        // if's n shit
-        if ($resource instanceof Item) {
-            $data = $this->processItem($scopeInstance, $resource);
-        } elseif ($resource instanceof Collection) {
-            $data = $this->processCollection($scopeInstance, $resource);
-        } elseif ($resource instanceof PaginatedCollection) {
-            $data = $this->processPaginator($scopeInstance, $resource);
-        } else {
-            throw new \InvalidArgumentException(
-                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\Paginator'
-            );
-        }
-
-        // So, this data is the current scope data
-        $scopeInstance->setCurrentData($data);
-
         return $scopeInstance;
     }
 
-    protected function fireTransformer($transformer, Scope $scope, $data)
-    {
-        // Fire Main Transformer
-        if (is_callable($transformer)) {
-            return call_user_func($transformer, $data);
-        }
 
-        $processedData = call_user_func(array($transformer, 'transform'), $data);
-
-        // If its an object, process potential embeded resources
-        if ($transformer instanceof TransformerAbstract) {
-            $embededData = $transformer->processEmbededResources($scope, $data);
-
-            // Push the new embeds in with the main data
-            $processedData = array_merge($processedData, $embededData);
-        }
-        
-        return $processedData;
-    }
-
-
-    protected function processItem($scope, Item $resource)
-    {
-        $transformer = $resource->getTransformer();
-        return $this->fireTransformer($transformer, $scope, $resource->getData());
-    }
-
-    protected function processCollection($scope, Collection $resources)
-    {
-        $transformer = $resources->getTransformer();
-
-        $data = array();
-        foreach ($resources->getData() as $itemData) {
-            $data []= $this->fireTransformer($transformer, $scope, $itemData);
-        }
-        return $data;
-    }
-
-    protected function processPaginator($scope, PaginatedCollection $resources)
-    {
-        $transformer = $resources->getTransformer();
-
-        $data = array();
-        foreach ($resources->getData() as $itemData) {
-            $data []= $this->fireTransformer($transformer, $scope, $itemData);
-        }
-        return $data;
-    }
 }

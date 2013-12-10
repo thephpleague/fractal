@@ -2,7 +2,7 @@
 
 use League\Fractal\Manager;
 use League\Fractal\Scope;
-use Mockery;
+use Mockery as m;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,7 +55,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->setManager($manager);
 
-        $scope = new Scope($manager);
+        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
         $this->assertFalse($transformer->processEmbededResources($scope, array('some' => 'data')));
     }
 
@@ -70,7 +70,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->setRequestedScopes(array('foo'));
 
         $transformer->setManager($manager);
-        $scope = new Scope($manager);
+        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
 
         $transformer->setAvailableEmbeds(array('foo'));
         $transformer->processEmbededResources($scope, array('some' => 'data'));
@@ -102,7 +102,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->setRequestedScopes(array('bar'));
 
         $transformer->setManager($manager);
-        $scope = new Scope($manager);
+        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
 
         $transformer->setAvailableEmbeds(array('foo', 'bar'));
 
@@ -116,7 +116,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testCollection()
     {
-        $mock = Mockery::mock('League\Fractal\TransformerAbstract');
+        $mock = m::mock('League\Fractal\TransformerAbstract');
         $result = $mock->collection(array(), function () {});
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $result);
 
@@ -127,10 +127,15 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testPaginatedCollection()
     {
-        $mock = Mockery::mock('League\Fractal\TransformerAbstract');
-        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $mock = m::mock('League\Fractal\TransformerAbstract');
+        $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->once()->andReturn(array());
         $result = $mock->paginatedCollection($paginator, function () {});
         $this->assertInstanceOf('League\Fractal\Resource\PaginatedCollection', $result);
+    }
+
+    public function tearDown()
+    {
+        m::close();
     }
 }
