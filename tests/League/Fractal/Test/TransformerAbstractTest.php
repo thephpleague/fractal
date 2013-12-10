@@ -6,6 +6,19 @@ use League\Fractal\Scope;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
+
+    public function testEmbedStructure()
+    {
+        $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
+        $manager = new ResourceManager;
+        $transformer->setManager($manager);
+        $scope = new Scope($manager);
+        $scope->setCurrentData(array('some' => 'stuff'));
+        $embed = $transformer->embedStructure($scope);
+
+        $this->assertEquals(array('data' => array('some' => 'stuff')), $embed);
+    }
+
     /**
      * @covers League\Fractal\TransformerAbstract::setManager
      */

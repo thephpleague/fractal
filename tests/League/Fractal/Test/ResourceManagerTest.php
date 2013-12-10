@@ -35,8 +35,13 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
         $rootScope = $manager->createData($resource);
         
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
+        
         $this->assertEquals($rootScope->toArray(), array('foo' => 'bar'));
+        $this->assertEquals($rootScope->toJson(), '{"foo":"bar"}');
+
     }
+
+
 
     public function testCreateDataWithClassItem()
     {
