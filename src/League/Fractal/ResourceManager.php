@@ -59,17 +59,6 @@ class ResourceManager
         return $scopeInstance;
     }
 
-    protected function getCallableTransformer(ResourceInterface $resource)
-    {
-        $transformer = $resource->getTransformer();
-
-        if (is_callable($transformer) or is_object($transformer)) {
-            return $transformer;
-        }
-
-        return new $transformer;
-    }
-
     protected function fireTransformer($transformer, Scope $scope, $data)
     {
         // Fire Main Transformer
@@ -94,13 +83,13 @@ class ResourceManager
 
     protected function processItem($scope, ItemResource $resource)
     {
-        $transformer = $this->getCallableTransformer($resource);
+        $transformer = $resource->getTransformer();
         return $this->fireTransformer($transformer, $scope, $resource->getData());
     }
 
     protected function processCollection($scope, CollectionResource $resources)
     {
-        $transformer = $this->getCallableTransformer($resources);
+        $transformer = $resources->getTransformer();
 
         $data = array();
         foreach ($resources->getData() as $itemData) {
@@ -111,7 +100,7 @@ class ResourceManager
 
     protected function processPaginator($scope, PaginatorResource $resources)
     {
-        $transformer = $this->getCallableTransformer($resources);
+        $transformer = $resources->getTransformer();
 
         $data = array();
         foreach ($resources->getData() as $itemData) {
