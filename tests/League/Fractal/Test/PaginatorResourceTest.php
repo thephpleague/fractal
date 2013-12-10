@@ -1,10 +1,8 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\PaginatorResource;
-
 use Illuminate\Pagination\Environment;
 use Illuminate\Pagination\Paginator;
-
+use League\Fractal\PaginatorResource;
 use Mockery as m;
 
 class PaginatorResourceTest extends \PHPUnit_Framework_TestCase

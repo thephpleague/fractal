@@ -2,6 +2,7 @@
 
 use League\Fractal\CollectionResource;
 use League\Fractal\ItemResource;
+use League\Fractal\PaginatorResource;
 use League\Fractal\ResourceManager;
 use Mockery as m;
 
@@ -37,7 +38,7 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($rootScope->toArray(), array('foo' => 'bar'));
     }
 
-    public function testCreateDataWithClass()
+    public function testCreateDataWithClassItem()
     {
         $manager = new ResourceManager();
 
@@ -59,6 +60,22 @@ class ResourceManagerTest extends \PHPUnit_Framework_TestCase
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
 
         $resource = new CollectionResource(array(array('foo' => 'bar')), $transformer);
+        $scope = $manager->createData($resource);
+        $this->assertEquals($scope->getCurrentData(), array(array('foo' => 'bar')));
+    }
+
+    public function testCreateDataWithClassPagination()
+    {
+        $manager = new ResourceManager();
+
+        $transformer = m::mock('League\Fractal\TransformerAbstract');
+        $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
+        $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+
+        $paginator = m::mock('Illuminate\Pagination\Paginator');
+        $paginator->shouldReceive('getCollection')->once()->andReturn(array(array('foo' => 'bar')));
+
+        $resource = new PaginatorResource($paginator, $transformer);
         $scope = $manager->createData($resource);
         $this->assertEquals($scope->getCurrentData(), array(array('foo' => 'bar')));
     }
