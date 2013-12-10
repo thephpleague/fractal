@@ -11,6 +11,10 @@
 
 namespace League\Fractal;
 
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\PaginatedCollection;
+
 /**
  * Transformer Abstract
  *
@@ -119,30 +123,30 @@ abstract class TransformerAbstract
     /**
      * Create a new item resource object
      *
-     * @return League\Fractal\ItemResource
+     * @return League\Fractal\Resource\Item
      */
-    protected function itemResource($data, $transformer)
+    protected function item($data, $transformer)
     {
-        return new ItemResource($data, $transformer);
+        return new Item($data, $transformer);
     }
 
     /**
      * Create a new collection resource object
      *
-     * @return League\Fractal\ItemResource
+     * @return League\Fractal\Resource\Collection
      */
-    protected function collectionResource($data, $transformer)
+    protected function collection($data, $transformer)
     {
-        return new CollectionResource($data, $transformer);
+        return new Collection($data, $transformer);
     }
 
     /**
-     * Create a new paginator resource object
+     * Create a new paginated collection
      *
-     * @return League\Fractal\ItemResource
+     * @return League\Fractal\Resource\PaginatedCollection
      */
-    protected function paginatorResource($data, $transformer)
+    protected function paginatedCollection($data, $transformer)
     {
-        return new PaginatorResource($data, $transformer);
+        return new PaginatedCollection($data, $transformer);
     }
 }

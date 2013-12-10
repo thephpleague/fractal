@@ -1,6 +1,6 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\ItemResource;
+use League\Fractal\Resource\Item;
 
 class ItemResourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -8,17 +8,17 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetData()
     {
-        $resource = new ItemResource($this->simpleItem, function() {});
+        $resource = new Item($this->simpleItem, function() {});
         $this->assertEquals($resource->getData(), $this->simpleItem);
     }
 
     public function testGetTransformer()
     {
-        $resource = new ItemResource($this->simpleItem, function () {
+        $resource = new Item($this->simpleItem, function () {
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $resource = new ItemResource($this->simpleItem, function() {});
+        $resource = new Item($this->simpleItem, function() {});
         $this->assertEquals($resource->getTransformer(), function() {});
     }
 }

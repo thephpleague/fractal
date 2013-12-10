@@ -21,7 +21,7 @@ class Scope
 
     protected $parentScopes = array();
 
-    public function __construct(ResourceManager $resourceManager, $currentScope = null)
+    public function __construct(Manager $resourceManager, $currentScope = null)
     {
         $this->resourceManager = $resourceManager;
         $this->currentScope = $currentScope;

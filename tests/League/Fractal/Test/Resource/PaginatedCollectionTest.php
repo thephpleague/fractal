@@ -1,8 +1,7 @@
 <?php namespace League\Fractal\Test;
 
-use Illuminate\Pagination\Environment;
 use Illuminate\Pagination\Paginator;
-use League\Fractal\PaginatorResource;
+use League\Fractal\Resource\PaginatedCollection;
 use Mockery as m;
 
 class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
@@ -17,7 +16,7 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->once()->andReturn($this->simpleCollection);
 
-        $resource = new PaginatorResource($paginator, function (array $data) {
+        $resource = new PaginatedCollection($paginator, function (array $data) {
             return $data;
         });
 
@@ -29,7 +28,7 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->once()->andReturn($this->simpleCollection);
 
-        $resource = new PaginatorResource($paginator, function () {});
+        $resource = new PaginatedCollection($paginator, function () {});
 
         $this->assertInstanceOf('Illuminate\Pagination\Paginator', $resource->getPaginator());
     }
@@ -39,11 +38,11 @@ class PaginatorResourceTest extends \PHPUnit_Framework_TestCase
         $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->times(2)->andReturn($this->simpleCollection);
 
-        $resource = new PaginatorResource($paginator, function () {
+        $resource = new PaginatedCollection($paginator, function () {
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $resource = new PaginatorResource($paginator, 'SomeClass');
+        $resource = new PaginatedCollection($paginator, 'SomeClass');
         $this->assertEquals($resource->getTransformer(), 'SomeClass');
     }
 

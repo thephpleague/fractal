@@ -25,7 +25,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.4.*"
+        "league/fractal": "0.5.*"
     }
 }
 ```
@@ -38,7 +38,7 @@ Shove this in your base controller or an IoC somehow.
 use League\Fractal;
 
 // Create a top level instance somewhere
-$fractal = new Fractal\ResourceManager();
+$fractal = new Fractal\Manager();
 $fractal->setRequestedScopes(explode(',', $_GET['embed']));
 ```
 
@@ -46,12 +46,12 @@ $fractal->setRequestedScopes(explode(',', $_GET['embed']));
 
 In your controllers you can then create "resources", of which there are three types:
 
-* **League\Fractal\ItemResource** - A singular resource, probably one entry in a data store
-* **League\Fractal\CollectionResource** - A collection of resources
-* **League\Fractal\PaginatorResource** - A collection of resources, but also supports pagination. This 
+* **League\Fractal\Resource\Item** - A singular resource, probably one entry in a data store
+* **League\Fractal\Resource\Collection** - A collection of resources
+* **League\Fractal\Resource\PaginatedCollection** - A collection of resources, but also supports pagination. This 
 only accepts an instance of `Illuminate\Pagination\Paginator` at this point
 
-The `ItemResource` and `CollectionResource` constructors will take any kind of data you wish to send it 
+The `Item` and `Collection` constructors will take any kind of data you wish to send it 
 as the first argument, and then a "transformer" as the second argument. This can be callable or a string 
 containing a fully-qualified class name. 
 
@@ -61,7 +61,7 @@ The transformer will the raw data passed back into it, so if you pass an instanc
 on each of those instances.
 
 ``` php
-$resource = new Fractal\CollectionResource($books, function(BookModel $book) {
+$resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
@@ -77,13 +77,13 @@ contain a transform method, much like the callback example: `public function tra
 ``` php
 use Acme\Transformer\BookTransformer;
 
-$resource = new Fractal\ItemResource($books[0], new BookTransformer);
-$resource = new Fractal\CollectionResource($books, new BookTransformer);
-$resource = new Fractal\PaginatorResource($books, new BookTransformer);
+$resource = new Fractal\Resource\Item($book, new BookTransformer);
+$resource = new Fractal\Resource\Collection($books, new BookTransformer);
+$resource = new Fractal\Resource\Paginator($paginator, new BookTransformer);
 
 ```
 
-### Embedding (a.k.a Nesting) Data
+### Embedding Data
 
 Your transformer at this point is mainly just giving you a method to handle array conversion from 
 you data source (or whatever your model is returning) to a simple array. Embedding data in an 
@@ -133,7 +133,7 @@ class BookTransformer extends TransformerAbstract
     {
         $author = $book->author;
 
-        return $this->itemResource($author, new AuthorTransformer);
+        return $this->item($author, new AuthorTransformer);
     }
 }
 ```
