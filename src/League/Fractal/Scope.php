@@ -144,8 +144,10 @@ class Scope
         if ($transformer instanceof TransformerAbstract) {
             $embededData = $transformer->processEmbededResources($this, $data);
 
-            // Push the new embeds in with the main data
-            $processedData = array_merge($processedData, $embededData);
+            if ($embededData !== false) {
+                // Push the new embeds in with the main data
+                $processedData = array_merge($processedData, $embededData);
+            }
 
             $this->availableEmbeds = $transformer->getAvailableEmbeds();
         }
@@ -164,7 +166,7 @@ class Scope
             $data = $this->transformPaginator();
         } else {
             throw new \InvalidArgumentException(
-                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\Paginator'
+                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\PaginatedCollection'
             );
         }
 

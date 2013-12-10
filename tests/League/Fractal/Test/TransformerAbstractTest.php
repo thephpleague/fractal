@@ -1,6 +1,7 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Mockery as m;
 
@@ -60,6 +61,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers League\Fractal\TransformerAbstract::processEmbededResources
      * @expectedException BadMethodCallException
      */
     public function testProcessEmbededResourcesInvalidEmbed()
@@ -76,39 +78,31 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->processEmbededResources($scope, array('some' => 'data'));
     }
 
+    /**
+     * @covers League\Fractal\TransformerAbstract::processEmbededResources
+     */
     public function testProcessEmbededResources()
     {
-        // $transformer = m::mock('League\Fractal\TransformerAbstract');
-        // $transformer->shouldReceive('embedFoo')->once()->andReturn(array('some' => 'data'));
-
-        // $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        // $transformer->expects($this->once())->method('embedFoo');
-
-        eval('class SomeFancyTransformer extends League\Fractal\TransformerAbstract {
-            public function transform($data)
-            {
-                return $data;
-            }
-
-            public function embedBar($data)
-            {
-                return $this->item($data, function() { return array(\'embedded\' => \'thing\'); });
-            }
-        };');
-
-        $transformer = new \SomeFancyTransformer;
-
         $manager = new Manager;
-        $manager->setRequestedScopes(array('bar'));
-
-        $transformer->setManager($manager);
-        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
-
-        $transformer->setAvailableEmbeds(array('foo', 'bar'));
-
+        $manager->setRequestedScopes(array('book'));
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+        $transformer->shouldReceive('embedBook')->once()->andReturnUsing(function($data) { 
+            return new Item(array('embedded' => 'thing'), function ($data) { return $data; });
+        });
+        $transformer->setAvailableEmbeds(array('book', 'publisher'));
+        $scope = new Scope($manager, new Item(array(), $transformer));
         $embedded = $transformer->processEmbededResources($scope, array('meh'));
+        $this->assertEquals(array('book' => array('data' => array('embedded' => 'thing'))), $embedded);
+    }
 
-        $this->assertEquals(array('bar' => array('data' => array('embedded' => 'thing'))), $embedded);
+    /**
+     * @covers League\Fractal\TransformerAbstract::item
+     */
+    public function testItem()
+    {
+        $mock = m::mock('League\Fractal\TransformerAbstract');
+        $item = $mock->item(array(), function () {});
+        $this->assertInstanceOf('League\Fractal\Resource\Item', $item);
     }
 
     /**
@@ -117,9 +111,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testCollection()
     {
         $mock = m::mock('League\Fractal\TransformerAbstract');
-        $result = $mock->collection(array(), function () {});
-        $this->assertInstanceOf('League\Fractal\Resource\Collection', $result);
-
+        $collection = $mock->collection(array(), function () {});
+        $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }
 
     /**
@@ -130,8 +123,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $mock = m::mock('League\Fractal\TransformerAbstract');
         $paginator = m::mock('Illuminate\Pagination\Paginator');
         $paginator->shouldReceive('getCollection')->once()->andReturn(array());
-        $result = $mock->paginatedCollection($paginator, function () {});
-        $this->assertInstanceOf('League\Fractal\Resource\PaginatedCollection', $result);
+        $collection = $mock->paginatedCollection($paginator, function () {});
+        $this->assertInstanceOf('League\Fractal\Resource\PaginatedCollection', $collection);
     }
 
     public function tearDown()
