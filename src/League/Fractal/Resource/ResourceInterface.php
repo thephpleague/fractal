@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace League\Fractal;
+namespace League\Fractal\Resource;
 
 interface ResourceInterface
 {

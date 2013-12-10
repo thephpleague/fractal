@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace League\Fractal;
+namespace League\Fractal\Resource;
 
 use Illuminate\Pagination\Paginator;
 
-class PaginatorResource implements ResourceInterface
+/**
+ * Paginated Collection
+ */
+class PaginatedCollection implements ResourceInterface
 {
     protected $paginator;
     protected $transformer;

@@ -1,8 +1,7 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\ResourceManager;
+use League\Fractal\Manager;
 use League\Fractal\Scope;
-// use Mockery as m;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +9,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testEmbedStructure()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $transformer->setManager($manager);
         $scope = new Scope($manager);
         $scope->setCurrentData(array('some' => 'stuff'));
@@ -25,7 +24,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testSetManager()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setManager($manager));
     }
 
@@ -44,7 +43,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetManager()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $transformer->setManager($manager);
         $this->assertEquals($transformer->getManager(), $manager);
     }
@@ -53,7 +52,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
        
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $manager->setRequestedScopes(array('foo'));
 
         $transformer->setManager($manager);
@@ -69,7 +68,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
        
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $manager->setRequestedScopes(array('foo'));
 
         $transformer->setManager($manager);
@@ -95,13 +94,13 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
             public function embedBar($data)
             {
-                return $this->itemResource($data, function() { return array(\'embedded\' => \'thing\'); });
+                return $this->item($data, function() { return array(\'embedded\' => \'thing\'); });
             }
         };');
 
         $transformer = new \SomeFancyTransformer;
 
-        $manager = new ResourceManager;
+        $manager = new Manager;
         $manager->setRequestedScopes(array('bar'));
 
         $transformer->setManager($manager);

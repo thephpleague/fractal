@@ -11,7 +11,11 @@
 
 namespace League\Fractal;
 
-class ResourceManager
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\PaginatedCollection;
+
+class Manager
 {
     protected $requestedScopes = array();
     
@@ -41,11 +45,11 @@ class ResourceManager
         }
 
         // if's n shit
-        if ($resource instanceof ItemResource) {
+        if ($resource instanceof Item) {
             $data = $this->processItem($scopeInstance, $resource);
-        } elseif ($resource instanceof CollectionResource) {
+        } elseif ($resource instanceof Collection) {
             $data = $this->processCollection($scopeInstance, $resource);
-        } elseif ($resource instanceof PaginatorResource) {
+        } elseif ($resource instanceof PaginatedCollection) {
             $data = $this->processPaginator($scopeInstance, $resource);
         } else {
             throw new \InvalidArgumentException(
@@ -81,13 +85,13 @@ class ResourceManager
     }
 
 
-    protected function processItem($scope, ItemResource $resource)
+    protected function processItem($scope, Item $resource)
     {
         $transformer = $resource->getTransformer();
         return $this->fireTransformer($transformer, $scope, $resource->getData());
     }
 
-    protected function processCollection($scope, CollectionResource $resources)
+    protected function processCollection($scope, Collection $resources)
     {
         $transformer = $resources->getTransformer();
 
@@ -98,7 +102,7 @@ class ResourceManager
         return $data;
     }
 
-    protected function processPaginator($scope, PaginatorResource $resources)
+    protected function processPaginator($scope, PaginatedCollection $resources)
     {
         $transformer = $resources->getTransformer();
 

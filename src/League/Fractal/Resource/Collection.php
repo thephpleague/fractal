@@ -9,21 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace League\Fractal;
+namespace League\Fractal\Resource;
 
 /**
- * Item Resource
+ * Resource Collection
  *
- * The Item Resource can stored any mixed data, usually an ORM, ODM or 
- * other sort of intelligent result, DataMapper model, etc but could 
- * be a basic array, object, or whatever you like.
+ * The data can be a collection of any sort of data, as long as the 
+ * "collection" is either array or an object implementing ArrayIterator.
  */
-class ItemResource implements ResourceInterface
+class Collection implements ResourceInterface
 {
     /**
-     * Any item to process
+     * A collection of data
      *
-     * @var mixed
+     * @var array|ArrayIterator
      */
     protected $data;
     
@@ -35,7 +34,7 @@ class ItemResource implements ResourceInterface
     protected $transformer;
 
     /**
-     * @param mixed $data
+     * @param array|ArrayIterator $data
      * @param callable|string $transformer
      */
     public function __construct($data, $transformer)

@@ -1,8 +1,8 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\CollectionResource;
+use League\Fractal\Resource\Collection;
 
-class CollectionResourceTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends \PHPUnit_Framework_TestCase
 {
     protected $simpleCollection = array(
         array('foo' => 'bar'),
@@ -11,7 +11,7 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetData()
     {
-        $resource = new CollectionResource($this->simpleCollection, function (array $data) {
+        $resource = new Collection($this->simpleCollection, function (array $data) {
             return $data;
         });
 
@@ -20,11 +20,11 @@ class CollectionResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTransformer()
     {
-        $resource = new CollectionResource($this->simpleCollection, function () {
+        $resource = new Collection($this->simpleCollection, function () {
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $resource = new CollectionResource($this->simpleCollection, 'SomeClass');
+        $resource = new Collection($this->simpleCollection, 'SomeClass');
         $this->assertEquals($resource->getTransformer(), 'SomeClass');
     }
 }

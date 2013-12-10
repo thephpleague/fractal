@@ -1,2 +1,4 @@
 composer.lock
 vendor
+Gemfile.lock
+coverage

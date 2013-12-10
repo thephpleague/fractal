@@ -1,7 +1,7 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\ItemResource;
-use League\Fractal\ResourceManager;
+use League\Fractal\Resource\Item;
+use League\Fractal\Manager;
 use League\Fractal\Scope;
 use Mockery as m;
 
@@ -9,10 +9,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 {
     public function testEmbedChildScope()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $this->assertEquals($scope->getCurrentScope(), 'book');
-        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
         $childScope = $scope->embedChildScope('author', $resource);
 
@@ -22,11 +22,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an 
-     *   instance of ItemResource, CollectionResource or PaginatorResource
+     *   instance of Item, CollectionResource or PaginatorResource
      */
     public function testEmbedChildScopeInvalidResource()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $scope->embedChildScope('author', array('not', 'a', 'resource'));
     }
@@ -36,7 +36,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCurrentData()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $this->assertInstanceOf('League\Fractal\Scope', $scope->setCurrentData(array('foo' => 'bar')));
     }
@@ -46,7 +46,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCurrentData()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $scope->setCurrentData(array('foo' => 'bar'));
         $this->assertEquals($scope->getCurrentData(), array('foo' => 'bar'));
@@ -54,10 +54,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCurrentScope()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $this->assertEquals($scope->getCurrentScope(), 'book');
-        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals($childScope->getCurrentScope(), 'author');
@@ -68,9 +68,9 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetParentScopes()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager, 'book');
-        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
         
         $childScope = $scope->embedChildScope('author', $resource);
@@ -82,11 +82,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testIsRequested()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
 
         $scope = new Scope($manager, 'book');
-        $resource = new ItemResource(array('name' => 'Larry Ullman'), function() {
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
         
         $this->assertTrue($scope->isRequested('foo'));
@@ -103,7 +103,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testPushParentScope()
     {
-        $manager = new ResourceManager();
+        $manager = new Manager();
         $scope = new Scope($manager);
 
         $this->assertEquals($scope->pushParentScope('book'), 1);
