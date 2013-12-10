@@ -2,6 +2,7 @@
 
 use League\Fractal\Manager;
 use League\Fractal\Scope;
+use Mockery;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +52,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testProcessEmbededResourcesNoAvailableEmbeds()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-       
+
         $manager = new Manager;
         $manager->setRequestedScopes(array('foo'));
 
@@ -67,7 +68,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testProcessEmbededResourcesInvalidEmbed()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-       
+
         $manager = new Manager;
         $manager->setRequestedScopes(array('foo'));
 
@@ -111,5 +112,28 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $embedded = $transformer->processEmbededResources($scope, array('meh'));
 
         $this->assertEquals(array('bar' => array('data' => array('embedded' => 'thing'))), $embedded);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::collection
+     */
+    public function testCollection()
+    {
+        $mock = Mockery::mock('League\Fractal\TransformerAbstract');
+        $result = $mock->collection(array(), function () {});
+        $this->assertInstanceOf('League\Fractal\Resource\Collection', $result);
+
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::paginatedCollection
+     */
+    public function testPaginatedCollection()
+    {
+        $mock = Mockery::mock('League\Fractal\TransformerAbstract');
+        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $paginator->shouldReceive('getCollection')->once()->andReturn(array());
+        $result = $mock->paginatedCollection($paginator, function () {});
+        $this->assertInstanceOf('League\Fractal\Resource\PaginatedCollection', $result);
     }
 }
