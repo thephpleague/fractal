@@ -25,7 +25,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.3.*"
+        "league/fractal": "0.4.*"
     }
 }
 ```
@@ -75,16 +75,11 @@ Assuming you use an autoloader of course. These classes must extend `League\Frac
 contain a transform method, much like the callback example: `public function transform(Foo $foo)`.
 
 ``` php
-// PHP 5.3+
-$resource = new Fractal\ItemResource($books[0], 'Acme\Transformer\BookTransformer');
-$resource = new Fractal\CollectionResource($books, 'Acme\Transformer\BookTransformer');
-$resource = new Fractal\PaginatorResource($books, 'Acme\Transformer\BookTransformer');
-
-// Alternative for PHP 5.5+
 use Acme\Transformer\BookTransformer;
-$resource = new Fractal\ItemResource($books[0], BookTransformer::class);
-$resource = new Fractal\CollectionResource($books, BookTransformer::class);
-$resource = new Fractal\PaginatorResource($books, BookTransformer::class);
+
+$resource = new Fractal\ItemResource($books[0], new BookTransformer);
+$resource = new Fractal\CollectionResource($books, new BookTransformer);
+$resource = new Fractal\PaginatorResource($books, new BookTransformer);
 
 ```
 
@@ -138,7 +133,7 @@ class BookTransformer extends TransformerAbstract
     {
         $author = $book->author;
 
-        return $this->itemResource($author, AuthorTransformer::class);
+        return $this->itemResource($author, new AuthorTransformer);
     }
 }
 ```
