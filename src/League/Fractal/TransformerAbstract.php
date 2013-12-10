@@ -40,6 +40,11 @@ abstract class TransformerAbstract
     protected $manager;
 
     /**
+     * @return array
+     */
+    abstract public function transform();
+
+    /**
      * Getter for availableEmbeds
      *
      * @return self
@@ -80,7 +85,7 @@ abstract class TransformerAbstract
             }
 
             $methodName = 'embed'.ucfirst($potentialEmbed);
-            if (! method_exists($this, $methodName)) {
+            if (! is_callable(array($this, $methodName))) {
                 throw new \BadMethodCallException(sprintf(
                     'Call to undefined method %s::%s()',
                     get_class($this),
