@@ -8,10 +8,7 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetData()
     {
-        $resource = new ItemResource($this->simpleItem, function (array $data) {
-            return $data;
-        });
-
+        $resource = new ItemResource($this->simpleItem, function() {});
         $this->assertEquals($resource->getData(), $this->simpleItem);
     }
 
@@ -21,7 +18,7 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $resource = new ItemResource($this->simpleItem, 'SomeClass');
-        $this->assertEquals($resource->getTransformer(), 'SomeClass');
+        $resource = new ItemResource($this->simpleItem, function() {});
+        $this->assertEquals($resource->getTransformer(), function() {});
     }
 }
