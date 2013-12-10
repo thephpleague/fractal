@@ -21,7 +21,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
-        $this->assertEquals($manager->getRequestedScopes(), array('foo', 'bar', 'baz.bart'));
+        $this->assertEquals(array('foo', 'bar', 'baz.bart'), $manager->getRequestedScopes());
     }
 
     public function testCreateDataWithCallback()
@@ -36,8 +36,8 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
-        $this->assertEquals($rootScope->toArray(), array('foo' => 'bar'));
-        $this->assertEquals($rootScope->toJson(), '{"foo":"bar"}');
+        $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
+        $this->assertEquals('{"data":{"foo":"bar"}}', $rootScope->toJson());
 
     }
 
@@ -51,7 +51,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals($scope->getCurrentData(), $this->simpleItem);
+        $this->assertEquals($this->simpleItem, $scope->getCurrentData());
     }
 
     public function testCreateDataWithClassCollection()
@@ -64,7 +64,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals($scope->getCurrentData(), array(array('foo' => 'bar')));
+        $this->assertEquals(array(array('foo' => 'bar')), $scope->getCurrentData());
     }
 
     public function testCreateDataWithClassPagination()
@@ -80,7 +80,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $resource = new PaginatedCollection($paginator, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals($scope->getCurrentData(), array(array('foo' => 'bar')));
+        $this->assertEquals(array(array('foo' => 'bar')), $scope->getCurrentData());
     }
 
     public function tearDown()

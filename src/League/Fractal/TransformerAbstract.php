@@ -40,13 +40,13 @@ abstract class TransformerAbstract
     protected $manager;
 
     /**
-     * @param Scope $scope
+     * Getter for availableEmbeds
+     *
+     * @return self
      */
-    public function embedStructure(Scope $scope)
+    public function getAvailableEmbeds()
     {
-        return array(
-            'data' => $scope->toArray(),
-        );
+        return $this->availableEmbeds;
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class TransformerAbstract
 
             $childScope = $scope->embedChildScope($potentialEmbed, $resource);
 
-            $embededData[$potentialEmbed] = $this->embedStructure($childScope);
+            $embededData[$potentialEmbed] = $childScope->toArray();
         }
 
         return $embededData;

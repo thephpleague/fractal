@@ -53,7 +53,7 @@ class Manager
             $data = $this->processPaginator($scopeInstance, $resource);
         } else {
             throw new \InvalidArgumentException(
-                'Argument $resource should be an instance of ItemResource, CollectionResource or PaginatorResource'
+                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\Paginator'
             );
         }
 
@@ -67,18 +67,17 @@ class Manager
     {
         // Fire Main Transformer
         if (is_callable($transformer)) {
-            $processedData = call_user_func($transformer, $data);
+            return call_user_func($transformer, $data);
+        }
 
-        } else {
-            $processedData = call_user_func(array($transformer, 'transform'), $data);
+        $processedData = call_user_func(array($transformer, 'transform'), $data);
 
-            // If its an object, process potential embeded resources
-            if ($transformer instanceof TransformerAbstract) {
-                $embededData = $transformer->processEmbededResources($scope, $data);
+        // If its an object, process potential embeded resources
+        if ($transformer instanceof TransformerAbstract) {
+            $embededData = $transformer->processEmbededResources($scope, $data);
 
-                // Push the new embeds in with the main data
-                $processedData = array_merge($processedData, $embededData);
-            }
+            // Push the new embeds in with the main data
+            $processedData = array_merge($processedData, $embededData);
         }
         
         return $processedData;
