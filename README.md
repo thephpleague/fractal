@@ -4,7 +4,6 @@
 [![Coverage Status](https://coveralls.io/repos/php-loep/fractal/badge.png)](https://coveralls.io/r/php-loep/fractal)
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
-[![Latest Unstable Version](https://poser.pugx.org/league/fractal/v/unstable.png)](https://packagist.org/packages/league/fractal)
 
 When building an API one of the most overlooked aspects is outputting the data. Most folks just grab stuff 
 from the database and pass it straight off to `json_encode()` which is fine for trivial APIs but if they are 

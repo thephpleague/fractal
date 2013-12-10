@@ -49,7 +49,18 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $scope = new Scope($manager, 'book');
         $scope->setCurrentData(array('foo' => 'bar'));
-        $this->assertEquals($scope->getCurrentData(), array('foo' => 'bar'));
+        $this->assertEquals(array('foo' => 'bar'), $scope->getCurrentData());
+    }
+
+    /**
+     * @covers League\Fractal\Scope::toArray
+     */
+    public function testToArray()
+    {
+        $manager = new Manager();
+        $scope = new Scope($manager, 'book');
+        $scope->setCurrentData(array('foo' => 'bar'));
+        $this->assertEquals(array('data' => array('foo' => 'bar')), $scope->toArray());
     }
 
     public function testGetCurrentScope()
@@ -60,10 +71,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals($childScope->getCurrentScope(), 'author');
+        $this->assertEquals('author', $childScope->getCurrentScope());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals($grandChildScope->getCurrentScope(), 'profile');
+        $this->assertEquals('profile', $grandChildScope->getCurrentScope());
     }
 
     public function testGetParentScopes()
@@ -74,10 +85,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
         
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals($childScope->getParentScopes(), array('book'));
+        $this->assertEquals(array('book'), $childScope->getParentScopes());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals($grandChildScope->getParentScopes(), array('book', 'author'));
+        $this->assertEquals(array('book', 'author'), $grandChildScope->getParentScopes());
     }
 
     public function testIsRequested()
@@ -106,11 +117,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $scope = new Scope($manager);
 
-        $this->assertEquals($scope->pushParentScope('book'), 1);
-        $this->assertEquals($scope->pushParentScope('author'), 2);
-        $this->assertEquals($scope->pushParentScope('profile'), 3);
+        $this->assertEquals(1, $scope->pushParentScope('book'));
+        $this->assertEquals(2, $scope->pushParentScope('author'));
+        $this->assertEquals(3, $scope->pushParentScope('profile'));
         
-        $this->assertEquals($scope->getParentScopes(), array('book', 'author', 'profile'));
+        $this->assertEquals(array('book', 'author', 'profile'), $scope->getParentScopes());
     }
 
 

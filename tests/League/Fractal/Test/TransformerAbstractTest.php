@@ -6,27 +6,14 @@ use Mockery;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testEmbedStructure()
-    {
-        $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new Manager;
-        $transformer->setManager($manager);
-        $scope = new Scope($manager);
-        $scope->setCurrentData(array('some' => 'stuff'));
-        $embed = $transformer->embedStructure($scope);
-
-        $this->assertEquals(array('data' => array('some' => 'stuff')), $embed);
-    }
-
     /**
-     * @covers League\Fractal\TransformerAbstract::setManager
+     * @covers League\Fractal\TransformerAbstract::getAvailableEmbeds
      */
-    public function testSetManager()
+    public function testGetAvailableEmbeds()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new Manager;
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setManager($manager));
+        $transformer->setAvailableEmbeds(array('foo', 'bar'));
+        $this->assertEquals(array('foo', 'bar'), $transformer->getAvailableEmbeds());
     }
 
     /**
@@ -47,6 +34,16 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager;
         $transformer->setManager($manager);
         $this->assertEquals($transformer->getManager(), $manager);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::setManager
+     */
+    public function testSetManager()
+    {
+        $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
+        $manager = new Manager;
+        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setManager($manager));
     }
 
     public function testProcessEmbededResourcesNoAvailableEmbeds()

@@ -124,7 +124,9 @@ class Scope
      */
     public function toArray()
     {
-        return (array) $this->currentData;
+        return array(
+            'data' => $this->currentData,
+        );
     }
 
     /**
