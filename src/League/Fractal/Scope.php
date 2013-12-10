@@ -11,51 +11,35 @@
 
 namespace League\Fractal;
 
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\PaginatedCollection;
+use League\Fractal\Resource\ResourceInterface;
+
 class Scope
 {
-    protected $currentData;
+    protected $availableEmbeds;
 
     protected $currentScope;
 
     protected $manager;
 
+    protected $resource;
+
     protected $parentScopes = array();
 
-    public function __construct(Manager $resourceManager, $currentScope = null)
+    public function __construct(Manager $resourceManager, ResourceInterface $resource, $currentScope = null)
     {
         $this->resourceManager = $resourceManager;
         $this->currentScope = $currentScope;
+        $this->resource = $resource;
     }
-
 
     public function embedChildScope($scopeIdentifier, $resource)
     {
         return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
     }
     
-    /**
-     * Setter for currentData
-     *
-     * @param mixed $parentScopes Value to set
-     *
-     * @return self
-     */
-    public function setCurrentData($currentData)
-    {
-        $this->currentData = $currentData;
-        return $this;
-    }
-
-    /**
-     * Getter for currentData
-     *
-     * @return mixed
-     */
-    public function getCurrentData()
-    {
-        return $this->currentData;
-    }
-
     /**
      * Getter for currentScope
      *
@@ -124,9 +108,17 @@ class Scope
      */
     public function toArray()
     {
-        return array(
-            'data' => $this->currentData,
-        );
+        $data = $this->runAppropriateTransformer();
+
+        $output = [];
+
+        if ($this->availableEmbeds) {
+            $output['embeds'] = $this->availableEmbeds;
+        }
+
+        $output['data'] = $data;
+
+        return $output;
     }
 
     /**
@@ -137,5 +129,73 @@ class Scope
     public function toJson()
     {
         return json_encode($this->toArray());
+    }
+
+    protected function fireTransformer($transformer, $data)
+    {
+        // Fire Main Transformer
+        if (is_callable($transformer)) {
+            return call_user_func($transformer, $data);
+        }
+
+        $processedData = call_user_func(array($transformer, 'transform'), $data);
+
+        // If its an object, process potential embeded resources
+        if ($transformer instanceof TransformerAbstract) {
+            $embededData = $transformer->processEmbededResources($this, $data);
+
+            // Push the new embeds in with the main data
+            $processedData = array_merge($processedData, $embededData);
+
+            $this->availableEmbeds = $transformer->getAvailableEmbeds();
+        }
+        
+        return $processedData;
+    }
+
+    protected function runAppropriateTransformer()
+    {
+        // if's n shit
+        if ($this->resource instanceof Item) {
+            $data = $this->transformItem();
+        } elseif ($this->resource instanceof Collection) {
+            $data = $this->transformCollection();
+        } elseif ($this->resource instanceof PaginatedCollection) {
+            $data = $this->transformPaginator();
+        } else {
+            throw new \InvalidArgumentException(
+                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\Paginator'
+            );
+        }
+
+        return $data;
+    }
+
+    protected function transformItem()
+    {
+        $transformer = $this->resource->getTransformer();
+        return $this->fireTransformer($transformer, $this->resource->getData());
+    }
+
+    protected function transformCollection()
+    {
+        $transformer = $this->resource->getTransformer();
+
+        $data = array();
+        foreach ($this->resource->getData() as $itemData) {
+            $data []= $this->fireTransformer($transformer, $itemData);
+        }
+        return $data;
+    }
+
+    protected function transformPaginator()
+    {
+        $transformer = $this->resource->getTransformer();
+
+        $data = array();
+        foreach ($this->resource->getData() as $itemData) {
+            $data []= $this->fireTransformer($transformer, $itemData);
+        }
+        return $data;
     }
 }

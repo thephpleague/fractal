@@ -10,46 +10,15 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testEmbedChildScope()
     {
         $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+
+        $resource = new Item(array('foo' => 'bar'), function () {
         });
+
+        $scope = new Scope($manager, $resource, 'book');
+        $this->assertEquals($scope->getCurrentScope(), 'book');
         $childScope = $scope->embedChildScope('author', $resource);
 
         $this->assertInstanceOf('League\Fractal\Scope', $childScope);
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an 
-     *   instance of Item, CollectionResource or PaginatorResource
-     */
-    public function testEmbedChildScopeInvalidResource()
-    {
-        $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $scope->embedChildScope('author', array('not', 'a', 'resource'));
-    }
-
-    /**
-     * @covers League\Fractal\Scope::setCurrentData
-     */
-    public function testSetCurrentData()
-    {
-        $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $this->assertInstanceOf('League\Fractal\Scope', $scope->setCurrentData(array('foo' => 'bar')));
-    }
-
-    /**
-     * @covers League\Fractal\Scope::getCurrentData
-     */
-    public function testGetCurrentData()
-    {
-        $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $scope->setCurrentData(array('foo' => 'bar'));
-        $this->assertEquals(array('foo' => 'bar'), $scope->getCurrentData());
     }
 
     /**
@@ -58,18 +27,26 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testToArray()
     {
         $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $scope->setCurrentData(array('foo' => 'bar'));
+
+        $resource = new Item(array('foo' => 'bar'), function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
         $this->assertEquals(array('data' => array('foo' => 'bar')), $scope->toArray());
     }
 
     public function testGetCurrentScope()
     {
         $manager = new Manager();
-        $scope = new Scope($manager, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
+        
         $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
+
+        $scope = new Scope($manager, $resource, 'book');
+        $this->assertEquals($scope->getCurrentScope(), 'book');
+        
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals('author', $childScope->getCurrentScope());
 
@@ -80,9 +57,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testGetParentScopes()
     {
         $manager = new Manager();
-        $scope = new Scope($manager, 'book');
+
         $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
+
+        $scope = new Scope($manager, $resource, 'book');
         
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals(array('book'), $childScope->getParentScopes());
@@ -96,16 +75,14 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
 
-        $scope = new Scope($manager, 'book');
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
-        });
+        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
         
         $this->assertTrue($scope->isRequested('foo'));
         $this->assertTrue($scope->isRequested('bar'));
         $this->assertTrue($scope->isRequested('baz.bart'));
         $this->assertFalse($scope->isRequested('nope'));
 
-        $childScope = $scope->embedChildScope('baz', $resource);
+        $childScope = $scope->embedChildScope('baz', m::mock('League\Fractal\Resource\ResourceInterface'));
         $this->assertTrue($childScope->isRequested('bart'));
         $this->assertFalse($childScope->isRequested('foo'));
         $this->assertFalse($childScope->isRequested('bar'));
@@ -115,7 +92,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testPushParentScope()
     {
         $manager = new Manager();
-        $scope = new Scope($manager);
+
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        });
+
+        $scope = new Scope($manager, $resource);
 
         $this->assertEquals(1, $scope->pushParentScope('book'));
         $this->assertEquals(2, $scope->pushParentScope('author'));
