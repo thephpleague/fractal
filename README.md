@@ -25,7 +25,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.5.*"
+        "league/fractal": "0.4.*"
     }
 }
 ```
