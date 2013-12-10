@@ -42,6 +42,4 @@ class Manager
 
         return $scopeInstance;
     }
-
-
 }

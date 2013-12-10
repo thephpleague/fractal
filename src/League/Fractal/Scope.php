@@ -110,7 +110,7 @@ class Scope
     {
         $data = $this->runAppropriateTransformer();
 
-        $output = [];
+        $output = array();
 
         if ($this->availableEmbeds) {
             $output['embeds'] = $this->availableEmbeds;
@@ -166,7 +166,8 @@ class Scope
             $data = $this->transformPaginator();
         } else {
             throw new \InvalidArgumentException(
-                'Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\PaginatedCollection'
+                'Argument $resource should be an instance of Resource\Item, Resource\Collection'
+                . ' or Resource\PaginatedCollection'
             );
         }
 
