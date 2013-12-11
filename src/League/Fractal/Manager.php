@@ -59,6 +59,6 @@ class Manager
             }
         }
 
-        return $parsed;
+        return array_values(array_unique($parsed));
     }
 }

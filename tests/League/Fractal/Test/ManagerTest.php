@@ -15,8 +15,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetRequestedScopes()
     {
         $manager = new Manager();
+        $manager->setRequestedScopes(array('foo', 'bar', 'baz', 'baz.bart'));
+        $this->assertEquals(array('foo', 'bar', 'baz', 'baz.bart'), $manager->getRequestedScopes());
+
+        $manager = new Manager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
-        $this->assertEquals(array('foo', 'bar', 'baz.bart'), $manager->getRequestedScopes());
+        $this->assertEquals(array('foo', 'bar', 'baz', 'baz.bart'), $manager->getRequestedScopes());
     }
 
     public function testCreateDataWithCallback()
@@ -28,7 +32,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         });
 
         $rootScope = $manager->createData($resource);
-        
+
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
         $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
