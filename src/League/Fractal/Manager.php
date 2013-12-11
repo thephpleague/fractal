@@ -14,15 +14,15 @@ namespace League\Fractal;
 class Manager
 {
     protected $requestedScopes = array();
-    
+
     public function getRequestedScopes()
     {
         return $this->requestedScopes;
     }
-    
+
     public function setRequestedScopes(array $requestedScopes)
     {
-        $this->requestedScopes = $requestedScopes;
+        $this->requestedScopes = $this->parseNestedScopes($requestedScopes);
         return $this;
     }
 
@@ -32,7 +32,7 @@ class Manager
 
         // Update scope history
         if ($parentScopeInstance !== null) {
-            
+
             // This will be the new childs list of partents (parents parents, plus the parent)
             $scopeArray = $parentScopeInstance->getParentScopes();
             $scopeArray[] = $parentScopeInstance->getCurrentScope();
@@ -41,5 +41,24 @@ class Manager
         }
 
         return $scopeInstance;
+    }
+
+    protected function parseNestedScopes(array $scopes)
+    {
+        $parsed = array();
+
+        foreach ($scopes as $scope) {
+            $nested = explode('.', $scope);
+
+            $part = array_shift($nested);
+            $parsed[] = $part;
+
+            while (count($nested) > 0) {
+                $part .= '.'.array_shift($nested);
+                $parsed[] = $part;
+            }
+        }
+
+        return array_values(array_unique($parsed));
     }
 }
