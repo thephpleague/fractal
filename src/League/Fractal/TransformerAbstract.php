@@ -40,11 +40,6 @@ abstract class TransformerAbstract
     protected $manager;
 
     /**
-     * @return array
-     */
-    abstract public function transform();
-
-    /**
      * Getter for availableEmbeds
      *
      * @return self
