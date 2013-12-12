@@ -96,7 +96,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @excpectedException InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testScopeRequiresConcreteImplementation()
     {

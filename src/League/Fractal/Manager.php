@@ -33,7 +33,7 @@ class Manager
         // Update scope history
         if ($parentScopeInstance !== null) {
 
-            // This will be the new childs list of partents (parents parents, plus the parent)
+            // This will be the new children list of parents (parents parents, plus the parent)
             $scopeArray = $parentScopeInstance->getParentScopes();
             $scopeArray[] = $parentScopeInstance->getCurrentScope();
 
