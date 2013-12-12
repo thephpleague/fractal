@@ -14,6 +14,7 @@ namespace League\Fractal;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\PaginatedCollection;
+use League\Fractal\Resource\ResourceInterface;
 
 /**
  * Transformer Abstract
@@ -26,11 +27,18 @@ use League\Fractal\Resource\PaginatedCollection;
 abstract class TransformerAbstract
 {
     /**
-     * Array of embeds available for this transformer
+     * Embed if requested
      *
      * @var array
      */
-    protected $availableEmbeds;
+    protected $availableEmbeds = [];
+
+    /**
+     * Embed without needing it to be requested
+     *
+     * @var array
+     */
+    protected $defaultEmbeds = [];
     
     /**
      * A callable to process the data attached to this resource
@@ -74,21 +82,25 @@ abstract class TransformerAbstract
 
         $embededData = array();
 
+        foreach ($this->defaultEmbeds as $defaultEmbed) {
+            if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
+                continue;
+            }
+
+            $childScope = $scope->embedChildScope($defaultEmbed, $resource);
+
+            $embededData[$defaultEmbed] = $childScope->toArray();
+        }
+
         foreach ($this->availableEmbeds as $potentialEmbed) {
+            // Check if an available embed is requested
             if (! $scope->isRequested($potentialEmbed)) {
                 continue;
             }
 
-            $methodName = 'embed'.ucfirst($potentialEmbed);
-            if (! is_callable(array($this, $methodName))) {
-                throw new \BadMethodCallException(sprintf(
-                    'Call to undefined method %s::%s()',
-                    get_class($this),
-                    $methodName
-                ));
+            if (! ($resource = $this->callEmbedMethod($potentialEmbed, $data))) {
+                continue;
             }
-
-            $resource = call_user_func(array($this, $methodName), $data);
 
             $childScope = $scope->embedChildScope($potentialEmbed, $resource);
 
@@ -96,6 +108,38 @@ abstract class TransformerAbstract
         }
 
         return $embededData;
+    }
+
+    protected function callEmbedMethod($embed, $data)
+    {
+        // Check if the method name actually exists
+        $methodName = 'embed'.str_replace(' ', '', ucwords(str_replace('_', ' ', $embed)));
+        
+        if (! is_callable(array($this, $methodName))) {
+            throw new \BadMethodCallException(sprintf(
+                'Call to undefined method %s::%s()',
+                __CLASS__,
+                $methodName
+            ));
+        }
+
+        $resource = call_user_func(array($this, $methodName), $data);
+
+        if ($resource === null) {
+            return false;
+        }
+
+        if (! $resource instanceof ResourceInterface) {
+            throw new \Exception(sprintf(
+                'Invalid return value from %s::%s(). Expected %s, received %s.',
+                __CLASS__,
+                $methodName,
+                ResourceInterface::class,
+                gettype($resource)
+            ));
+        }
+
+        return $resource;
     }
 
     /**
