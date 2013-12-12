@@ -31,14 +31,14 @@ abstract class TransformerAbstract
      *
      * @var array
      */
-    protected $availableEmbeds = [];
+    protected $availableEmbeds = array();
 
     /**
      * Embed without needing it to be requested
      *
      * @var array
      */
-    protected $defaultEmbeds = [];
+    protected $defaultEmbeds = array();
     
     /**
      * A callable to process the data attached to this resource
