@@ -101,7 +101,15 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testScopeRequiresConcreteImplementation()
     {
         $manager = new Manager();
-        new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
+        $manager->setRequestedScopes(array('book'));
+
+        $resource = m::mock('League\Fractal\Resource\ResourceInterface', array(
+            array('bar' => 'baz'),
+            function() {}
+        ))->makePartial();
+
+        $scope = new Scope($manager, $resource);
+        $scope->toArray();
     }
 
     public function testToArrayWithEmbeds()
