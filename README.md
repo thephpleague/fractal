@@ -172,7 +172,7 @@ check against the `Accept` header.
 This is still in concept stage, and these issues are left to explore:
 
 - [X] Should Processors be called Presenters? (Went with Transformers)
-- [X] Simplify the assosciation of nested items. Move to a register method? 
+- [X] Simplify the association of nested items. Move to a register method?
 - [ ] Switch return array to use instance properties in `transform()`
 - [ ] Implement [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS)/[HAL](http://stateless.co/hal_specification.html )links
 - [ ] Support other pagination systems, not just `Illuminate\Pagination`
