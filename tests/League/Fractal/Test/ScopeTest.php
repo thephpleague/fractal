@@ -45,13 +45,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testGetCurrentScope()
     {
         $manager = new Manager();
-        
+
         $resource = new Item(array('name' => 'Larry Ullman'), function () {
         });
 
         $scope = new Scope($manager, $resource, 'book');
         $this->assertEquals($scope->getCurrentScope(), 'book');
-        
+
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals('author', $childScope->getCurrentScope());
 
@@ -67,7 +67,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        
+
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals(array('book'), $childScope->getParentScopes());
 
@@ -81,9 +81,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
-        
+
         $this->assertTrue($scope->isRequested('foo'));
         $this->assertTrue($scope->isRequested('bar'));
+        $this->assertTrue($scope->isRequested('baz'));
         $this->assertTrue($scope->isRequested('baz.bart'));
         $this->assertFalse($scope->isRequested('nope'));
 
@@ -95,7 +96,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @excpectedException InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testScopeRequiresConcreteImplementation()
     {
@@ -117,7 +118,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $resource = new Item(array('bar' => 'baz'), $transformer);
 
         $scope = new Scope($manager, $resource);
-        
+
         $this->assertEquals(array('data' => array('bar' => 'baz'), 'embeds' => array('book')), $scope->toArray());
     }
 
@@ -134,7 +135,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $scope->pushParentScope('book'));
         $this->assertEquals(2, $scope->pushParentScope('author'));
         $this->assertEquals(3, $scope->pushParentScope('profile'));
-        
+
         $this->assertEquals(array('book', 'author', 'profile'), $scope->getParentScopes());
     }
 
