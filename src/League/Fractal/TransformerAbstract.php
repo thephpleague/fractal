@@ -35,7 +35,7 @@ abstract class TransformerAbstract
     /**
      * A callable to process the data attached to this resource
      *
-     * @var League\Fractal\ResourceManager
+     * @var League\Fractal\Manager
      */
     protected $manager;
 
@@ -52,7 +52,7 @@ abstract class TransformerAbstract
     /**
      * Getter for manager
      *
-     * @return League\Fractal\ResourceManager
+     * @return League\Fractal\Manager
      */
     public function getManager()
     {
