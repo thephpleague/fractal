@@ -81,6 +81,7 @@ abstract class TransformerAbstract
         }
 
         $embededData = array();
+        $embededDataCount = 0;
 
         foreach ($this->defaultEmbeds as $defaultEmbed) {
             if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
@@ -90,6 +91,7 @@ abstract class TransformerAbstract
             $childScope = $scope->embedChildScope($defaultEmbed, $resource);
 
             $embededData[$defaultEmbed] = $childScope->toArray();
+            ++$embededDataCount;
         }
 
         foreach ($this->availableEmbeds as $potentialEmbed) {
@@ -105,6 +107,11 @@ abstract class TransformerAbstract
             $childScope = $scope->embedChildScope($potentialEmbed, $resource);
 
             $embededData[$potentialEmbed] = $childScope->toArray();
+            ++$embededDataCount;
+        }
+
+        if ($embededDataCount === 0) {
+            return false;
         }
 
         return $embededData;
