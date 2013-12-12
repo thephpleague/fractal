@@ -78,7 +78,7 @@ use Acme\Transformer\BookTransformer;
 
 $resource = new Fractal\Resource\Item($book, new BookTransformer);
 $resource = new Fractal\Resource\Collection($books, new BookTransformer);
-$resource = new Fractal\Resource\Paginator($paginator, new BookTransformer);
+$resource = new Fractal\Resource\PaginatedCollection($paginator, new BookTransformer);
 
 ```
 
