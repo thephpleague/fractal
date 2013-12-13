@@ -24,7 +24,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.4.*"
+        "league/fractal": "0.5.*"
     }
 }
 ```
@@ -47,8 +47,6 @@ In your controllers you can then create "resources", of which there are three ty
 
 * **League\Fractal\Resource\Item** - A singular resource, probably one entry in a data store
 * **League\Fractal\Resource\Collection** - A collection of resources
-* **League\Fractal\Resource\PaginatedCollection** - A collection of resources, but also supports pagination. This 
-only accepts an instance of `Illuminate\Pagination\Paginator` at this point
 
 The `Item` and `Collection` constructors will take any kind of data you wish to send it 
 as the first argument, and then a "transformer" as the second argument. This can be callable or a string 
@@ -78,8 +76,6 @@ use Acme\Transformer\BookTransformer;
 
 $resource = new Fractal\Resource\Item($book, new BookTransformer);
 $resource = new Fractal\Resource\Collection($books, new BookTransformer);
-$resource = new Fractal\Resource\PaginatedCollection($paginator, new BookTransformer);
-
 ```
 
 ### Embedding Data

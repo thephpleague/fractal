@@ -203,14 +203,4 @@ abstract class TransformerAbstract
     {
         return new Collection($data, $transformer);
     }
-
-    /**
-     * Create a new paginated collection
-     *
-     * @return League\Fractal\Resource\PaginatedCollection
-     */
-    protected function paginatedCollection($data, $transformer)
-    {
-        return new PaginatedCollection($data, $transformer);
-    }
 }

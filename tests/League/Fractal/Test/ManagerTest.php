@@ -1,8 +1,9 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Manager;
-use Mockery as m;
+use Mockery;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,6 +43,6 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        m::close();
+        Mockery::close();
     }
 }

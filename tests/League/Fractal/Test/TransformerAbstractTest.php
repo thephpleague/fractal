@@ -241,18 +241,6 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }
 
-    /**
-     * @covers League\Fractal\TransformerAbstract::paginatedCollection
-     */
-    public function testPaginatedCollection()
-    {
-        $mock = m::mock('League\Fractal\TransformerAbstract');
-        $paginator = m::mock('Illuminate\Pagination\Paginator');
-        $paginator->shouldReceive('getCollection')->once()->andReturn(array());
-        $collection = $mock->paginatedCollection($paginator, function () {});
-        $this->assertInstanceOf('League\Fractal\Resource\PaginatedCollection', $collection);
-    }
-
     public function tearDown()
     {
         m::close();
