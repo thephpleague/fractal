@@ -168,15 +168,15 @@ class Scope
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();
 
-        $pagination = [
+        $pagination = array(
             'total' => (int) $paginator->getTotal(),
             'count' => (int) $paginator->count(),
             'per_page' => (int) $paginator->getPerPage(),
             'current_page' => $currentPage,
             'total_pages' => $lastPage,
-        ];
+        );
 
-        $pagination['links'] = [];
+        $pagination['links'] = array();
 
         // $paginator->appends(array_except(Request::query(), ['page']));
 
