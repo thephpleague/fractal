@@ -141,7 +141,7 @@ abstract class TransformerAbstract
                 'Invalid return value from %s::%s(). Expected %s, received %s.',
                 __CLASS__,
                 $methodName,
-                ResourceInterface::class,
+                'League\Fractal\Resource\ResourceInterface',
                 gettype($resource)
             ));
         }
