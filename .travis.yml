@@ -9,8 +9,13 @@ php:
 before_script:
   - composer self-update
   - composer install
-  - pear install pear/PHP_CodeSniffer
+  - pyrus install pear/PHP_CodeSniffer
+  - phpenv rehash
 
 script:
   - phpcs --standard=psr2 src/
   - phpunit --coverage-text
+
+matrix:
+  allow_failures:
+    - php: hhvm
