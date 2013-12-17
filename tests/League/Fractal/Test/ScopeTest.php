@@ -2,10 +2,9 @@
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\PaginatedCollection;
 use League\Fractal\Manager;
 use League\Fractal\Scope;
-use Mockery as m;
+use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,7 +79,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
 
-        $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
+        $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceInterface'));
 
         $this->assertTrue($scope->isRequested('foo'));
         $this->assertTrue($scope->isRequested('bar'));
@@ -88,7 +87,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($scope->isRequested('baz.bart'));
         $this->assertFalse($scope->isRequested('nope'));
 
-        $childScope = $scope->embedChildScope('baz', m::mock('League\Fractal\Resource\ResourceInterface'));
+        $childScope = $scope->embedChildScope('baz', Mockery::mock('League\Fractal\Resource\ResourceInterface'));
         $this->assertTrue($childScope->isRequested('bart'));
         $this->assertFalse($childScope->isRequested('foo'));
         $this->assertFalse($childScope->isRequested('bar'));
@@ -103,7 +102,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->setRequestedScopes(array('book'));
 
-        $resource = m::mock('League\Fractal\Resource\ResourceInterface', array(
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceInterface', array(
             array('bar' => 'baz'),
             function() {}
         ))->makePartial();
@@ -117,7 +116,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->setRequestedScopes(array('book'));
 
-        $transformer = m::mock('League\Fractal\TransformerAbstract[getAvailableEmbeds,transform]');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableEmbeds,transform]');
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function(array $data) {
             return $data;
@@ -151,7 +150,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $transformer = m::mock('League\Fractal\TransformerAbstract');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
@@ -165,7 +164,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $transformer = m::mock('League\Fractal\TransformerAbstract');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
@@ -176,41 +175,79 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
     }
 
-    public function testRunAppropriateTransformerPagination()
-    {
-        $manager = new Manager();
-
-        $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->shouldReceive('transform')->once()->andReturnUsing(function ($data) { return $data; });
-
-        $paginator = m::mock('Illuminate\Pagination\Paginator');
-        $paginator->shouldReceive('getCollection')->once()->andReturn(array(array('foo' => 'bar')));
-
-        $resource = new PaginatedCollection($paginator, $transformer);
-        $scope = $manager->createData($resource);
-        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
-    }
-
     /**
      * @covers League\Fractal\Scope::runAppropriateTransformer
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item, Resource\Collection or Resource\PaginatedCollection
+     * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item or Resource\Collection
      */
     public function testCreateDataWithClassFuckKnows()
     {
         $manager = new Manager();
 
-        $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $resource = m::mock('League\Fractal\Resource\ResourceInterface', array($this->simpleItem, $transformer))->makePartial();
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceInterface', array($this->simpleItem, $transformer))->makePartial();
         $scope = $manager->createData($resource);
         $scope->toArray();
     }
 
 
+    public function testPaginatorOutput()
+    {
+        $manager = new Manager();
+
+        $collection = new Collection(array(array('foo' => 'bar', 'baz' => 'ban')), function (array $data) {
+            return $data;
+        });
+
+        $paginator = Mockery::mock('Illuminate\Pagination\Paginator')->makePartial();
+
+
+        $total = 100;
+        $perPage = $count = 5;
+        $currentPage = 2;
+        $lastPage = 20;
+        $lastPage = 20;
+
+        $paginator->shouldReceive('getTotal')->once()->andReturn($total);
+        $paginator->shouldReceive('count')->once()->andReturn($count);
+        $paginator->shouldReceive('getPerPage')->once()->andReturn($perPage);
+        $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
+        $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
+        $paginator->shouldReceive('getUrl')->times(2)->andReturnUsing(function ($page) { 
+            return 'http://example.com/foo?page='.$page;
+        });
+
+        $collection->setPaginator($paginator);
+
+        $rootScope = $manager->createData($collection);
+
+        $expectedOutput = array(
+            'pagination' => array(
+                'total' => $total,
+                'count' => $count,
+                'per_page' => $perPage,
+                'current_page' => $currentPage,
+                'total_pages' => $lastPage,
+                'links' => array(
+                    'previous' => 'http://example.com/foo?page=1',
+                    'next' => 'http://example.com/foo?page=3',
+                ),
+            ),
+            'data' => array(
+                array(
+                    'foo' => 'bar',
+                    'baz' => 'ban',
+                ),
+            ),
+        );
+
+        $this->assertEquals($expectedOutput, $rootScope->toArray());
+    }
+
     public function tearDown()
     {
-        m::close();
+        Mockery::close();
     }
 
 }

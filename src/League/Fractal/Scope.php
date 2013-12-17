@@ -11,9 +11,9 @@
 
 namespace League\Fractal;
 
+use Illuminate\Pagination\Paginator;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\PaginatedCollection;
 use League\Fractal\Resource\ResourceInterface;
 
 class Scope
@@ -116,6 +116,14 @@ class Scope
             $output['embeds'] = $this->availableEmbeds;
         }
 
+        if ($this->resource instanceof Collection) {
+            $paginator = $this->resource->getPaginator();
+
+            if ($paginator !== null and $paginator instanceof Paginator) {
+                $output['pagination'] = $this->outputPaginator($paginator);
+            }
+        }
+
         $output['data'] = $data;
 
         return $output;
@@ -155,6 +163,34 @@ class Scope
         return $processedData;
     }
 
+    protected function outputPaginator(Paginator $paginator)
+    {
+        $currentPage = (int) $paginator->getCurrentPage();
+        $lastPage = (int) $paginator->getLastPage();
+
+        $pagination = array(
+            'total' => (int) $paginator->getTotal(),
+            'count' => (int) $paginator->count(),
+            'per_page' => (int) $paginator->getPerPage(),
+            'current_page' => $currentPage,
+            'total_pages' => $lastPage,
+        );
+
+        $pagination['links'] = array();
+
+        // $paginator->appends(array_except(Request::query(), ['page']));
+
+        if ($currentPage > 1) {
+            $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
+        }
+
+        if ($currentPage < $lastPage) {
+            $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
+        }
+
+        return $pagination;
+    }
+
     protected function runAppropriateTransformer()
     {
         // if's n shit
@@ -162,12 +198,9 @@ class Scope
             $data = $this->transformItem();
         } elseif ($this->resource instanceof Collection) {
             $data = $this->transformCollection();
-        } elseif ($this->resource instanceof PaginatedCollection) {
-            $data = $this->transformPaginator();
         } else {
             throw new \InvalidArgumentException(
-                'Argument $resource should be an instance of Resource\Item, Resource\Collection'
-                . ' or Resource\PaginatedCollection'
+                'Argument $resource should be an instance of Resource\Item or Resource\Collection'
             );
         }
 
@@ -181,17 +214,6 @@ class Scope
     }
 
     protected function transformCollection()
-    {
-        $transformer = $this->resource->getTransformer();
-
-        $data = array();
-        foreach ($this->resource->getData() as $itemData) {
-            $data []= $this->fireTransformer($transformer, $itemData);
-        }
-        return $data;
-    }
-
-    protected function transformPaginator()
     {
         $transformer = $this->resource->getTransformer();
 

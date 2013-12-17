@@ -11,6 +11,8 @@
 
 namespace League\Fractal\Resource;
 
+use Illuminate\Pagination\Paginator;
+
 /**
  * Resource Collection
  *
@@ -26,6 +28,13 @@ class Collection implements ResourceInterface
      */
     protected $data;
     
+    /**
+     * A collection of data
+     *
+     * @var Illuminate\Pagination\Paginator
+     */
+    protected $paginator;
+
     /**
      * A callable to process the data attached to this resource
      *
@@ -54,6 +63,16 @@ class Collection implements ResourceInterface
     }
 
     /**
+     * Getter for paginator
+     *
+     * @return Illuminate\Pagination\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
      * Getter for transformer
      *
      * @return callable|string
@@ -61,5 +80,18 @@ class Collection implements ResourceInterface
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+    /**
+     * Setter for paginator
+     *
+     * @param Illuminate\Pagination\Paginator
+     *
+     * @return self
+     */
+    public function setPaginator(Paginator $paginator)
+    {
+        $this->paginator = $paginator;
+        return $this;
     }
 }

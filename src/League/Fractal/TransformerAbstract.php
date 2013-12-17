@@ -31,14 +31,14 @@ abstract class TransformerAbstract
      *
      * @var array
      */
-    protected $availableEmbeds = array();
+    protected $availableEmbeds;
 
     /**
      * Embed without needing it to be requested
      *
      * @var array
      */
-    protected $defaultEmbeds = array();
+    protected $defaultEmbeds;
     
     /**
      * A callable to process the data attached to this resource
@@ -50,11 +50,21 @@ abstract class TransformerAbstract
     /**
      * Getter for availableEmbeds
      *
-     * @return self
+     * @return array
      */
     public function getAvailableEmbeds()
     {
         return $this->availableEmbeds;
+    }
+
+    /**
+     * Getter for defaultEmbeds
+     *
+     * @return array
+     */
+    public function getDefaultEmbeds()
+    {
+        return $this->defaultEmbeds;
     }
 
     /**
@@ -76,59 +86,51 @@ abstract class TransformerAbstract
      */
     public function processEmbededResources(Scope $scope, $data)
     {
-        if ($this->availableEmbeds === null) {
-            return false;
-        }
-
         $embededData = array();
         $embededDataCount = 0;
 
-        foreach ($this->defaultEmbeds as $defaultEmbed) {
-            if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
-                continue;
+        // Nothing to do, bail
+        if (is_array($this->defaultEmbeds)) {
+
+            foreach ($this->defaultEmbeds as $defaultEmbed) {
+                if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
+                    continue;
+                }
+
+                $childScope = $scope->embedChildScope($defaultEmbed, $resource);
+
+                $embededData[$defaultEmbed] = $childScope->toArray();
+                ++$embededDataCount;
             }
-
-            $childScope = $scope->embedChildScope($defaultEmbed, $resource);
-
-            $embededData[$defaultEmbed] = $childScope->toArray();
-            ++$embededDataCount;
         }
 
-        foreach ($this->availableEmbeds as $potentialEmbed) {
-            // Check if an available embed is requested
-            if (! $scope->isRequested($potentialEmbed)) {
-                continue;
+        // Nothing more to do? Bail
+        if (is_array($this->availableEmbeds)) {
+
+            foreach ($this->availableEmbeds as $potentialEmbed) {
+                // Check if an available embed is requested
+                if (! $scope->isRequested($potentialEmbed)) {
+                    continue;
+                }
+
+                if (! ($resource = $this->callEmbedMethod($potentialEmbed, $data))) {
+                    continue;
+                }
+
+                $childScope = $scope->embedChildScope($potentialEmbed, $resource);
+
+                $embededData[$potentialEmbed] = $childScope->toArray();
+                ++$embededDataCount;
             }
-
-            if (! ($resource = $this->callEmbedMethod($potentialEmbed, $data))) {
-                continue;
-            }
-
-            $childScope = $scope->embedChildScope($potentialEmbed, $resource);
-
-            $embededData[$potentialEmbed] = $childScope->toArray();
-            ++$embededDataCount;
         }
 
-        if ($embededDataCount === 0) {
-            return false;
-        }
-
-        return $embededData;
+        return $embededDataCount === 0 ? false : $embededData;
     }
 
     protected function callEmbedMethod($embed, $data)
     {
         // Check if the method name actually exists
         $methodName = 'embed'.str_replace(' ', '', ucwords(str_replace('_', ' ', $embed)));
-        
-        if (! is_callable(array($this, $methodName))) {
-            throw new \BadMethodCallException(sprintf(
-                'Call to undefined method %s::%s()',
-                __CLASS__,
-                $methodName
-            ));
-        }
 
         $resource = call_user_func(array($this, $methodName), $data);
 
@@ -172,6 +174,17 @@ abstract class TransformerAbstract
     }
 
     /**
+     * Setter for defaultEmbeds
+     *
+     * @return self
+     */
+    public function setDefaultEmbeds($defaultEmbeds)
+    {
+        $this->defaultEmbeds = $defaultEmbeds;
+        return $this;
+    }
+
+    /**
      * Create a new item resource object
      *
      * @return League\Fractal\Resource\Item
@@ -189,15 +202,5 @@ abstract class TransformerAbstract
     protected function collection($data, $transformer)
     {
         return new Collection($data, $transformer);
-    }
-
-    /**
-     * Create a new paginated collection
-     *
-     * @return League\Fractal\Resource\PaginatedCollection
-     */
-    protected function paginatedCollection($data, $transformer)
-    {
-        return new PaginatedCollection($data, $transformer);
     }
 }
