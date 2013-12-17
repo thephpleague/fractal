@@ -9,8 +9,7 @@ php:
 before_script:
   - composer self-update
   - composer install
-  - pyrus install pear/PHP_CodeSniffer
-  - phpenv rehash
+  - pear install pear/PHP_CodeSniffer
 
 script:
   - phpcs --standard=psr2 src/
