@@ -1,6 +1,7 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\Resource\Collection;
+use Mockery;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,5 +27,28 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $resource = new Collection($this->simpleCollection, 'SomeClass');
         $this->assertEquals($resource->getTransformer(), 'SomeClass');
+    }
+
+    /**
+     * @covers League\Fractal\Resource\Collection::setPaginator
+     */
+    public function testSetAvailableEmbeds()
+    {
+        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
+        $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setPaginator($paginator));
+    }
+
+    public function testGetPaginator()
+    {
+        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
+        $collection->setPaginator($paginator);
+        $this->assertInstanceOf('Illuminate\Pagination\Paginator', $collection->getPaginator());
+    }
+
+    public function tearDown()
+    {
+        Mockery::close();
     }
 }
