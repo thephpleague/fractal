@@ -64,6 +64,8 @@ The transformer will the raw data passed back into it, so if you pass an instanc
 on each of those instances.
 
 ``` php
+use League\Fractal;
+
 $resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
     return [
         'id' => (int) $book->id,
@@ -78,6 +80,7 @@ Assuming you use an autoloader of course. These classes must extend `League\Frac
 contain a transform method, much like the callback example: `public function transform(Foo $foo)`.
 
 ``` php
+use League\Fractal;
 use Acme\Transformer\BookTransformer;
 
 $resource = new Fractal\Resource\Item($book, new BookTransformer);
@@ -162,12 +165,35 @@ $data = $fractal->createData($resource)->toArray();
 $json = $fractal->createData($resource)->toJson();
 ```
 
-Grab a beverage, you're done. If you want to use something other than JSON then you'll need to 
-think that one up yourself. If you're using horribly complicated XML for example, then you will 
-probably need to create some specific view files, which negates the purpose of using this system 
-entirely. Auto-generated XML, YAML or anything similar could easily be set up in a switch, just 
-check against the `Accept` header.
+If you want to use something other than JSON then you'll need to think that one up yourself. If 
+you're using horribly complicated XML for example, then you will probably need to create some 
+specific view files, which negates the purpose of using this system entirely. Auto-generated XML,
+YAML or anything similar could easily be set up in a switch, just check against the `Accept` header.
 
+### Paginators
+
+When working with a large data set it obviously makes sense to offer pagination options to the endpoint, 
+otherwise that data can get very slow. To avoid writing your own pagination output into every endpoint you
+can utilize the the `League\Fractal\Resource\Collection::setPaginator()` method.
+
+Currently this only supports the [Laravel Pagination][] package known as `illuminate\pagination`. This can 
+be used outside of Laravel by manually creating the objects, but will be made easier in future versions. 
+
+Inside of Laravel 4 - using the Eloquent or Query Builder method paginated() - the following syntax is 
+possible"
+
+[Laravel Pagination]: http://laravel.com/docs/pagination
+
+``` php
+use League\Fractal;
+use Acme\Transformer\BookTransformer;
+
+$paginator = Books::paginated();
+$books = $books->getCollection();
+
+$resource = new Fractal\Resource\Collection($books, new BookTransformer);
+$resource->setPaginator($paginator);
+```
 
 ## TODO
 
