@@ -5,10 +5,9 @@
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
 
-When building an API one of the most overlooked aspects is outputting the data. Most folks just grab stuff 
-from the database and pass it straight off to `json_encode()` which is fine for trivial APIs but if they are 
-in use by the public, or you have an iPhone application you definitely cannot just go around changing your 
-output willy nilly.
+When building an API it is common for people to just grab stuff from the database and pass it 
+to `json_encode()`. This might be passable for "trivial" API's but if they are in use by the public, 
+or used by an iPhone application then this will quickly lead to inconsistent output.
 
 This package aims to do a few simple things:
 
