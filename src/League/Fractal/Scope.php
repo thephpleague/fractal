@@ -11,10 +11,10 @@
 
 namespace League\Fractal;
 
-use Illuminate\Pagination\Paginator;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Pagination\PaginationInterface;
 
 class Scope
 {
@@ -108,9 +108,9 @@ class Scope
      */
     public function toArray()
     {
-        $data = $this->runAppropriateTransformer();
-
-        $output = array();
+        $output = array(
+            'data' => $this->runAppropriateTransformer()
+        );
 
         if ($this->availableEmbeds) {
             $output['embeds'] = $this->availableEmbeds;
@@ -119,12 +119,10 @@ class Scope
         if ($this->resource instanceof Collection) {
             $paginator = $this->resource->getPaginator();
 
-            if ($paginator !== null and $paginator instanceof Paginator) {
+            if ($paginator !== null and $paginator instanceof PaginationInterface) {
                 $output['pagination'] = $this->outputPaginator($paginator);
             }
         }
-
-        $output['data'] = $data;
 
         return $output;
     }
@@ -163,7 +161,7 @@ class Scope
         return $processedData;
     }
 
-    protected function outputPaginator(Paginator $paginator)
+    protected function outputPaginator(PaginationInterface $paginator)
     {
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();
