@@ -30,7 +30,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.5.*"
+        "league/fractal": "0.6.*"
     }
 }
 ```
@@ -170,29 +170,34 @@ you're using horribly complicated XML for example, then you will probably need t
 specific view files, which negates the purpose of using this system entirely. Auto-generated XML,
 YAML or anything similar could easily be set up in a switch, just check against the `Accept` header.
 
-### Paginators
+### Pagination
 
 When working with a large data set it obviously makes sense to offer pagination options to the endpoint, 
 otherwise that data can get very slow. To avoid writing your own pagination output into every endpoint you
 can utilize the the `League\Fractal\Resource\Collection::setPaginator()` method.
 
-Currently this only supports the [Laravel Pagination][] package known as `illuminate\pagination`. This can 
-be used outside of Laravel by manually creating the objects, but will be made easier in future versions. 
+The paginator passed to `setPaginator()` must implement `League\Fractal\Pagination\PaginatorInterface` 
+and it's specified methods.
 
-Inside of Laravel 4 - using the Eloquent or Query Builder method paginated() - the following syntax is 
-possible"
+Fractal currently only ships with an adapter for Laravel's `illuminate/pagination` package as 
+`League\Fractal\Pagination\IlluminatePaginatorAdapter`.
 
 [Laravel Pagination]: http://laravel.com/docs/pagination
 
+Inside of Laravel 4, using the Eloquent or Query Builder method `paginate()`, the following syntax is 
+possible:
+
 ``` php
-use League\Fractal;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Acme\Model\Book;
 use Acme\Transformer\BookTransformer;
 
-$paginator = Books::paginated();
+$paginator = Books::paginate();
 $books = $books->getCollection();
 
-$resource = new Fractal\Resource\Collection($books, new BookTransformer);
-$resource->setPaginator($paginator);
+$resource = new Collection($books, new BookTransformer);
+$resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ```
 
 ## TODO
@@ -202,8 +207,6 @@ This is still in concept stage, and these issues are left to explore:
 - [ ] Switch return array to use instance properties in `transform()`
 - [ ] Implement [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS)/[HAL](http://stateless.co/hal_specification.html) links
 - [ ] Add smart embed syntax, e.g: `?embed=foo:limit(5):order(something,asc)`
-- [ ] Support other pagination systems, not just `Illuminate\Pagination`
-
 
 ## Testing
 
@@ -226,5 +229,3 @@ Please see [CONTRIBUTING](https://github.com/php-loep/fractal/blob/master/CONTRI
 ## License
 
 The MIT License (MIT). Please see [License File](https://github.com/php-loep/fractal/blob/master/LICENSE) for more information.
-
-[ArrayIterator]: http://php.net/ArrayIterator

@@ -34,14 +34,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetAvailableEmbeds()
     {
-        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter');
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setPaginator($paginator));
     }
 
     public function testGetPaginator()
     {
-        $paginator = Mockery::mock('Illuminate\Pagination\Paginator');
+        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter');
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setPaginator($paginator);
         $this->assertInstanceOf('Illuminate\Pagination\Paginator', $collection->getPaginator());
