@@ -1,7 +1,7 @@
 <?php
 namespace League\Fractal\Test\Pagination;
 
-use League\Fractal\Pagination\IlluminatePaginationAdapter;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Mockery;
 
 class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
@@ -31,10 +31,10 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('count')->andReturn('5');
         $paginator->shouldReceive('getPerPage')->andReturn('5');
 
-        $adapter = new IlluminatePaginationAdapter($paginator);
+        $adapter = new IlluminatePaginatorAdapter($paginator);
 
         $this->assertInstanceOf(
-            'League\Fractal\Pagination\PaginationInterface',
+            'League\Fractal\Pagination\PaginatorInterface',
             $adapter
         );
 

@@ -176,11 +176,11 @@ When working with a large data set it obviously makes sense to offer pagination 
 otherwise that data can get very slow. To avoid writing your own pagination output into every endpoint you
 can utilize the the `League\Fractal\Resource\Collection::setPaginator()` method.
 
-The paginator passed to `setPaginator()` must implement `League\Fractal\Pagination\PaginationInterface` 
+The paginator passed to `setPaginator()` must implement `League\Fractal\Pagination\PaginatorInterface` 
 and it's specified methods.
 
 Fractal currently only ships with an adapter for Laravel's `illuminate/pagination` package as 
-`League\Fractal\Pagination\IlluminatePaginationAdapter`.
+`League\Fractal\Pagination\IlluminatePaginatorAdapter`.
 
 [Laravel Pagination]: http://laravel.com/docs/pagination
 
@@ -189,7 +189,7 @@ possible:
 
 ``` php
 use League\Fractal\Resource\Collection;
-use League\Fractal\Pagination\IlluminatePaginationAdapter;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Acme\Model\Book;
 use Acme\Transformer\BookTransformer;
 
@@ -197,7 +197,7 @@ $paginator = Books::paginate();
 $books = $books->getCollection();
 
 $resource = new Collection($books, new BookTransformer);
-$resource->setPaginator(new IlluminatePaginationAdapter($paginator));
+$resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ```
 
 ## TODO

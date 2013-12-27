@@ -16,7 +16,7 @@ namespace League\Fractal\Pagination;
  *
  * @author Marc Addeo <marcaddeo@gmail.com>
  */
-interface PaginationInterface
+interface PaginatorInterface
 {
     public function getCurrentPage();
     public function getLastPage();

@@ -11,7 +11,7 @@
 
 namespace League\Fractal\Resource;
 
-use League\Fractal\Pagination\PaginationInterface;
+use League\Fractal\Pagination\PaginatorInterface;
 
 /**
  * Resource Collection
@@ -31,7 +31,7 @@ class Collection implements ResourceInterface
     /**
      * A collection of data
      *
-     * @var League\Fractal\Pagination\PaginationInterface
+     * @var League\Fractal\Pagination\PaginatorInterface
      */
     protected $paginator;
 
@@ -65,7 +65,7 @@ class Collection implements ResourceInterface
     /**
      * Getter for paginator
      *
-     * @return League\Fractal\Pagination\PaginationInterface
+     * @return League\Fractal\Pagination\PaginatorInterface
      */
     public function getPaginator()
     {
@@ -85,11 +85,11 @@ class Collection implements ResourceInterface
     /**
      * Setter for paginator
      *
-     * @param League\Fractal\Pagination\PaginationInterface $paginator
+     * @param League\Fractal\Pagination\PaginatorInterface $paginator
      *
      * @return self
      */
-    public function setPaginator(PaginationInterface $paginator)
+    public function setPaginator(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
         return $this;
