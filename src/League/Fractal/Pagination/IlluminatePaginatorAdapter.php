@@ -14,11 +14,11 @@ namespace League\Fractal\Pagination;
 use Illuminate\Pagination\Paginator;
 
 /**
- * A pagination adapter for illuminate/pagination
+ * A paginator adapter for illuminate/pagination
  *
  * @author Marc Addeo <marcaddeo@gmail.com>
  */
-class IlluminatePaginationAdapter extends Paginator implements PaginationInterface
+class IlluminatePaginatorAdapter extends Paginator implements PaginatorInterface
 {
     /**
      * Setup our adapter

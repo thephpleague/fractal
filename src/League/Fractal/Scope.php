@@ -14,7 +14,7 @@ namespace League\Fractal;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Pagination\PaginationInterface;
+use League\Fractal\Pagination\PaginatorInterface;
 
 class Scope
 {
@@ -119,7 +119,7 @@ class Scope
         if ($this->resource instanceof Collection) {
             $paginator = $this->resource->getPaginator();
 
-            if ($paginator !== null and $paginator instanceof PaginationInterface) {
+            if ($paginator !== null and $paginator instanceof PaginatorInterface) {
                 $output['pagination'] = $this->outputPaginator($paginator);
             }
         }
@@ -161,7 +161,7 @@ class Scope
         return $processedData;
     }
 
-    protected function outputPaginator(PaginationInterface $paginator)
+    protected function outputPaginator(PaginatorInterface $paginator)
     {
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();

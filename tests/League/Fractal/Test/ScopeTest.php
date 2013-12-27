@@ -200,7 +200,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             return $data;
         });
 
-        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginationAdapter')->makePartial();
+        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter')->makePartial();
 
 
         $total = 100;
