@@ -229,3 +229,5 @@ Please see [CONTRIBUTING](https://github.com/php-loep/fractal/blob/master/CONTRI
 ## License
 
 The MIT License (MIT). Please see [License File](https://github.com/php-loep/fractal/blob/master/LICENSE) for more information.
+
+[ArrayIterator]: http://php.net/ArrayIterator
