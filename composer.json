@@ -26,9 +26,9 @@
         "illuminate/pagination": "~4.0"
     },
     "autoload": {
-        "psr-0": {
-            "League": ["src", "tests"],
-            "Silex\\Provider": "src"
+        "psr-4": {
+            "League\\Fractal\\": "src",
+            "League\\Fractal\\Tests\\": "tests"
         }
     }
 }
