@@ -22,7 +22,7 @@
         "mockery/mockery": "dev-master@dev",
         "silex/silex": "~1.1"
     },
-    "suggests": {
+    "suggest": {
         "illuminate/pagination": "~4.0"
     },
     "autoload": {
