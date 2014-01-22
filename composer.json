@@ -6,7 +6,7 @@
         "api",
         "json"
     ],
-    "homepage": "https://github.com/php-loep/fractal",
+    "homepage": "https://github.com/thephpleague/fractal",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
         }
     ],
     "require-dev": {
-        "illuminate/pagination": "~4.0",
+        "illuminate/pagination": "~4.1",
         "league/phpunit-coverage-listener": "~1.1",
         "mockery/mockery": "dev-master@dev",
         "silex/silex": "~1.1"
