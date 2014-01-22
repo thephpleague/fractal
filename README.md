@@ -1,7 +1,7 @@
 # Fractal
 
-[![Build Status](https://travis-ci.org/php-loep/fractal.png?branch=master)](https://travis-ci.org/php-loep/fractal)
-[![Coverage Status](https://coveralls.io/repos/php-loep/fractal/badge.png)](https://coveralls.io/r/php-loep/fractal)
+[![Build Status](https://travis-ci.org/thephpleague/fractal.png?branch=master)](https://travis-ci.org/thephpleague/fractal)
+[![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
 
@@ -200,6 +200,8 @@ $resource = new Collection($books, new BookTransformer);
 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ```
 
+[ArrayIterator]: http://php.net/ArrayIterator
+
 ## TODO
 
 This is still in concept stage, and these issues are left to explore:
@@ -217,17 +219,15 @@ $ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/php-loep/fractal/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CONTRIBUTING.md) for details.
 
 
 ## Credits
 
 - [Phil Sturgeon](https://github.com/philsturgeon)
-- [All Contributors](https://github.com/php-loep/fractal/contributors)
+- [All Contributors](https://github.com/thephpleague/fractal/contributors)
 
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/php-loep/fractal/blob/master/LICENSE) for more information.
-
-[ArrayIterator]: http://php.net/ArrayIterator
+The MIT License (MIT). Please see [License File](https://github.com/thephpleague/fractal/blob/master/LICENSE) for more information.
