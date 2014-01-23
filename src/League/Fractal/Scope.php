@@ -15,6 +15,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Pagination\PaginatorInterface;
+use League\Fractal\Cursor\CursorInterface;
 
 class Scope
 {
@@ -39,7 +40,7 @@ class Scope
     {
         return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
     }
-    
+
     /**
      * Getter for currentScope
      *
@@ -59,7 +60,7 @@ class Scope
     {
         return $this->parentScopes;
     }
-    
+
     public function isRequested($checkScopeSegment)
     {
         if ($this->parentScopes) {
@@ -122,6 +123,12 @@ class Scope
             if ($paginator !== null and $paginator instanceof PaginatorInterface) {
                 $output['pagination'] = $this->outputPaginator($paginator);
             }
+
+            $cursor = $this->resource->getCursor();
+
+            if ($cursor !== null and $cursor instanceof CursorInterface) {
+                $output['cursor'] = $this->outputCursor($cursor);
+            }
         }
 
         return $output;
@@ -157,7 +164,7 @@ class Scope
 
             $this->availableEmbeds = $transformer->getAvailableEmbeds();
         }
-        
+
         return $processedData;
     }
 
@@ -187,6 +194,24 @@ class Scope
         }
 
         return $pagination;
+    }
+
+    /**
+     * Generates output for cursor adapters. We don't type hint current/next
+     * because they can be either a string or a integer.
+     *
+     * @param  League\Fractal\Cursor\CursorInterface $cursor
+     * @return array
+     */
+    protected function outputCursor(CursorInterface $cursor)
+    {
+        $cursor = array(
+            'current' => $cursor->getCurrent(),
+            'next' => $cursor->getNext(),
+            'count' => (int) $cursor->getCount(),
+        );
+
+        return $cursor;
     }
 
     protected function runAppropriateTransformer()
