@@ -11,12 +11,13 @@
 
 namespace League\Fractal\Resource;
 
+use League\Fractal\Cursor\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 
 /**
  * Resource Collection
  *
- * The data can be a collection of any sort of data, as long as the 
+ * The data can be a collection of any sort of data, as long as the
  * "collection" is either array or an object implementing ArrayIterator.
  */
 class Collection implements ResourceInterface
@@ -27,13 +28,20 @@ class Collection implements ResourceInterface
      * @var array|ArrayIterator
      */
     protected $data;
-    
+
     /**
      * A collection of data
      *
      * @var League\Fractal\Pagination\PaginatorInterface
      */
     protected $paginator;
+
+    /**
+     * Cursor implementation.
+     *
+     * @var League\Fractal\Cursor\CursorInterface
+     */
+    protected $cursor;
 
     /**
      * A callable to process the data attached to this resource
@@ -51,7 +59,7 @@ class Collection implements ResourceInterface
         $this->data = $data;
         $this->transformer = $transformer;
     }
-    
+
     /**
      * Getter for data
      *
@@ -70,6 +78,16 @@ class Collection implements ResourceInterface
     public function getPaginator()
     {
         return $this->paginator;
+    }
+
+    /**
+     * Set the cursor implementation.
+     *
+     * @return League\Fractal\Cursor\CursorInterface
+     */
+    public function getCursor()
+    {
+        return $this->cursor;
     }
 
     /**
@@ -94,4 +112,16 @@ class Collection implements ResourceInterface
         $this->paginator = $paginator;
         return $this;
     }
+
+    /**
+     * Set the cursor implementation.
+     *
+     * @param League\Fractal\Cursor\CursorInterface $cursor
+     */
+    public function setCursor(CursorInterface $cursor)
+    {
+        $this->cursor = $cursor;
+        return $this;
+    }
+
 }
