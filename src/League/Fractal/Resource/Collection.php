@@ -123,5 +123,4 @@ class Collection implements ResourceInterface
         $this->cursor = $cursor;
         return $this;
     }
-
 }

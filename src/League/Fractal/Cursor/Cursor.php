@@ -18,7 +18,6 @@ namespace League\Fractal\Cursor;
  */
 class Cursor implements CursorInterface
 {
-
     /**
      * Current cursor value.
      *
@@ -119,5 +118,4 @@ class Cursor implements CursorInterface
         $this->count = $count;
         return $this;
     }
-
 }
