@@ -219,17 +219,17 @@ use Acme\Transformer\BookTransformer;
 use League\Fractal\Cursor\Cursor;
 use League\Fractal\Resource\Collection;
 
-$users = new Book;
+$books = new Book;
 
 if ($current = Input::get('cursor', false)) {
-    $users = $users->where('id', '>', $current);
+    $books = $books->where('id', '>', $current);
 }
 
-$users = $users->take(5)->get();
+$books = $books->take(5)->get();
 
-$cursor = new Cursor($current, $users->last()->id, $users->count());
+$cursor = new Cursor($current, $books->last()->id, $books->count());
 
-$resource = new Collection($users, new BookTransformer);
+$resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
 ```
 
