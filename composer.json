@@ -19,8 +19,7 @@
     "require-dev": {
         "illuminate/pagination": "~4.1",
         "league/phpunit-coverage-listener": "~1.1",
-        "mockery/mockery": "dev-master@dev",
-        "silex/silex": "~1.1"
+        "mockery/mockery": "dev-master@dev"
     },
     "suggests": {
         "illuminate/pagination": "~4.0"
