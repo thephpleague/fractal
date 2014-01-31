@@ -3,5 +3,5 @@ guard 'phpunit2', :tests_path => 'tests', :cli => '--colors' do
   watch(%r{^.+Test\.php$})
 
   # Watch library files and run their tests
-  watch(%r{^src/League/Fractal/(.+)\.php}) { |m| "tests/League/Fractal/Test/#{m[1]}Test.php" }
+  watch(%r{^src/(.+)\.php}) { |m| "tests/#{m[1]}Test.php" }
 end
