@@ -15,12 +15,12 @@ This package aims to do a few simple things:
 * Avoid db schema changes changing your output
 * Allow for simple, flexible and controllable embedding of data, avoiding infinite loops
 
-This package is compliant with [PSR-0][], [PSR-1][], and [PSR-2][]. If you
+This package is compliant with [PSR-1][], [PSR-2][] and [PSR-4][]. If you
 notice compliance oversights, please send a patch via pull request.
 
-[PSR-0]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
+[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
 
 ## Install
@@ -30,7 +30,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.6.*"
+        "league/fractal": "0.7.*"
     }
 }
 ```
