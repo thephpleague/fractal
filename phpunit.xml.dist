@@ -27,7 +27,7 @@
                         <string>League\Fractal</string>
                     </element>
                     <element key="repo_token">
-                        <string>SWXV74M3EDTakDezlQvrc12eH4ODwk0bV</string>
+                        <string>LbVGh7Vb9CIJNLDWgIfi7N0d6B5JnvLfk</string>
                     </element>
                     <element key="target_url">
                         <string>https://coveralls.io/api/v1/jobs</string>

@@ -8,9 +8,7 @@ php:
 
 before_script:
   - composer self-update
-  - git clone git://github.com/donquixote/composer.git -b feature/psr4-complete
-  - cd composer && composer install && cd ../
-  - ./composer/bin/composer install
+  - composer install
   - pyrus install pear/PHP_CodeSniffer
   - phpenv rehash
 
