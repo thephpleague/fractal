@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test;
 
+use League\Fractal\Cursor\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Manager;
@@ -214,7 +215,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('getPerPage')->once()->andReturn($perPage);
         $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
-        $paginator->shouldReceive('getUrl')->times(2)->andReturnUsing(function ($page) { 
+        $paginator->shouldReceive('getUrl')->times(2)->andReturnUsing(function ($page) {
             return 'http://example.com/foo?page='.$page;
         });
 
@@ -233,6 +234,37 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     'previous' => 'http://example.com/foo?page=1',
                     'next' => 'http://example.com/foo?page=3',
                 ),
+            ),
+            'data' => array(
+                array(
+                    'foo' => 'bar',
+                    'baz' => 'ban',
+                ),
+            ),
+        );
+
+        $this->assertEquals($expectedOutput, $rootScope->toArray());
+    }
+
+    public function testCursorOutput()
+    {
+        $manager = new Manager();
+
+        $collection = new Collection(array(array('foo' => 'bar', 'baz' => 'ban')), function (array $data) {
+            return $data;
+        });
+
+        $cursor = new Cursor(0, 'ban', 2);
+
+        $collection->setCursor($cursor);
+
+        $rootScope = $manager->createData($collection);
+
+        $expectedOutput = array(
+            'cursor' => array(
+                'current' => 0,
+                'next' => 'ban',
+                'count' => 2,
             ),
             'data' => array(
                 array(
