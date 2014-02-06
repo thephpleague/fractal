@@ -1,0 +1,3 @@
+phpunit.xml
+/src/League/PHPunitCoverageListener/Tests/Mocks/data/custom/coverage.json
+/vendor

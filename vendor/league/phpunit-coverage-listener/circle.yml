@@ -1,0 +1,11 @@
+machine:
+  php:
+    version: 5.3.10
+
+dependencies:
+  pre:
+    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
+
+test:
+  override:
+    - vendor/bin/phpunit --configuration configuration/circle.xml

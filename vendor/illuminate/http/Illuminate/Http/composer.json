@@ -1,0 +1,31 @@
+{
+    "name": "illuminate/http",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylorotwell@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/session": "4.0.x",
+        "illuminate/support": "4.0.x",
+        "symfony/http-foundation": "2.3.*"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.7.2",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Illuminate\\Http": ""
+        }
+    },
+    "target-dir": "Illuminate/Http",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}
