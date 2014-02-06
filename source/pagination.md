@@ -62,16 +62,17 @@ use Acme\Transformer\BookTransformer;
 use League\Fractal\Cursor\Cursor;
 use League\Fractal\Resource\Collection;
 
-$books = new Book;
-
 if ($current = Input::get('cursor', false)) {
-    $books = $books->where('id', '>', $current);
+    $books = Book::where('id', '>', $current)->take(5)->get();
+} else {
+    $books = Book::take(5)->get();	
 }
-
-$books = $books->take(5)->get();
 
 $cursor = new Cursor($current, $books->last()->id, $books->count());
 
 $resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
 ~~~
+
+These examples are for Laravel's Illuminate\Database package, but you can obviously do it however you like. Simply make 
+sure that the current cursor is used as a marker, for where to get your next chunk of content.
