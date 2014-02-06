@@ -32,6 +32,6 @@ APIs, and works really well with JSON.
 
 ## Questions?
 
-Plates was created by Phil Sturgeon. Find him on Twitter at [@philsturgeon](https://twitter.com/philsturgeon).
+Fractal was created by Phil Sturgeon. Find him on Twitter at [@philsturgeon](https://twitter.com/philsturgeon).
 
 
