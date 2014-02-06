@@ -1,0 +1,54 @@
+---
+layout: layout
+title: Resources
+---
+
+# Resources
+
+Resources are objects that represent data, and have knowledge of a "Transformer", which is 
+an object or callback that will know how to output the data.
+
+Two types of resource exist:
+
+* **League\Fractal\Resource\Item** - A singular resource, probably one entry in a data store
+* **League\Fractal\Resource\Collection** - A collection of resources
+
+The `Item` and `Collection` constructors will take any kind of data you wish to send it
+as the first argument, and then a "transformer" as the second argument. 
+
+### Item Example
+
+~~~.language-php
+use League\Fractal;
+
+$book = BookModel::find($id);
+
+$resource = new Fractal\Resource\Item($book, function(BookModel $book) {
+    return [
+        'id' => (int) $book->id,
+        'title' => $book->title,
+        'year' => $book->yr,
+    ];
+});
+~~~
+
+### Collection Example
+
+~~~.language-php
+use League\Fractal;
+
+$books = BookModel::all();
+
+$resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
+    return [
+        'id' => (int) $book->id,
+        'title' => $book->title,
+        'year' => $book->yr,
+    ];
+});
+~~~
+
+In this example `$books` is an array of `BookModel` instances, or a collection class 
+that implemented [ArrayIterator][].
+
+[ArrayIterator]: http://php.net/ArrayIterator

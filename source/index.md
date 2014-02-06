@@ -35,53 +35,14 @@ APIs, and works really well with JSON.
 
 Shove this in your base controller or an IoC somehow.
 
-``` php
+~~~.language-php
 use League\Fractal;
 
 // Create a top level instance somewhere
 $fractal = new Fractal\Manager();
 $fractal->setRequestedScopes(explode(',', $_GET['embed']));
-```
+~~~
 
-### Creating Resources and Transformers
-
-In your controllers you can then create "resources", of which there are three types:
-
-* **League\Fractal\Resource\Item** - A singular resource, probably one entry in a data store
-* **League\Fractal\Resource\Collection** - A collection of resources
-
-The `Item` and `Collection` constructors will take any kind of data you wish to send it
-as the first argument, and then a "transformer" as the second argument. This can be callable or a string
-containing a fully-qualified class name.
-
-The transformer will the raw data passed back into it, so if you pass an instance of `BookModel` into an
-`ItemResource` then you can expect this instance to be `BookModel`. If you passed an array or a collection
-(an object implementing [ArrayIterator][]) of `BookModel` instances then this transform method will be run
-on each of those instances.
-
-``` php
-use League\Fractal;
-
-$resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
-    return [
-        'id' => (int) $book->id,
-        'title' => $book->title,
-        'year' => $book->yr,
-    ];
-});
-```
-
-If you want to reuse your transformers (recommended) then create classes somewhere and pass in the name.
-Assuming you use an autoloader of course. These classes must extend `League\Fractal\TransformerAbstract` and
-contain a transform method, much like the callback example: `public function transform(Foo $foo)`.
-
-``` php
-use League\Fractal;
-use Acme\Transformer\BookTransformer;
-
-$resource = new Fractal\Resource\Item($book, new BookTransformer);
-$resource = new Fractal\Resource\Collection($books, new BookTransformer);
-```
 
 ### Embedding Data
 

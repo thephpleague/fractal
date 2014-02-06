@@ -8,5 +8,7 @@ menu:
         Simple Example: '/simple-example/'
         Installation: '/installation/'
         Glossary: '/glossary/'
+        Resources: '/resources/'
+        Transformers: '/transformers/'
     Advanced:
         Pagination: '/pagination/'
