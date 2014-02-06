@@ -19,11 +19,12 @@ as the first argument, and then a "transformer" as the second argument.
 ### Item Example
 
 ~~~.language-php
+use Acme\Model\Book;
 use League\Fractal;
 
-$book = BookModel::find($id);
+$book = Book::find($id);
 
-$resource = new Fractal\Resource\Item($book, function(BookModel $book) {
+$resource = new Fractal\Resource\Item($book, function(Book $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
@@ -35,11 +36,12 @@ $resource = new Fractal\Resource\Item($book, function(BookModel $book) {
 ### Collection Example
 
 ~~~.language-php
+use Acme\Model\Book;
 use League\Fractal;
 
-$books = BookModel::all();
+$books = Book::all();
 
-$resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
+$resource = new Fractal\Resource\Collection($books, function(Book $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
@@ -48,7 +50,7 @@ $resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
 });
 ~~~
 
-In this example `$books` is an array of `BookModel` instances, or a collection class 
+In this example `$books` is an array of `Acme\Model\Book` instances, or a collection class 
 that implemented [ArrayIterator][].
 
 [ArrayIterator]: http://php.net/ArrayIterator
