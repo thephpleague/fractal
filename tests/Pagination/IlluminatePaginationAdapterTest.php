@@ -10,14 +10,14 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $paginator   = Mockery::mock('Illuminate\Pagination\Paginator')
             ->makePartial();
-        $environment = Mockery::mock('Illuminate\Pagination\Environment')
+        $factory = Mockery::mock('Illuminate\Pagination\Factory')
             ->makePartial();
 
-        $environment->setCurrentPage(2);
-        $environment->setBaseUrl('http://example.com/foo');
-        $environment->setPageName('page');
+        $factory->setCurrentPage(2);
+        $factory->setBaseUrl('http://example.com/foo');
+        $factory->setPageName('page');
 
-        $paginator->shouldReceive('getEnvironment')->andReturn($environment);
+        $paginator->shouldReceive('getFactory')->andReturn($factory);
         $paginator->shouldReceive('getItems')->andReturn(array(
             'Item 0',
             'Item 1',
