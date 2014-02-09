@@ -5,10 +5,10 @@ namespace League\Fractal\Test\Cursor;
 use League\Fractal\Cursor\Cursor;
 use Mockery;
 
-class CursorAdapterTest extends \PHPUnit_Framework_TestCase
+class CursorTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testCursorAdapter()
+    public function testCursor()
     {
         $cursor = new Cursor(100, 110, 10);
 
