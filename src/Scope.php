@@ -57,6 +57,11 @@ class Scope
      */
     public function getSerializer()
     {
+        // Set the serializer to the default Data Array format, if not set.
+        if (! $this->serializer || ! $this->serializer instanceof SerializerInterface) {
+            $this->setSerializer(new DataArraySerializer);
+        }
+
         return $this->serializer;
     }
 
@@ -153,10 +158,9 @@ class Scope
      */
     public function toArray()
     {
-        // Set the serializer to the default Data Array format, if not set.
-        if (! $this->getSerializer() instanceof DataArraySerializer) {
-            $this->setSerializer(new DataArraySerializer);
-        }
+        // Force the serializer to the default Data Array format,
+        // for backwards compatibility with Scope::toArray().
+        $this->setSerializer(new DataArraySerializer);
 
         return $this->serialize();
     }
