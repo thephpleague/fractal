@@ -39,7 +39,7 @@ use Acme\Model\Book;
 use Acme\Transformer\BookTransformer;
 
 $paginator = Book::paginate();
-$books = $books->getCollection();
+$books = $paginator->getCollection();
 
 $resource = new Collection($books, new BookTransformer);
 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
