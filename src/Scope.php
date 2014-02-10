@@ -128,6 +128,27 @@ class Scope
     }
 
     /**
+     * Serialize the current data for this scope.
+     *
+     * @return mixed
+     */
+    public function serializeData()
+    {
+        $serializer = $this->getSerializer();
+
+        $data = $this->runAppropriateTransformer();
+
+        $paginator = $cursor = null;
+
+        if ($this->resource instanceof Collection) {
+            $paginator = $this->resource->getPaginator();
+            $cursor = $this->resource->getCursor();
+        }
+
+        return $serializer->output($data, $this->availableEmbeds, $paginator, $cursor);
+    }
+
+    /**
      * Convert the current data for this scope to an array
      *
      * @return array
