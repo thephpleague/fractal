@@ -172,7 +172,7 @@ class Scope
      */
     public function toJson()
     {
-        return json_encode($this->toArray());
+        return json_encode($this->serialize());
     }
 
     protected function fireTransformer($transformer, $data)
