@@ -16,6 +16,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Cursor\CursorInterface;
+use League\Fractal\Serializer\SerializerInterface;
 
 class Scope
 {
@@ -24,6 +25,8 @@ class Scope
     protected $currentScope;
 
     protected $manager;
+
+    protected $serializer;
 
     protected $resource;
 
@@ -34,6 +37,28 @@ class Scope
         $this->resourceManager = $resourceManager;
         $this->currentScope = $currentScope;
         $this->resource = $resource;
+    }
+
+    /**
+     * Setter for data serializer.
+     *
+     * @param  League\Fractal\Serializer\SerializerInterface $serializer
+     * @return self
+     */
+    public function setSerializer(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+        return $this;
+    }
+
+    /**
+     * Getter for data serializer.
+     *
+     * @return League\Fractal\Serializer\SerializerInterface
+     */
+    public function getSerializer()
+    {
+        return $this->serializer;
     }
 
     public function embedChildScope($scopeIdentifier, $resource)
