@@ -175,7 +175,7 @@ class Scope
 
         $pagination = array(
             'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->count(),
+            'count' => (int) $paginator->getCount(),
             'per_page' => (int) $paginator->getPerPage(),
             'current_page' => $currentPage,
             'total_pages' => $lastPage,
