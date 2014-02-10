@@ -6,7 +6,7 @@ title: Installation
 Installation
 ============
 
-Plates is available on [Packagist](https://packagist.org/packages/league/plates) and can be installed using [Composer](https://getcomposer.org/):
+Fractal is available on [Packagist](https://packagist.org/packages/league/fractal) and can be installed using [Composer](https://getcomposer.org/):
 
 ~~~.language-javascript
 {
