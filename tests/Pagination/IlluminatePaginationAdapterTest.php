@@ -28,7 +28,7 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('getCurrentPage')->andReturn('2');
         $paginator->shouldReceive('getLastPage')->andReturn('10');
         $paginator->shouldReceive('getTotal')->andReturn('50');
-        $paginator->shouldReceive('count')->andReturn('5');
+        $paginator->shouldReceive('getCount')->andReturn('5');
         $paginator->shouldReceive('getPerPage')->andReturn('5');
 
         $adapter = new IlluminatePaginatorAdapter($paginator);
@@ -41,7 +41,7 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $adapter->getCurrentPage());
         $this->assertEquals(10, $adapter->getLastPage());
         $this->assertEquals(50, $adapter->getTotal());
-        $this->assertEquals(5, $adapter->count());
+        $this->assertEquals(5, $adapter->getCount());
         $this->assertEquals(5, $adapter->getPerPage());
         $this->assertEquals(
             'http://example.com/foo?page=1',
