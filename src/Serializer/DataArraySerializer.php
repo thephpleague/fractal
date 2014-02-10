@@ -22,30 +22,29 @@ use League\Fractal\Cursor\CursorInterface;
 class DataArraySerializer implements SerializerInterface
 {
     /**
-     * Generates output for resource.
+     * Serializes output for a given resource.
      *
-     * @param  array $data
-     * @param  array $embeds
-     * @param  League\Fractal\Cursor\PaginatorInterface|null $paginator
-     * @param  League\Fractal\Cursor\CursorInterface|null $cursor
+     * @param  array $object
      * @return array
      */
-    public function serialize($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null)
+    public function serialize(array $object)
     {
-        $output = array(
-            'data' => $data,
-        );
+        $output = array();
 
-        if ($embeds) {
-            $output['embeds'] = $embeds;
-        }
+        foreach ($object as $key => $value) {
+            // Don't output null value top-level items.
+            // This behavior should be serializer specific.
+            if (is_null($value)) {
+                continue;
+            }
 
-        if ($paginator !== null and $paginator instanceof PaginatorInterface) {
-            $output['pagination'] = $this->outputPaginator($paginator);
-        }
+            $method = 'process'.ucwords($key);
+            if (method_exists($this, $method)) {
+                $this->{$method}($value, $output);
+            } else {
+                $output[$key] = $value;
+            }
 
-        if ($cursor !== null and $cursor instanceof CursorInterface) {
-            $output['cursor'] = $this->outputCursor($cursor);
         }
 
         return $output;
@@ -54,10 +53,10 @@ class DataArraySerializer implements SerializerInterface
     /**
      * Generates output for paginator adapters.
      *
-     * @param  League\Fractal\Cursor\PaginatorInterface $paginator
-     * @return array
+     * @param League\Fractal\Cursor\PaginatorInterface $paginator
+     * @param array $output
      */
-    public function outputPaginator(PaginatorInterface $paginator)
+    public function processPaginator(PaginatorInterface $paginator, &$output)
     {
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();
@@ -82,24 +81,22 @@ class DataArraySerializer implements SerializerInterface
             $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
         }
 
-        return $pagination;
+        $output['pagination'] = $pagination;
     }
 
     /**
      * Generates output for cursor adapters. We don't type hint current/next
      * because they can be either a string or a integer.
      *
-     * @param  League\Fractal\Cursor\CursorInterface $cursor
-     * @return array
+     * @param League\Fractal\Cursor\CursorInterface $cursor
+     * @param array $output
      */
-    public function outputCursor(CursorInterface $cursor)
+    public function processCursor(CursorInterface $cursor, &$output)
     {
-        $cursor = array(
+        $output['cursor'] = array(
             'current' => $cursor->getCurrent(),
             'next' => $cursor->getNext(),
             'count' => (int) $cursor->getCount(),
         );
-
-        return $cursor;
     }
 }

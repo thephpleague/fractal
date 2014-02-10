@@ -11,15 +11,16 @@
 
 namespace League\Fractal\Serializer;
 
-use League\Fractal\Pagination\PaginatorInterface;
-use League\Fractal\Cursor\CursorInterface;
-
 /**
  * The interface for resource output serializers.
  */
 interface SerializerInterface
 {
-    public function outputPaginator(PaginatorInterface $paginator);
-    public function outputCursor(CursorInterface $cursor);
-    public function serialize($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null);
+    /**
+     * Serializes output for a given resource.
+     *
+     * @param  array $object
+     * @return mixed
+     */
+    public function serialize(array $object);
 }

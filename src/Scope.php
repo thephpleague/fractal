@@ -131,20 +131,19 @@ class Scope
      *
      * @return mixed
      */
-    public function serializeData()
+    public function serialize()
     {
-        $serializer = $this->getSerializer();
-
-        $data = $this->runAppropriateTransformer();
-
-        $paginator = $cursor = null;
+        $object = array(
+            'data' => $this->runAppropriateTransformer(),
+            'embeds' => $this->availableEmbeds,
+        );
 
         if ($this->resource instanceof Collection) {
-            $paginator = $this->resource->getPaginator();
-            $cursor = $this->resource->getCursor();
+            $object['paginator'] = $this->resource->getPaginator();
+            $object['cursor'] = $this->resource->getCursor();
         }
 
-        return $serializer->serialize($data, $this->availableEmbeds, $paginator, $cursor);
+        return $this->getSerializer()->serialize($object);
     }
 
     /**
@@ -159,7 +158,7 @@ class Scope
             $this->setSerializer(new DataArraySerializer);
         }
 
-        return $this->serializeData();
+        return $this->serialize();
     }
 
     /**
