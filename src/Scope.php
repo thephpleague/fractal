@@ -14,9 +14,8 @@ namespace League\Fractal;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Pagination\PaginatorInterface;
-use League\Fractal\Cursor\CursorInterface;
 use League\Fractal\Serializer\SerializerInterface;
+use League\Fractal\Serializer\DataArraySerializer;
 
 class Scope
 {
@@ -155,29 +154,12 @@ class Scope
      */
     public function toArray()
     {
-        $output = array(
-            'data' => $this->runAppropriateTransformer()
-        );
-
-        if ($this->availableEmbeds) {
-            $output['embeds'] = $this->availableEmbeds;
+        // Set the serializer to the default Data Array format, if not set.
+        if (! $this->getSerializer() instanceof DataArraySerializer) {
+            $this->setSerializer(new DataArraySerializer);
         }
 
-        if ($this->resource instanceof Collection) {
-            $paginator = $this->resource->getPaginator();
-
-            if ($paginator !== null and $paginator instanceof PaginatorInterface) {
-                $output['pagination'] = $this->outputPaginator($paginator);
-            }
-
-            $cursor = $this->resource->getCursor();
-
-            if ($cursor !== null and $cursor instanceof CursorInterface) {
-                $output['cursor'] = $this->outputCursor($cursor);
-            }
-        }
-
-        return $output;
+        return $this->serializeData();
     }
 
     /**
@@ -212,52 +194,6 @@ class Scope
         }
 
         return $processedData;
-    }
-
-    protected function outputPaginator(PaginatorInterface $paginator)
-    {
-        $currentPage = (int) $paginator->getCurrentPage();
-        $lastPage = (int) $paginator->getLastPage();
-
-        $pagination = array(
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->count(),
-            'per_page' => (int) $paginator->getPerPage(),
-            'current_page' => $currentPage,
-            'total_pages' => $lastPage,
-        );
-
-        $pagination['links'] = array();
-
-        // $paginator->appends(array_except(Request::query(), ['page']));
-
-        if ($currentPage > 1) {
-            $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
-        }
-
-        if ($currentPage < $lastPage) {
-            $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
-        }
-
-        return $pagination;
-    }
-
-    /**
-     * Generates output for cursor adapters. We don't type hint current/next
-     * because they can be either a string or a integer.
-     *
-     * @param  League\Fractal\Cursor\CursorInterface $cursor
-     * @return array
-     */
-    protected function outputCursor(CursorInterface $cursor)
-    {
-        $cursor = array(
-            'current' => $cursor->getCurrent(),
-            'next' => $cursor->getNext(),
-            'count' => (int) $cursor->getCount(),
-        );
-
-        return $cursor;
     }
 
     protected function runAppropriateTransformer()
