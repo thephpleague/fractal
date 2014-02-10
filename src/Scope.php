@@ -144,7 +144,7 @@ class Scope
             $cursor = $this->resource->getCursor();
         }
 
-        return $serializer->output($data, $this->availableEmbeds, $paginator, $cursor);
+        return $serializer->serialize($data, $this->availableEmbeds, $paginator, $cursor);
     }
 
     /**

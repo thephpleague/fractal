@@ -30,7 +30,7 @@ class DataArraySerializer implements SerializerInterface
      * @param  League\Fractal\Cursor\CursorInterface|null $cursor
      * @return array
      */
-    public function output($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null)
+    public function serialize($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null)
     {
         $output = array(
             'data' => $data,

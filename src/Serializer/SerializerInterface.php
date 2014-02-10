@@ -19,7 +19,7 @@ use League\Fractal\Cursor\CursorInterface;
  */
 interface SerializerInterface
 {
-    public function output($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null);
     public function outputPaginator(PaginatorInterface $paginator);
     public function outputCursor(CursorInterface $cursor);
+    public function serialize($data, array $embeds = null, PaginatorInterface $paginator = null, CursorInterface $cursor = null);
 }
