@@ -37,11 +37,12 @@ $books = [
 
 // Pass this array (collection) into a resource, which will also have a "Transformer"
 // This "Transformer" can be a callback or a new instance of a Transformer object
-$resource = new Fractal\Resource\Collection($books, function(BookModel $book) {
+// We type hint for array, because each item in the $books var is an array
+$resource = new Fractal\Resource\Collection($books, function(array $book) {
     return [
-        'id' => (int) $book->id,
-        'title' => $book->title,
-        'year' => $book->yr,
+        'id' => (int) $book['id'],
+        'title' => $book['title'],
+        'year' => $book['yr'],
     ];
 });
 
