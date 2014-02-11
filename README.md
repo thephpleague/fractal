@@ -42,7 +42,9 @@ Via Composer
 
 ## Documentation
 
-Read [full documentation](http://fractal.thephpleague.com) here.
+Fractal has [full documentation](http://fractal.thephpleague.com), powered by [Sculpin](https://sculpin.io).
+
+Contribute to this documentation in the [sculpin branch](https://github.com/thephpleague/fractal/tree/sculpin/source).
 
 ## Todo
 

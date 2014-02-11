@@ -21,7 +21,7 @@ interface PaginatorInterface
     public function getCurrentPage();
     public function getLastPage();
     public function getTotal();
-    public function count();
+    public function getCount();
     public function getPerPage();
     public function getUrl($page);
 }
