@@ -13,7 +13,6 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\PaginatedCollection;
 use League\Fractal\Resource\ResourceInterface;
 
 /**
