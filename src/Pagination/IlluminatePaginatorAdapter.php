@@ -28,7 +28,7 @@ class IlluminatePaginatorAdapter extends Paginator implements PaginatorInterface
     public function __construct(Paginator $paginator)
     {
         parent::__construct(
-            $paginator->getEnvironment(),
+            (method_exists($paginator, 'getFactory') ? $paginator->getFactory() : $paginator->getEnvironment()),
             $paginator->getItems(),
             $paginator->getTotal(),
             $paginator->getPerPage()
