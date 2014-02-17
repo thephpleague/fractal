@@ -40,6 +40,18 @@ Via Composer
 }
 ```
 
+## Requirements
+
+The following versions of PHP are supported by this version. 
+
+* PHP 5.3
+* PHP 5.4
+* PHP 5.5
+* PHP 5.6
+
+HHVM support is also experimentally supported. It basically works, but CodeSniffer installation is screwing it up on 
+Travis-CI.
+
 ## Documentation
 
 Fractal has [full documentation](http://fractal.thephpleague.com), powered by [Sculpin](https://sculpin.io).
