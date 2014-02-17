@@ -120,13 +120,13 @@ class Scope
         if ($this->resource instanceof Collection) {
             $paginator = $this->resource->getPaginator();
 
-            if ($paginator !== null and $paginator instanceof PaginatorInterface) {
+            if ($paginator !== null && $paginator instanceof PaginatorInterface) {
                 $output['pagination'] = $this->outputPaginator($paginator);
             }
 
             $cursor = $this->resource->getCursor();
 
-            if ($cursor !== null and $cursor instanceof CursorInterface) {
+            if ($cursor !== null && $cursor instanceof CursorInterface) {
                 $output['cursor'] = $this->outputCursor($cursor);
             }
         }
@@ -182,8 +182,6 @@ class Scope
         );
 
         $pagination['links'] = array();
-
-        // $paginator->appends(array_except(Request::query(), ['page']));
 
         if ($currentPage > 1) {
             $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
