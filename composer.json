@@ -16,6 +16,9 @@
             "role": "Developer"
         }
     ],
+    "require": {
+        "php": ">=5.3"
+    },
     "require-dev": {
         "illuminate/pagination": "~4.1",
         "league/phpunit-coverage-listener": "~1.1",
