@@ -475,6 +475,8 @@ table {
   src: url("../fonts/museo_sans_300.eot?#iefix") format("embedded-opentype"), url("../fonts/museo_sans_300.woff") format("woff"), url("../fonts/museo_sans_300.ttf") format("truetype"), url("../fonts/museo_sans_300.svg#Museo Sans 500") format("svg"); }
 
 * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
 html {
@@ -871,7 +873,7 @@ main {
       font-size: 0; }
       main article .quick_links li {
         display: inline-block;
-        margin: 0 10px 0 0; }
+        margin: 0 10px 10px 0; }
         main article .quick_links li a {
           display: block;
           height: 38px;
@@ -893,7 +895,7 @@ main {
         margin: 0 0 30px 0;
         padding: 0 15px; }
         main article h1 {
-          margin: 30px 0 15px 0;
+          margin: 30px 0 25px 0;
           font-size: 40px; }
         main article h2 {
           margin: 30px 0 10px 0;
@@ -903,7 +905,7 @@ main {
         margin: 0 0 30px 0;
         padding: 0 30px; }
         main article h1 {
-          margin: 30px 0 15px 0;
+          margin: 30px 0 25px 0;
           font-size: 50px; }
         main article h2 {
           margin: 30px 0 10px 0;
@@ -945,8 +947,8 @@ footer {
     footer {
       padding: 25px 0 25px 45px; } }
 
-code[class*="language-"],
-pre[class*="language-"] {
+code,
+pre {
   color: #2b3d50;
   font-family: Consolas, Monaco, 'Andale Mono', monospace;
   line-height: 140%;
@@ -963,20 +965,17 @@ pre[class*="language-"] {
   -ms-hyphens: none;
   hyphens: none; }
   @media (min-width: 550px) and (max-width: 849px) {
-    code[class*="language-"],
-    pre[class*="language-"] {
+    code,
+    pre {
       font-size: 14px; } }
   @media screen and (min-width: 800px) {
-    code[class*="language-"],
-    pre[class*="language-"] {
+    code,
+    pre {
       font-size: 16px; } }
 
-pre[class*="language-"] {
+pre {
   padding: 1em;
-  overflow: auto; }
-
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
+  overflow: auto;
   background: #f5f6f7;
   border: solid #dcdddd 1px; }
 
@@ -1005,17 +1004,19 @@ pre[class*="language-"] {
 .language-php .php .punctuation {
   color: #07a; }
 .language-php .markup .token {
-  color: #2b3d50 !important; }
+  color: #2b3d50; }
+  .language-php .markup .token.comment {
+    color: #b6b6b6; }
   .language-php .markup .token .php .keyword,
   .language-php .markup .token .php .string,
   .language-php .markup .token .php .punctuation {
-    color: #690 !important; }
+    color: #690; }
   .language-php .markup .token .php .function,
   .language-php .markup .token .php .property,
   .language-php .markup .token .php .this,
   .language-php .markup .token .php .variable,
   .language-php .markup .token .php .operator {
-    color: #07a !important; }
+    color: #07a; }
 
 .language-javascript .punctuation {
   color: #007e74; }
