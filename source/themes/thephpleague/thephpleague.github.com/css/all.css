@@ -1022,3 +1022,29 @@ pre {
   color: #007e74; }
 .language-javascript .string {
   color: #ff4143; }
+  
+  
+/* ==========================================================================
+   Message Boxes
+   ========================================================================== */  
+
+.message-info {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin:0 auto .3em;
+    padding:.3em;
+    background-color:#B9E6F7;
+    color:#227796;
+    border-radius:.3em;
+}
+
+.message-warning {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin:0 auto .3em;
+    padding:.3em;
+    background-color:#F2DEDE;
+    color:#B94A48;
+    border-radius:.3em;
+}
+
