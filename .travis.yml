@@ -20,8 +20,3 @@ script:
 matrix:
   allow_failures:
     - php: hhvm
-
-branches:
-  except:
-    - sculpin
-    - gh-pages
