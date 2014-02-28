@@ -11,7 +11,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="/tmp/coverage.xml"/>
+        <log type="coverage-clover" target="build/coverage.xml"/>
     </logging>
     <listeners>
         <listener class="League\PHPUnitCoverageListener\Listener">
@@ -33,7 +33,7 @@
                         <string>https://coveralls.io/api/v1/jobs</string>
                     </element>
                     <element key="coverage_dir">
-                        <string>/tmp</string>
+                        <string>build/</string>
                     </element>
                 </array>
             </arguments>
