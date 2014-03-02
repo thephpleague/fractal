@@ -14,7 +14,7 @@ or used by an iPhone application then this will quickly lead to inconsistent out
 
 ## Goals 
 
-* Create a "barrier" between source data and output, so schema changes do not effect users
+* Create a "barrier" between source data and output, so schema changes do not affect users
 * Systematic type-casting of data, to avoid foreach()ing through and (bool)ing everything
 * Embed (or nest) relationships for complex data structures
 * Support the pagination of data results, for small and large data sets alike
