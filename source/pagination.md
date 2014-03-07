@@ -19,7 +19,7 @@ which will only show if there is more data available. This intelligence comes at
 count the number of entries in a database on each call. 
 
 For some data sets this might not be an issue, but for some it certainly will. If pure speed is an issue, 
-consder using Cursors instead.
+consider using Cursors instead.
 
 Paginator objects are created, and must implement `League\Fractal\Pagination\PaginatorInterface`
 and it's specified methods. The instantiated object must then be passed to the `League\Fractal\Resource\Collection::setPaginator()` method.
