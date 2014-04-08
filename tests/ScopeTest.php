@@ -254,7 +254,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             return $data;
         });
 
-        $cursor = new Cursor(0, 'ban', 2);
+        $cursor = new Cursor(0, 'ban', 'ban', 2);
 
         $collection->setCursor($cursor);
 
@@ -263,6 +263,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $expectedOutput = array(
             'cursor' => array(
                 'current' => 0,
+                'prev' => 'ban',
                 'next' => 'ban',
                 'count' => 2,
             ),
