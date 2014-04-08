@@ -19,6 +19,7 @@ namespace League\Fractal\Cursor;
 interface CursorInterface
 {
     public function getCurrent();
+    public function getPrev();
     public function getNext();
     public function getCount();
 }

@@ -15,6 +15,7 @@ namespace League\Fractal\Cursor;
  * A generic cursor adapter.
  *
  * @author Isern Palaus <ipalaus@ipalaus.com>
+ * @author Michele Massari <michele@michelemassari.net>
  */
 class Cursor implements CursorInterface
 {
@@ -24,6 +25,13 @@ class Cursor implements CursorInterface
      * @var mixed
      */
     protected $current;
+
+    /**
+     * Prev cursor value
+     * 
+     * @var mixed
+     */
+    protected $prev;
 
     /**
      * Next cursor value.
@@ -46,9 +54,10 @@ class Cursor implements CursorInterface
      * @param mixed   $next
      * @param integer $count
      */
-    public function __construct($current = null, $next = null, $count = null)
+    public function __construct($current = null, $prev = null, $next = null, $count = null)
     {
         $this->current = $current;
+        $this->prev = $prev;
         $this->next = $next;
         $this->count = $count;
     }
@@ -72,6 +81,28 @@ class Cursor implements CursorInterface
     public function setCurrent($current)
     {
         $this->current = $current;
+        return $this;
+    }
+
+    /**
+     * Get the prev cursor value.
+     *
+     * @return mixed
+     */
+    public function getPrev()
+    {
+        return $this->prev;
+    }
+
+    /**
+     * Set the prev cursor value.
+     *
+     * @param  mixed $prev
+     * @return League\Fractal\Cursor\Cursor
+     */
+    public function setPrev($prev)
+    {
+        $this->prev = $prev;
         return $this;
     }
 
