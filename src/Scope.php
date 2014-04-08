@@ -205,6 +205,7 @@ class Scope
     {
         $cursor = array(
             'current' => $cursor->getCurrent(),
+            'prev' => $cursor->getPrev(),
             'next' => $cursor->getNext(),
             'count' => (int) $cursor->getCount(),
         );
