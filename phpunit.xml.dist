@@ -11,32 +11,10 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="build/coverage.xml"/>
+        <log type="tap" target="build/report.tap"/>
+        <log type="junit" target="build/report.junit.xml"/>
+        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
+        <log type="coverage-text" target="build/coverage.txt"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
-    <listeners>
-        <listener class="League\PHPUnitCoverageListener\Listener">
-            <arguments>
-                <array>
-                    <element key="printer">
-                      <object class="League\PHPUnitCoverageListener\Printer\StdOut"/>
-                    </element>
-                    <element key="hook">
-                      <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
-                    </element>
-                    <element key="namespace">
-                        <string>League\Fractal</string>
-                    </element>
-                    <element key="repo_token">
-                        <string>LbVGh7Vb9CIJNLDWgIfi7N0d6B5JnvLfk</string>
-                    </element>
-                    <element key="target_url">
-                        <string>https://coveralls.io/api/v1/jobs</string>
-                    </element>
-                    <element key="coverage_dir">
-                        <string>build/</string>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
 </phpunit>
