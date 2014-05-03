@@ -37,5 +37,10 @@
         "psr-4": {
             "League\\Fractal\\Tests\\": "tests"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.7-dev"
+        }
     }
 }
