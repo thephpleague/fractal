@@ -20,16 +20,21 @@
         "php": ">=5.3"
     },
     "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9",
         "illuminate/pagination": "~4.1",
-        "league/phpunit-coverage-listener": "~1.1",
-        "mockery/mockery": "dev-master@dev"
+        "league/phpunit-coverage-listener": "~1.1"
     },
     "suggest": {
-        "illuminate/pagination": "~4.0"
+        "illuminate/pagination": "The Illuminate Pagination component."
     },
     "autoload": {
         "psr-4": {
-            "League\\Fractal\\": "src",
+            "League\\Fractal\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "League\\Fractal\\Tests\\": "tests"
         }
     }
