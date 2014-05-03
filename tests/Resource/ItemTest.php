@@ -18,7 +18,8 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $resource = new Item($this->simpleItem, function() {});
-        $this->assertEquals($resource->getTransformer(), function() {});
+        $transformer = function() {};
+        $resource = new Item($this->simpleItem, $transformer);
+        $this->assertEquals($resource->getTransformer(), $transformer);
     }
 }
