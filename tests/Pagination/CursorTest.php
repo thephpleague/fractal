@@ -1,8 +1,8 @@
 <?php
 
-namespace League\Fractal\Test\Cursor;
+namespace League\Fractal\Test\Pagination;
 
-use League\Fractal\Cursor\Cursor;
+use League\Fractal\Pagination\Cursor;
 use Mockery;
 
 class CursorTest extends \PHPUnit_Framework_TestCase

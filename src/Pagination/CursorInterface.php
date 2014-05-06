@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace League\Fractal\Cursor;
+namespace League\Fractal\Pagination;
 
 /**
  * A common interface for cursors to use.

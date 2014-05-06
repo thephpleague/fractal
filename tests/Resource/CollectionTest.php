@@ -1,6 +1,6 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\Cursor\Cursor;
+use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use Mockery;
 
@@ -53,7 +53,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $cursor = new Cursor;
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setCursor($cursor);
-        $this->assertInstanceOf('League\Fractal\Cursor\Cursor', $collection->getCursor());
+        $this->assertInstanceOf('League\Fractal\Pagination\Cursor', $collection->getCursor());
     }
 
     public function tearDown()

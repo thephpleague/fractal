@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace League\Fractal\Cursor;
+namespace League\Fractal\Pagination;
 
 /**
  * A generic cursor adapter.
@@ -76,7 +76,7 @@ class Cursor implements CursorInterface
      * Set the current cursor value.
      *
      * @param  mixed $current
-     * @return League\Fractal\Cursor\Cursor
+     * @return League\Fractal\Pagination\PaginatorInterface
      */
     public function setCurrent($current)
     {
@@ -98,7 +98,7 @@ class Cursor implements CursorInterface
      * Set the prev cursor value.
      *
      * @param  mixed $prev
-     * @return League\Fractal\Cursor\Cursor
+     * @return League\Fractal\Pagination\PaginatorInterface
      */
     public function setPrev($prev)
     {
@@ -120,7 +120,7 @@ class Cursor implements CursorInterface
      * Set the next cursor value.
      *
      * @param  mixed $next
-     * @return League\Fractal\Cursor\Cursor
+     * @return League\Fractal\Pagination\PaginatorInterface
      */
     public function setNext($next)
     {
@@ -142,7 +142,7 @@ class Cursor implements CursorInterface
      * Set the total items in the current cursor.
      *
      * @param integer $count
-     * @return League\Fractal\Cursor\Cursor
+     * @return League\Fractal\Pagination\PaginatorInterface
      */
     public function setCount($count)
     {

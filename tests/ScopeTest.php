@@ -1,6 +1,6 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\Cursor\Cursor;
+use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Manager;
@@ -250,13 +250,18 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $collection = new Collection(array(array('foo' => 'bar', 'baz' => 'ban')), function (array $data) {
+        $inputCollection = array(
+            array(
+                'foo' => 'bar',
+                'baz' => 'ban',
+            )
+        );
+
+        $collection = new Collection($inputCollection, function (array $data) {
             return $data;
         });
 
-
         $cursor = new Cursor(0, 'ban', 'ban', 2);
-
 
         $collection->setCursor($cursor);
 
@@ -269,12 +274,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                 'next' => 'ban',
                 'count' => 2,
             ),
-            'data' => array(
-                array(
-                    'foo' => 'bar',
-                    'baz' => 'ban',
-                ),
-            ),
+            'data' => $inputCollection,
         );
 
         $this->assertEquals($expectedOutput, $rootScope->toArray());
@@ -284,5 +284,4 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         Mockery::close();
     }
-
 }

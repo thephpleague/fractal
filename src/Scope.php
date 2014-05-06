@@ -14,8 +14,8 @@ namespace League\Fractal;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
-use League\Fractal\Cursor\CursorInterface;
 
 class Scope
 {
@@ -99,6 +99,7 @@ class Scope
     public function setParentScopes($parentScopes)
     {
         $this->parentScopes = $parentScopes;
+
         return $this;
     }
 
@@ -198,7 +199,7 @@ class Scope
      * Generates output for cursor adapters. We don't type hint current/next
      * because they can be either a string or a integer.
      *
-     * @param  League\Fractal\Cursor\CursorInterface $cursor
+     * @param  League\Fractal\Pagination\CursorInterface $cursor
      * @return array
      */
     protected function outputCursor(CursorInterface $cursor)
@@ -232,6 +233,7 @@ class Scope
     protected function transformItem()
     {
         $transformer = $this->resource->getTransformer();
+
         return $this->fireTransformer($transformer, $this->resource->getData());
     }
 
@@ -243,6 +245,7 @@ class Scope
         foreach ($this->resource->getData() as $itemData) {
             $data []= $this->fireTransformer($transformer, $itemData);
         }
+
         return $data;
     }
 }
