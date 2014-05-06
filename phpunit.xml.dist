@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false" bootstrap="tests/Bootstrap.php">
     <testsuites>
-        <testsuite name="League Fractal Test Suite">
+        <testsuite name="all">
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
     </testsuites>
