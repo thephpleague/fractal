@@ -39,7 +39,7 @@ class Collection implements ResourceInterface
     /**
      * Cursor implementation.
      *
-     * @var League\Fractal\Pagination\PaginatorInterfaceInterface
+     * @var League\Fractal\Pagination\CursorInterface
      */
     protected $cursor;
 
@@ -83,7 +83,7 @@ class Collection implements ResourceInterface
     /**
      * Set the cursor implementation.
      *
-     * @return League\Fractal\Pagination\PaginatorInterfaceInterface
+     * @return League\Fractal\Pagination\CursorInterface
      */
     public function getCursor()
     {
@@ -116,7 +116,7 @@ class Collection implements ResourceInterface
     /**
      * Set the cursor implementation.
      *
-     * @param League\Fractal\Pagination\PaginatorInterfaceInterface $cursor
+     * @param League\Fractal\Pagination\CursorInterface $cursor
      */
     public function setCursor(CursorInterface $cursor)
     {
