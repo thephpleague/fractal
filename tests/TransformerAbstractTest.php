@@ -184,7 +184,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->setAvailableEmbeds(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
-        $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
+        $transformer->processEmbeddedResources($scope, array('meh'));
     }
 
     /**
