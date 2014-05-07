@@ -7,21 +7,25 @@ use Mockery;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSetRequestedScopes()
+    public function testParseIncludes()
     {
         $manager = new Manager();
-        $this->assertInstanceOf('League\Fractal\Manager', $manager->setRequestedScopes(array('foo')));
-    }
 
-    public function testGetRequestedScopes()
-    {
-        $manager = new Manager();
-        $manager->setRequestedScopes(array('foo', 'bar', 'baz', 'baz.bart'));
-        $this->assertEquals(array('foo', 'bar', 'baz', 'baz.bart'), $manager->getRequestedScopes());
+        // Does a CSV string work
+        $manager->parseIncludes('foo,bar');
+        $this->assertEquals(array('foo', 'bar'), $manager->getRequestedIncludes());
 
-        $manager = new Manager();
-        $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
-        $this->assertEquals(array('foo', 'bar', 'baz', 'baz.bart'), $manager->getRequestedScopes());
+        // Does a big array of stuff work
+        $manager->parseIncludes(array('foo', 'bar', 'bar.baz'));
+        $this->assertEquals(array('foo', 'bar', 'bar.baz'), $manager->getRequestedIncludes());
+
+        // Do requests for `baz.bart` also request `baz`?
+        $manager->parseIncludes(array('foo.bar'));
+        $this->assertEquals(array('foo', 'foo.bar'), $manager->getRequestedIncludes());
+
+        // See if fancy syntax works
+        $manager->parseIncludes('foo:limit(5|1):order(-something)');
+        $this->assertEquals(array('limit' => array('5', '1'), 'order' => array('-something')), $manager->getIncludeParams('foo'));
     }
 
     public function testCreateDataWithCallback()
@@ -38,7 +42,6 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
         $this->assertEquals('{"data":{"foo":"bar"}}', $rootScope->toJson());
-
     }
 
     public function tearDown()

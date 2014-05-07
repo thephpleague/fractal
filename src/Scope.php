@@ -72,7 +72,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        $checkAgainstArray = $this->resourceManager->getRequestedScopes();
+        $checkAgainstArray = $this->resourceManager->getRequestedIncludes();
 
         return in_array($scopeString, $checkAgainstArray);
     }
@@ -154,13 +154,13 @@ class Scope
 
         $processedData = call_user_func(array($transformer, 'transform'), $data);
 
-        // If its an object, process potential embeded resources
+        // If its an object, process potential embedded resources
         if ($transformer instanceof TransformerAbstract) {
-            $embededData = $transformer->processEmbededResources($this, $data);
+            $embeddedData = $transformer->processEmbeddedResources($this, $data);
 
-            if ($embededData !== false) {
+            if ($embeddedData !== false) {
                 // Push the new embeds in with the main data
-                $processedData = array_merge($processedData, $embededData);
+                $processedData = array_merge($processedData, $embeddedData);
             }
 
             $this->availableEmbeds = $transformer->getAvailableEmbeds();

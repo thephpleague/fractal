@@ -78,7 +78,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testIsRequested()
     {
         $manager = new Manager();
-        $manager->setRequestedScopes(array('foo', 'bar', 'baz.bart'));
+        $manager->parseIncludes(array('foo', 'bar', 'baz.bart'));
 
         $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceInterface'));
 
@@ -101,7 +101,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testScopeRequiresConcreteImplementation()
     {
         $manager = new Manager();
-        $manager->setRequestedScopes(array('book'));
+        $manager->parseIncludes('book');
 
         $resource = Mockery::mock('League\Fractal\Resource\ResourceInterface', array(
             array('bar' => 'baz'),
@@ -115,7 +115,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testToArrayWithEmbeds()
     {
         $manager = new Manager();
-        $manager->setRequestedScopes(array('book'));
+        $manager->parseIncludes('book');
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableEmbeds,transform]');
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(array('book'));
@@ -153,7 +153,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
-        $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+        $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
 
         $resource = new Item($this->simpleItem, $transformer);
@@ -167,7 +167,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
-        $transformer->shouldReceive('processEmbededResources')->once()->andReturn(array());
+        $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
         $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);

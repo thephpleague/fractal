@@ -78,15 +78,17 @@ abstract class TransformerAbstract
 
     /**
      * This method is fired to loop through available embeds,
-     * see if any of them are requested and permitted for this 
+     * see if any of them are requested and permitted for this
      * scope.
      *
+     * @param Scope $scope
+     * @param $data
      * @return array
      */
-    public function processEmbededResources(Scope $scope, $data)
+    public function processEmbeddedResources(Scope $scope, $data)
     {
-        $embededData = array();
-        $embededDataCount = 0;
+        $embeddedData = array();
+        $embeddedDataCount = 0;
 
         // Nothing to do, bail
         if (is_array($this->defaultEmbeds)) {
@@ -98,8 +100,8 @@ abstract class TransformerAbstract
 
                 $childScope = $scope->embedChildScope($defaultEmbed, $resource);
 
-                $embededData[$defaultEmbed] = $childScope->toArray();
-                ++$embededDataCount;
+                $embeddedData[$defaultEmbed] = $childScope->toArray();
+                ++$embeddedDataCount;
             }
         }
 
@@ -118,12 +120,12 @@ abstract class TransformerAbstract
 
                 $childScope = $scope->embedChildScope($potentialEmbed, $resource);
 
-                $embededData[$potentialEmbed] = $childScope->toArray();
-                ++$embededDataCount;
+                $embeddedData[$potentialEmbed] = $childScope->toArray();
+                ++$embeddedDataCount;
             }
         }
 
-        return $embededDataCount === 0 ? false : $embededData;
+        return $embeddedDataCount === 0 ? false : $embeddedData;
     }
 
     protected function callEmbedMethod($embed, $data)
@@ -153,8 +155,9 @@ abstract class TransformerAbstract
     /**
      * Setter for manager
      *
+     * @param $manager
      * @return self
-     */
+     **/
     public function setManager($manager)
     {
         $this->manager = $manager;
@@ -164,7 +167,8 @@ abstract class TransformerAbstract
     /**
      * Setter for availableEmbeds
      *
-     * @return self
+     * @param $availableEmbeds
+     * @return $this
      */
     public function setAvailableEmbeds($availableEmbeds)
     {
@@ -175,8 +179,9 @@ abstract class TransformerAbstract
     /**
      * Setter for defaultEmbeds
      *
-     * @return self
-     */
+     * @param $defaultEmbeds
+     * @return $this
+     **/
     public function setDefaultEmbeds($defaultEmbeds)
     {
         $this->defaultEmbeds = $defaultEmbeds;
@@ -186,8 +191,10 @@ abstract class TransformerAbstract
     /**
      * Create a new item resource object
      *
+     * @param $data
+     * @param $transformer
      * @return League\Fractal\Resource\Item
-     */
+     **/
     protected function item($data, $transformer)
     {
         return new Item($data, $transformer);
@@ -196,6 +203,8 @@ abstract class TransformerAbstract
     /**
      * Create a new collection resource object
      *
+     * @param $data
+     * @param $transformer
      * @return League\Fractal\Resource\Collection
      */
     protected function collection($data, $transformer)
