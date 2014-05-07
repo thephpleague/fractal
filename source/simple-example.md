@@ -16,7 +16,11 @@ use League\Fractal;
 
 // Create a top level instance somewhere
 $fractal = new Fractal\Manager();
-$fractal->setRequestedScopes(explode(',', $_GET['embed']));
+
+// If you request embedded data
+if (! empty($_GET['embed'])) {
+	$fractal->setRequestedScopes(explode(',', $_GET['embed']));
+}
 
 // Get data from some sort of source
 // Most PHP extensions for SQL engines return everything as a string for... speed?
@@ -24,13 +28,13 @@ $books = [
 	[
 		'id' => "1",
 		'title' => "Hogfather",
-		'year' => "1998",
+		'yr' => "1998",
 		'author_email' => 'philip@example.com'
 	],
 	[
 		'id' => "2",
 		'title' => "Going Postal",
-		'year' => "2004",
+		'yr' => "2004",
 		'author_email' => 'philip@example.com'
 	]
 ];
@@ -42,7 +46,7 @@ $resource = new Fractal\Resource\Collection($books, function(array $book) {
     return [
         'id' => (int) $book['id'],
         'title' => $book['title'],
-        'year' => $book['yr'],
+        'year' => (int) $book['yr'],
     ];
 });
 
