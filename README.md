@@ -60,9 +60,8 @@ Contribute to this documentation in the [sculpin branch](https://github.com/thep
 
 ## Todo
 
-- [ ] Switch return array to use instance properties in `transform()`
-- [ ] Implement [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS)/[HAL](http://stateless.co/hal_specification.html) links
-- [ ] Add smart embed syntax, e.g: `?embed=foo:limit(5):order(something,asc)`
+- Wrap optional params in a ParamBag object or similar
+- Complete JSON-API and HAL serializers
 
 ## Testing
 
