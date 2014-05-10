@@ -19,7 +19,7 @@ use League\Fractal\Pagination\PaginatorInterface;
 
 class Scope
 {
-    protected $availableEmbeds;
+    protected $availableIncludes;
 
     protected $currentScope;
 
@@ -114,8 +114,8 @@ class Scope
             'data' => $this->runAppropriateTransformer()
         );
 
-        if ($this->availableEmbeds) {
-            $output['embeds'] = $this->availableEmbeds;
+        if ($this->availableIncludes) {
+            $output['embeds'] = $this->availableIncludes;
         }
 
         if ($this->resource instanceof Collection) {
@@ -163,7 +163,7 @@ class Scope
                 $processedData = array_merge($processedData, $embeddedData);
             }
 
-            $this->availableEmbeds = $transformer->getAvailableEmbeds();
+            $this->availableIncludes = $transformer->getAvailableIncludes();
         }
 
         return $processedData;
@@ -199,7 +199,7 @@ class Scope
      * Generates output for cursor adapters. We don't type hint current/next
      * because they can be either a string or a integer.
      *
-     * @param  League\Fractal\Pagination\CursorInterface $cursor
+     * @param \League\Fractal\Pagination\CursorInterface $cursor
      * @return array
      */
     protected function outputCursor(CursorInterface $cursor)

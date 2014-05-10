@@ -117,8 +117,8 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableEmbeds,transform]');
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(array('book'));
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform]');
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function(array $data) {
             return $data;
         });
@@ -154,7 +154,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -168,7 +168,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);

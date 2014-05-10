@@ -20,7 +20,7 @@ use League\Fractal\Resource\ResourceInterface;
  *
  * All Transformer classes should extend this to utilize the convenience methods 
  * collectionResource(), itemResource() and paginatorResource(), and make 
- * the self::$availableEmbeds property available. Extends it and add a `transform()`
+ * the self::$availableIncludes property available. Extends it and add a `transform()`
  * method to transform any data into a basic array, including embedded content.
  */
 abstract class TransformerAbstract
@@ -30,50 +30,40 @@ abstract class TransformerAbstract
      *
      * @var array
      */
-    protected $availableEmbeds;
+    protected $availableIncludes;
 
     /**
      * Embed without needing it to be requested
      *
      * @var array
      */
-    protected $defaultEmbeds;
-    
-    /**
-     * A callable to process the data attached to this resource
-     *
-     * @var League\Fractal\Manager
-     */
-    protected $manager;
+    protected $defaultIncludes;
 
     /**
-     * Getter for availableEmbeds
+     * Allow transformer to access its scope
+     *
+     * @var League\Fractal\Scope
+     */
+    protected $scope;
+
+    /**
+     * Getter for availableIncludes
      *
      * @return array
      */
-    public function getAvailableEmbeds()
+    public function getAvailableIncludes()
     {
-        return $this->availableEmbeds;
+        return $this->availableIncludes;
     }
 
     /**
-     * Getter for defaultEmbeds
+     * Getter for defaultIncludes
      *
      * @return array
      */
-    public function getDefaultEmbeds()
+    public function getDefaultIncludes()
     {
-        return $this->defaultEmbeds;
-    }
-
-    /**
-     * Getter for manager
-     *
-     * @return League\Fractal\Manager
-     */
-    public function getManager()
-    {
-        return $this->manager;
+        return $this->defaultIncludes;
     }
 
     /**
@@ -91,36 +81,36 @@ abstract class TransformerAbstract
         $embeddedDataCount = 0;
 
         // Nothing to do, bail
-        if (is_array($this->defaultEmbeds)) {
+        if (is_array($this->defaultIncludes)) {
 
-            foreach ($this->defaultEmbeds as $defaultEmbed) {
-                if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
+            foreach ($this->defaultIncludes as $defaultInclude) {
+                if (! ($resource = $this->callIncludeMethod($defaultInclude, $data))) {
                     continue;
                 }
 
-                $childScope = $scope->embedChildScope($defaultEmbed, $resource);
+                $childScope = $scope->embedChildScope($defaultInclude, $resource);
 
-                $embeddedData[$defaultEmbed] = $childScope->toArray();
+                $embeddedData[$defaultInclude] = $childScope->toArray();
                 ++$embeddedDataCount;
             }
         }
 
         // Nothing more to do? Bail
-        if (is_array($this->availableEmbeds)) {
+        if (is_array($this->availableIncludes)) {
 
-            foreach ($this->availableEmbeds as $potentialEmbed) {
+            foreach ($this->availableIncludes as $potentialInclude) {
                 // Check if an available embed is requested
-                if (! $scope->isRequested($potentialEmbed)) {
+                if (! $scope->isRequested($potentialInclude)) {
                     continue;
                 }
 
-                if (! ($resource = $this->callEmbedMethod($potentialEmbed, $data))) {
+                if (! ($resource = $this->callIncludeMethod($potentialInclude, $data))) {
                     continue;
                 }
 
-                $childScope = $scope->embedChildScope($potentialEmbed, $resource);
+                $childScope = $scope->embedChildScope($potentialInclude, $resource);
 
-                $embeddedData[$potentialEmbed] = $childScope->toArray();
+                $embeddedData[$potentialInclude] = $childScope->toArray();
                 ++$embeddedDataCount;
             }
         }
@@ -128,7 +118,7 @@ abstract class TransformerAbstract
         return $embeddedDataCount === 0 ? false : $embeddedData;
     }
 
-    protected function callEmbedMethod($embed, $data)
+    protected function callIncludeMethod($embed, $data)
     {
         // Check if the method name actually exists
         $methodName = 'embed'.str_replace(' ', '', ucwords(str_replace('_', ' ', $embed)));
@@ -153,38 +143,26 @@ abstract class TransformerAbstract
     }
 
     /**
-     * Setter for manager
+     * Setter for availableIncludes
      *
-     * @param $manager
-     * @return self
-     **/
-    public function setManager($manager)
-    {
-        $this->manager = $manager;
-        return $this;
-    }
-
-    /**
-     * Setter for availableEmbeds
-     *
-     * @param $availableEmbeds
+     * @param array $availableIncludes
      * @return $this
      */
-    public function setAvailableEmbeds($availableEmbeds)
+    public function setAvailableIncludes(array $availableIncludes)
     {
-        $this->availableEmbeds = $availableEmbeds;
+        $this->availableIncludes = $availableIncludes;
         return $this;
     }
 
     /**
-     * Setter for defaultEmbeds
+     * Setter for defaultIncludes
      *
-     * @param $defaultEmbeds
+     * @param array $defaultIncludes
      * @return $this
      **/
-    public function setDefaultEmbeds($defaultEmbeds)
+    public function setDefaultIncludes($defaultIncludes)
     {
-        $this->defaultEmbeds = $defaultEmbeds;
+        $this->defaultIncludes = $defaultIncludes;
         return $this;
     }
 
@@ -206,9 +184,21 @@ abstract class TransformerAbstract
      * @param $data
      * @param $transformer
      * @return League\Fractal\Resource\Collection
-     */
+     **/
     protected function collection($data, $transformer)
     {
         return new Collection($data, $transformer);
+    }
+
+    /**
+     * Create a new collection resource object
+     *
+     * @param $data
+     * @internal param $transformer
+     * @return mixed
+     */
+    protected function param($data)
+    {
+        return [get_class($this->scope)];
     }
 }

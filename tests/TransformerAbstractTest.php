@@ -2,68 +2,48 @@
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Scope;
 use Mockery as m;
 
 class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers League\Fractal\TransformerAbstract::setAvailableEmbeds
+     * @covers League\Fractal\TransformerAbstract::setAvailableIncludes
      */
-    public function testSetAvailableEmbeds()
+    public function testSetAvailableIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setAvailableEmbeds(array('foo')));
+        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setAvailableIncludes(array('foo')));
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::getAvailableEmbeds
+     * @covers League\Fractal\TransformerAbstract::getAvailableIncludes
      */
-    public function testGetAvailableEmbeds()
+    public function testGetAvailableIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->setAvailableEmbeds(array('foo', 'bar'));
-        $this->assertEquals(array('foo', 'bar'), $transformer->getAvailableEmbeds());
+        $transformer->setAvailableIncludes(array('foo', 'bar'));
+        $this->assertEquals(array('foo', 'bar'), $transformer->getAvailableIncludes());
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::setDefaultEmbeds
+     * @covers League\Fractal\TransformerAbstract::setDefaultIncludes
      */
-    public function testSetDefaultEmbeds()
+    public function testSetDefaultIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setDefaultEmbeds(array('foo')));
+        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setDefaultIncludes(array('foo')));
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::getDefaultEmbeds
+     * @covers League\Fractal\TransformerAbstract::getDefaultIncludes
      */
-    public function testGetDefaultEmbeds()
+    public function testGetDefaultIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->setDefaultEmbeds(array('foo', 'bar'));
-        $this->assertEquals(array('foo', 'bar'), $transformer->getDefaultEmbeds());
-    }
-
-    /**
-     * @covers League\Fractal\TransformerAbstract::setManager
-     */
-    public function testSetManager()
-    {
-        $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new Manager;
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setManager($manager));
-    }
-
-    /**
-     * @covers League\Fractal\TransformerAbstract::getManager
-     */
-    public function testGetManager()
-    {
-        $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $manager = new Manager;
-        $transformer->setManager($manager);
-        $this->assertEquals($transformer->getManager(), $manager);
+        $transformer->setDefaultIncludes(array('foo', 'bar'));
+        $this->assertEquals(array('foo', 'bar'), $transformer->getDefaultIncludes());
     }
 
     public function testProcessEmbeddedResourcesNoAvailableEmbeds()
@@ -72,8 +52,6 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $manager = new Manager;
         $manager->parseIncludes('foo');
-
-        $transformer->setManager($manager);
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
         $this->assertFalse($transformer->processEmbeddedResources($scope, array('some' => 'data')));
@@ -86,15 +64,13 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager;
         $manager->parseIncludes('foo');
 
-        $transformer->setManager($manager);
-
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
         $this->assertFalse($transformer->processEmbeddedResources($scope, array('some' => 'data')));
     }
 
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      * @expectedException BadMethodCallException
      */
     public function testProcessEmbeddedResourcesInvalidAvailableEmbed()
@@ -104,16 +80,15 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager;
         $manager->parseIncludes('book');
 
-        $transformer->setManager($manager);
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
 
-        $transformer->setAvailableEmbeds(array('book'));
+        $transformer->setAvailableIncludes(array('book'));
         $transformer->processEmbeddedResources($scope, array());
     }
 
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      * @expectedException BadMethodCallException
      */
     public function testProcessEmbeddedResourcesInvalidDefaultEmbed()
@@ -121,17 +96,16 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
         $manager = new Manager;
-        $transformer->setManager($manager);
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceInterface'));
 
-        $transformer->setDefaultEmbeds(array('book'));
+        $transformer->setDefaultIncludes(array('book'));
         $transformer->processEmbeddedResources($scope, array());
     }
 
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedAvailableResources()
     {
@@ -144,7 +118,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
                 return $data;
             });
         });
-        $transformer->setAvailableEmbeds(array('book', 'publisher'));
+        $transformer->setAvailableIncludes(array('book', 'publisher'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
         $this->assertEquals(array('book' => array('data' => array('embedded' => 'thing'))), $embedded);
@@ -152,7 +126,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedAvailableResourcesEmptyEmbed()
     {
@@ -162,7 +136,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->shouldReceive('embedBook')->once()->andReturn(null);
 
-        $transformer->setAvailableEmbeds(array('book'));
+        $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
 
@@ -170,7 +144,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      * @expectedException Exception
      * @expectedExceptionMessage Invalid return value from League\Fractal\TransformerAbstract::embedBook().
      */
@@ -182,14 +156,14 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->shouldReceive('embedBook')->once()->andReturn(new \stdClass);
 
-        $transformer->setAvailableEmbeds(array('book'));
+        $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $transformer->processEmbeddedResources($scope, array('meh'));
     }
 
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedDefaultResources()
     {
@@ -201,15 +175,44 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
                 return $data;
             });
         });
-        $transformer->setDefaultEmbeds(array('book'));
+        $transformer->setDefaultIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
         $this->assertEquals(array('book' => array('data' => array('embedded' => 'thing'))), $embedded);
     }
 
+    public function testTransformerEmbedParams()
+    {
+        $manager = new Manager;
+
+        // See if fancy syntax works
+        $manager->parseIncludes('foo:limit(1|2):order(-something)');
+
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+
+        $resource = new Collection(array('foo' => 'bar'), $transformer);
+
+        $that = $transformer;
+
+        $transformer->shouldReceive('embedFoo')->once()->andReturnUsing(function ($data) use ($that) {
+            return new Item($that->param('limit'), function ($data) {
+                return $data;
+            });
+        });
+
+        $rootScope = $manager->createData($resource);
+
+        $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
+
+
+//        $scope = new Scope($manager, new Item(array(), $transformer));
+//        $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
+//        $this->assertEquals(array('book' => array('data' => array('limit' => array ('1', '2')))), $embedded);
+    }
+
     /**
      * @covers League\Fractal\TransformerAbstract::processEmbeddedResources
-     * @covers League\Fractal\TransformerAbstract::callEmbedMethod
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedDefaultResourcesEmptyEmbed()
     {
@@ -218,7 +221,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->shouldReceive('embedBook')->once()->andReturn(null);
 
-        $transformer->setDefaultEmbeds(array('book'));
+        $transformer->setDefaultIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $embedded = $transformer->processEmbeddedResources($scope, array('meh'));
 
