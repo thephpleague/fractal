@@ -7,7 +7,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */
+ **/
 
 namespace League\Fractal;
 
@@ -19,7 +19,7 @@ use League\Fractal\Pagination\PaginatorInterface;
 
 class Scope
 {
-    protected $availableEmbeds;
+    protected $availableIncludes;
 
     protected $currentScope;
 
@@ -29,36 +29,58 @@ class Scope
 
     protected $parentScopes = array();
 
-    public function __construct(Manager $resourceManager, ResourceInterface $resource, $currentScope = null)
+    public function __construct(Manager $manager, ResourceInterface $resource, $currentScope = null)
     {
-        $this->resourceManager = $resourceManager;
+        $this->manager = $manager;
         $this->currentScope = $currentScope;
         $this->resource = $resource;
     }
 
     public function embedChildScope($scopeIdentifier, $resource)
     {
-        return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
+        return $this->manager->createData($resource, $scopeIdentifier, $this);
     }
 
     /**
      * Getter for currentScope
      *
-     * @return mixed
-     */
+     * @return \League\Fractal\Scope
+     **/
     public function getCurrentScope()
     {
         return $this->currentScope;
     }
 
     /**
+     * Get the unique identifier for this scope
+     *
+     * @param string $appendIdentifier
+     * @return string
+     **/
+    public function getIdentifier($appendIdentifier = null)
+    {
+        $identifierParts = array_merge($this->parentScopes, array($this->currentScope, $appendIdentifier));
+        return implode('.', array_filter($identifierParts));
+    }
+
+    /**
      * Getter for parentScopes
      *
      * @return mixed
-     */
+     **/
     public function getParentScopes()
     {
         return $this->parentScopes;
+    }
+
+    /**
+     * Getter for manager
+     *
+     * @return \League\Fractal\Manager
+     **/
+    public function getManager()
+    {
+        return $this->manager;
     }
 
     public function isRequested($checkScopeSegment)
@@ -72,7 +94,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        $checkAgainstArray = $this->resourceManager->getRequestedIncludes();
+        $checkAgainstArray = $this->manager->getRequestedIncludes();
 
         return in_array($scopeString, $checkAgainstArray);
     }
@@ -83,7 +105,7 @@ class Scope
      * @param string $newScope
      *
      * @return int Returns the new number of elements in the array.
-     */
+     **/
     public function pushParentScope($newScope)
     {
         return array_push($this->parentScopes, $newScope);
@@ -95,7 +117,7 @@ class Scope
      * @param mixed $parentScopes Value to set
      *
      * @return self
-     */
+     **/
     public function setParentScopes($parentScopes)
     {
         $this->parentScopes = $parentScopes;
@@ -107,15 +129,15 @@ class Scope
      * Convert the current data for this scope to an array
      *
      * @return array
-     */
+     **/
     public function toArray()
     {
         $output = array(
             'data' => $this->runAppropriateTransformer()
         );
 
-        if ($this->availableEmbeds) {
-            $output['embeds'] = $this->availableEmbeds;
+        if ($this->availableIncludes) {
+            $output['embeds'] = $this->availableIncludes;
         }
 
         if ($this->resource instanceof Collection) {
@@ -139,7 +161,7 @@ class Scope
      * Convert the current data for this scope to JSON
      *
      * @return string
-     */
+     **/
     public function toJson()
     {
         return json_encode($this->toArray());
@@ -156,14 +178,14 @@ class Scope
 
         // If its an object, process potential embedded resources
         if ($transformer instanceof TransformerAbstract) {
-            $embeddedData = $transformer->processEmbeddedResources($this, $data);
+            $embeddedData = $transformer->processIncludedResources($this, $data);
 
             if ($embeddedData !== false) {
                 // Push the new embeds in with the main data
                 $processedData = array_merge($processedData, $embeddedData);
             }
 
-            $this->availableEmbeds = $transformer->getAvailableEmbeds();
+            $this->availableIncludes = $transformer->getAvailableIncludes();
         }
 
         return $processedData;
@@ -199,9 +221,9 @@ class Scope
      * Generates output for cursor adapters. We don't type hint current/next
      * because they can be either a string or a integer.
      *
-     * @param  League\Fractal\Pagination\CursorInterface $cursor
+     * @param  \League\Fractal\Pagination\CursorInterface $cursor
      * @return array
-     */
+     **/
     protected function outputCursor(CursorInterface $cursor)
     {
         $cursor = array(

@@ -59,7 +59,7 @@ class Manager
     /**
      * Get Include Params
      *
-     * @param $include
+     * @param string $include
      * @return array|null
      */
     public function getIncludeParams($include)
@@ -78,8 +78,6 @@ class Manager
     {
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = array();
-
-        // ([^:]+):(([^\(]+)\(([^\)]+)\),?)+
 
         if (is_string($includes)) {
             $includes = explode(',', $includes);

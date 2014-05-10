@@ -26,6 +26,16 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('League\Fractal\Scope', $childScope);
     }
 
+    public function testGetManager()
+    {
+        $resource = new Item(array('foo' => 'bar'), function () {
+        });
+
+        $scope = new Scope(new Manager(), $resource, 'book');
+
+        $this->assertInstanceOf('League\Fractal\Manager', $scope->getManager());
+    }
+
     /**
      * @covers League\Fractal\Scope::toArray
      */
@@ -50,13 +60,30 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
+        $this->assertEquals('book', $scope->getCurrentScope());
 
         $childScope = $scope->embedChildScope('author', $resource);
         $this->assertEquals('author', $childScope->getCurrentScope());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
         $this->assertEquals('profile', $grandChildScope->getCurrentScope());
+    }
+
+    public function testGetIdentifier()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        });
+
+        $scope = new Scope($manager, $resource, 'book');
+        $this->assertEquals('book', $scope->getIdentifier());
+
+        $childScope = $scope->embedChildScope('author', $resource);
+        $this->assertEquals('book.author', $childScope->getIdentifier());
+
+        $grandChildScope = $childScope->embedChildScope('profile', $resource);
+        $this->assertEquals('book.author.profile', $grandChildScope->getIdentifier());
     }
 
     public function testGetParentScopes()
@@ -117,8 +144,8 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableEmbeds,transform]');
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(array('book'));
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform]');
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function(array $data) {
             return $data;
         });
@@ -153,8 +180,8 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
-        $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -167,8 +194,8 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
-        $transformer->shouldReceive('processEmbeddedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableEmbeds')->once()->andReturn(null);
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
