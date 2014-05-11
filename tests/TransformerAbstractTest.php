@@ -1,6 +1,7 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Mockery as m;
@@ -208,7 +209,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      * @covers League\Fractal\TransformerAbstract::processIncludedResources
      * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
-    public function testProcessIncludedResourcesWithSetAvailable()
+    public function testIncludedItem()
     {
         $manager = new Manager;
         $manager->parseIncludes('book');
@@ -223,6 +224,32 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $scope = new Scope($manager, new Item(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
         $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     */
+    public function testIncludedCollection()
+    {
+        $manager = new Manager;
+        $manager->parseIncludes('book');
+
+        $collectionData = array(
+            array('included' => 'thing'),
+            array('another' => 'thing'),
+        );
+
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+        $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) use ($collectionData) {
+            return new Collection($collectionData, function ($data) {
+                return $data;
+            });
+        });
+        $transformer->setAvailableIncludes(array('book'));
+        $scope = new Scope($manager, new Collection(array(), $transformer));
+        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $this->assertEquals(array('book' => array('data' => $collectionData)), $included);
     }
 
     /**

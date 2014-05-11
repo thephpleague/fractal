@@ -242,7 +242,7 @@ class Scope
 
             return ! empty($availableIncludes);
         }
-        
+
         return false;
     }
 }
