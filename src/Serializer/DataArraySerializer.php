@@ -23,16 +23,4 @@ class DataArraySerializer extends ArraySerializer
     {
         return array('data' => $data);
     }
-
-    /**
-     * Serialize the included data.
-     * 
-     * @param  string  $resourceKey
-     * @param  array  $data
-     * @return array
-     */
-    public function serializeIncludedData($resourceKey, array $data)
-    {
-        return $this->serializeData($resourceKey, $data);
-    }
 }

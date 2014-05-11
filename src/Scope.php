@@ -133,13 +133,21 @@ class Scope
      **/
     public function toArray()
     {
-        list($data, $includedData) = $this->executeResourceTransformer();
-
         $serializer = $this->manager->getSerializer();
         $resourceKey = $this->resource->getResourceKey();
 
+        list($data, $includedData) = $this->executeResourceTransformers();
+
         $data = $serializer->serializeData($resourceKey, $data);
-        $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
+
+        // If the serializer wants the includes to be sideloaded then we'll
+        // serialize the included data and merge it with the data.
+        if ($serializer->sideloadIncludes()) {
+            $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
+
+            $data = array_merge($data, $includedData);
+        }
+
         $availableIncludes = $serializer->serializeAvailableIncludes($this->availableIncludes);
 
         $pagination = array();
@@ -152,7 +160,7 @@ class Scope
             }
         }
 
-        return array_merge_recursive($data, $includedData, $availableIncludes, $pagination);
+        return array_merge($data, $availableIncludes, $pagination);
     }
 
     /**
@@ -170,24 +178,19 @@ class Scope
      * 
      * @return array
      */
-    protected function executeResourceTransformer()
+    protected function executeResourceTransformers()
     {
         $transformer = $this->resource->getTransformer();
-        $data = $includedData = array();
+        $data = $this->resource->getData();
+
+        $transformedData = $includedData = array();
 
         if ($this->resource instanceof Item) {
-            $data = $this->fireTransformer($transformer, $this->resource->getData());
-            
-            if ($this->transformerHasIncludes($transformer)) {
-                $includedData = $this->fireIncludedTransformers($transformer, $this->resource->getData());
-            }
-        } elseif ($this->resource instanceof Collection) {
-            foreach ($this->resource->getData() as $item) {
-                $data[] = $this->fireTransformer($transformer, $item);
+            list ($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
 
-                if ($this->transformerHasIncludes($transformer)) {
-                    $includedData[] = $this->fireIncludedTransformers($transformer, $item);
-                }
+        } elseif ($this->resource instanceof Collection) {
+            foreach ($data as $key => $value) {
+                list ($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
             }
         } else {
             throw new InvalidArgumentException(
@@ -195,9 +198,8 @@ class Scope
             );
         }
 
-        return array($data, $includedData);
+        return array($transformedData, $includedData);
     }
-
    
     /**
      * Fire the main transformer.
@@ -208,11 +210,25 @@ class Scope
      */
     protected function fireTransformer($transformer, $data)
     {
-        if (is_callable($transformer)) {
-            return call_user_func($transformer, $data);
-        }
+        $transformedData = $includedData = array();
 
-        return $transformer->transform($data);
+        if (is_callable($transformer)) {
+            $transformedData = call_user_func($transformer, $data);
+        } else {
+            $transformedData = $transformer->transform($data);
+        }
+            
+        if ($this->transformerHasIncludes($transformer)) {
+            $includedData = $this->fireIncludedTransformers($transformer, $data);
+
+            // If the serializer does not want the includes to be sideloaded then
+            // the included data must be merged with the transformed data.
+            if (! $this->manager->getSerializer()->sideloadIncludes()) {
+                $transformedData = array_merge($transformedData, $includedData);
+            }
+        }
+        
+        return array($transformedData, $includedData);
     }
 
     /**
@@ -239,7 +255,6 @@ class Scope
     {
         if ($transformer instanceof TransformerAbstract) {
             $availableIncludes = $transformer->getAvailableIncludes();
-
             return ! empty($availableIncludes);
         }
 

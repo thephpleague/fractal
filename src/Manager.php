@@ -13,7 +13,7 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Serializer\DataArraySerializer;
-use League\Fractal\Serializer\SerializerInterface;
+use League\Fractal\Serializer\SerializerAbstract;
 
 class Manager
 {
@@ -191,11 +191,11 @@ class Manager
     /**
      * Set Serializer
      *
-     * @param \League\Fractal\Serializer\SerializerInterface $serializer
+     * @param \League\Fractal\Serializer\SerializerAbstract $serializer
      *
      * @return $this
      **/
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
         return $this;

@@ -139,22 +139,58 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $scope->toArray();
     }
 
-    public function testToArrayWithEmbeds()
+    public function testToArrayWithIncludes()
     {
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform]');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
         $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
 
         $resource = new Item(array('bar' => 'baz'), $transformer);
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(array('data' => array('bar' => 'baz'), 'includes' => array('book')), $scope->toArray());
+        $this->assertEquals(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang')), 'includes' => array('book')), $scope->toArray());
+    }
+
+    public function testToArrayWithSideloadedIncludes()
+    {
+        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer[sideloadIncludes,serializeData,serializeIncludedData]');
+        $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
+        $serializer->shouldReceive('serializeData')->andReturnUsing(function ($key, $data) {
+            return array('data' => $data);
+        });
+        $serializer->shouldReceive('serializeIncludedData')->andReturnUsing(function ($key, $data) {
+            return array('sideloaded' => array_pop($data));
+        });
+
+        $manager = new Manager();
+        $manager->parseIncludes('book');
+        $manager->setSerializer($serializer);
+
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
+        $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
+            return $data;
+        });
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
+
+        $resource = new Item(array('bar' => 'baz'), $transformer);
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'data' => array('bar' => 'baz'),
+            'sideloaded' => array('book' => array('yin' => 'yang')),
+            'includes' => array('book')
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
 
 
@@ -202,7 +238,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::executeResourceTransformer
+     * @covers League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item or Resource\Collection
      */
