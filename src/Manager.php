@@ -18,14 +18,14 @@ use League\Fractal\Serializer\SerializerInterface;
 class Manager
 {
     /**
-     * Requested Scopes
+     * Array of scope identifiers for resources to include
      *
      * @var array
      **/
     protected $requestedIncludes = array();
 
     /**
-     * Requested Params
+     * Array containing modifiers as keys and an array value of params
      *
      * @var array
      **/
@@ -39,6 +39,13 @@ class Manager
     protected $paramDelimiter = '|';
 
     /**
+     * Upper limit to how many levels of included data are allowed
+     *
+     * @var integer
+     **/
+    protected $recursionLimit = 10;
+
+    /**
      * Serializer
      * 
      * @var \League\Fractal\Serializer\SerializerInterface
@@ -46,12 +53,12 @@ class Manager
     protected $serializer;
     
     /**
-     * Get Include Params
+     * Create Data
      *
      * @param \League\Fractal\Resource\ResourceAbstract $resource
      * @param string $scopeIdentifier
      * @param string $parentScopeInstance
-     * @return array|null
+     * @return \League\Fractal\Scope
      **/
     public function createData(ResourceAbstract $resource, $scopeIdentifier = null, $parentScopeInstance = null)
     {
@@ -108,7 +115,7 @@ class Manager
     /**
      * Parse Include String
      *
-     * @param array|string $includes List of resources to include
+     * @param array|string $includes Array or csv string of resources to include
      *
      * @return $this
      **/
@@ -125,6 +132,12 @@ class Manager
             
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
 
+            // Trim it down to a cool level of recursion
+            $includeName = $this->trimToAcceptableRecursionLevel($includeName);
+
+            if (in_array($includeName, $this->requestedIncludes)) {
+                continue;
+            }
             $this->requestedIncludes[] = $includeName;
 
             // No Params? Bored
@@ -163,20 +176,34 @@ class Manager
     }
 
     /**
-     * Set Serializer
+     * Set Recursion Limit
      *
      * @param \League\Fractal\Serializer\SerializerInterface
+     *
+     * @return $this
+     **/
+    public function setRecursionLimit($recursionLimit)
+    {
+        $this->recursionLimit = $recursionLimit;
+        return $this;
+    }
+
+    /**
+     * Set Serializer
+     *
+     * @param \League\Fractal\Serializer\SerializerInterface $serializer
      *
      * @return $this
      **/
     public function setSerializer(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
+        return $this;
     }
 
     /**
      * Auto-include Parents
-     * Look at the requested includes and automatically include the parents if they 
+     * Look at the requested includes and automatically include the parents if they
      * are not explicitly requested. E.g: [foo, bar.baz] becomes [foo, bar, bar.baz]
      **/
     protected function autoIncludeParents()
@@ -196,5 +223,15 @@ class Manager
         }
 
         $this->requestedIncludes = array_values(array_unique($parsed));
+    }
+
+    /**
+     * Trim to Acceptable Recursion Level
+     * Strip off any requested resources that are too many levels deep, to avoid DiCaprio being chased
+     * by trains or whatever the hell that movie was about.
+     **/
+    protected function trimToAcceptableRecursionLevel($includeName)
+    {
+        return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
     }
 }
