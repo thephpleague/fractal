@@ -48,13 +48,15 @@ class JsonApiSerializer extends ArraySerializer
             return array();
         }
 
-        $response = array('linked' => array());
+        $serializedData = array();
 
         foreach ($data as $key => $value) {
-            $response['linked'] = array_merge($response['linked'], $value);
+            foreach ($value as $includeKey => $includeValue) {
+                $serializedData = array_merge_recursive($serializedData, $includeValue);
+            }
         }
 
-        return $response;
+        return empty($serializedData) ? array() : array('linked' => $serializedData);
     }
 
     /**
@@ -66,5 +68,15 @@ class JsonApiSerializer extends ArraySerializer
     public function serializeAvailableIncludes(array $includes)
     {
         return array();
+    }
+
+    /**
+     * Indicates if includes should be sideloaded.
+     * 
+     * @return bool
+     */
+    public function sideloadIncludes()
+    {
+        return true;
     }
 }

@@ -206,11 +206,12 @@ abstract class TransformerAbstract
      *
      * @param $data
      * @param $transformer
+     * @param $resourceKey
      * @return \League\Fractal\Resource\Item
      **/
-    protected function item($data, $transformer)
+    protected function item($data, $transformer, $resourceKey = null)
     {
-        return new Item($data, $transformer);
+        return new Item($data, $transformer, $resourceKey);
     }
 
     /**
@@ -218,10 +219,11 @@ abstract class TransformerAbstract
      *
      * @param $data
      * @param $transformer
+     * @param $resourceKey
      * @return \League\Fractal\Resource\Collection
      */
-    protected function collection($data, $transformer)
+    protected function collection($data, $transformer, $resourceKey = null)
     {
-        return new Collection($data, $transformer);
+        return new Collection($data, $transformer, $resourceKey);
     }
 }
