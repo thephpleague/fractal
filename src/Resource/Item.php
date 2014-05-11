@@ -18,49 +18,7 @@ namespace League\Fractal\Resource;
  * other sort of intelligent result, DataMapper model, etc but could 
  * be a basic array, object, or whatever you like.
  */
-class Item implements ResourceInterface
+class Item extends ResourceAbstract
 {
-    /**
-     * Any item to process
-     *
-     * @var mixed
-     */
-    protected $data;
-    
-    /**
-     * A callable to process the data attached to this resource
-     *
-     * @var callable|string
-     */
-    protected $transformer;
 
-    /**
-     * @param mixed $data
-     * @param callable|string $transformer
-     */
-    public function __construct($data, $transformer)
-    {
-        $this->data = $data;
-        $this->transformer = $transformer;
-    }
-    
-    /**
-     * Getter for data
-     *
-     * @return array|ArrayIterator
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * Getter for transformer
-     *
-     * @return callable|string
-     */
-    public function getTransformer()
-    {
-        return $this->transformer;
-    }
 }
