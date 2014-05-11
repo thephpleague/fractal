@@ -20,7 +20,7 @@ use League\Fractal\Pagination\PaginatorInterface;
  * The data can be a collection of any sort of data, as long as the
  * "collection" is either array or an object implementing ArrayIterator.
  */
-class Collection implements ResourceInterface
+class Collection extends ResourceAbstract
 {
     /**
      * A collection of data
@@ -51,13 +51,21 @@ class Collection implements ResourceInterface
     protected $transformer;
 
     /**
+     * Array of meta data
+     * 
+     * @var array
+     */
+    protected $meta = array();
+
+    /**
      * @param array|ArrayIterator $data
      * @param callable|string $transformer
      */
-    public function __construct($data, $transformer)
+    public function __construct($data, $transformer, $resourceKey = null)
     {
         $this->data = $data;
         $this->transformer = $transformer;
+        $this->resourceKey = $resourceKey;
     }
 
     /**
@@ -81,6 +89,16 @@ class Collection implements ResourceInterface
     }
 
     /**
+     * Determine if the resouce has a paginator implementation.
+     * 
+     * @return bool
+     */
+    public function hasPaginator()
+    {
+        return $this->paginator instanceof PaginatorInterface;
+    }
+
+    /**
      * Set the cursor implementation.
      *
      * @return League\Fractal\Pagination\CursorInterface
@@ -88,6 +106,16 @@ class Collection implements ResourceInterface
     public function getCursor()
     {
         return $this->cursor;
+    }
+
+    /**
+     * Determine if the resouce has a cursor implementation.
+     * 
+     * @return bool
+     */
+    public function hasCursor()
+    {
+        return $this->cursor instanceof CursorInterface;
     }
 
     /**
@@ -122,5 +150,28 @@ class Collection implements ResourceInterface
     {
         $this->cursor = $cursor;
         return $this;
+    }
+
+    /**
+     * Set the meta data
+     * 
+     * @param array $meta
+     * 
+     * @return self
+     */
+    public function setMeta(array $meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
+
+    /**
+     * Get the meta data
+     * 
+     * @return array
+     */
+    public function getMeta()
+    {
+        return $this->meta;
     }
 }
