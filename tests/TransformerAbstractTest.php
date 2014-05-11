@@ -137,14 +137,14 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
-            return new Item(array('embedded' => 'thing'), function ($data) {
+            return new Item(array('included' => 'thing'), function ($data) {
                 return $data;
             });
         });
         $transformer->setAvailableIncludes(array('book', 'publisher'));
         $scope = new Scope($manager, new Item(array(), $transformer));
-        $embedded = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => array('embedded' => 'thing'))), $embedded);
+        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
     /**
@@ -161,9 +161,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
-        $embedded = $transformer->processIncludedResources($scope, array('meh'));
+        $included = $transformer->processIncludedResources($scope, array('meh'));
 
-        $this->assertFalse($embedded);
+        $this->assertFalse($included);
     }
 
     /**
@@ -194,14 +194,35 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
-            return new Item(array('embedded' => 'thing'), function ($data) {
+            return new Item(array('included' => 'thing'), function ($data) {
                 return $data;
             });
         });
         $transformer->setDefaultIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
-        $embedded = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => array('embedded' => 'thing'))), $embedded);
+        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     */
+    public function testProcessIncludedResourcesWithSetAvailable()
+    {
+        $manager = new Manager;
+        $manager->parseIncludes('book');
+
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+        $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
+            return new Item(array('included' => 'thing'), function ($data) {
+                return $data;
+            });
+        });
+        $transformer->setAvailableIncludes(array('book'));
+        $scope = new Scope($manager, new Item(array(), $transformer));
+        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
     /**
@@ -210,16 +231,14 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessEmbeddedDefaultResourcesEmptyEmbed()
     {
-        $manager = new Manager;
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
-
         $transformer->shouldReceive('includeBook')->once()->andReturn(null);
 
         $transformer->setDefaultIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $embedded = $transformer->processIncludedResources($scope, array('meh'));
+        $scope = new Scope(new Manager, new Item(array(), $transformer));
+        $included = $transformer->processIncludedResources($scope, array('meh'));
 
-        $this->assertFalse($embedded);
+        $this->assertFalse($included);
     }
 
     /**

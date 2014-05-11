@@ -142,19 +142,17 @@ class Scope
         $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
         $availableIncludes = $serializer->serializeAvailableIncludes($this->availableIncludes);
 
-        $paginator = $cursor = array();
+        $pagination = array();
 
         if ($this->resource instanceof Collection) {
-            if ($this->resource->hasPaginator()) {
-                $paginator = $serializer->serializePaginator($this->resource->getPaginator());
-            }
-
             if ($this->resource->hasCursor()) {
-                $cursor = $serializer->serializeCursor($this->resource->getCursor());
+                $pagination = $serializer->serializeCursor($this->resource->getCursor());
+            } elseif ($this->resource->hasPaginator()) {
+                $pagination = $serializer->serializePaginator($this->resource->getPaginator());
             }
         }
 
-        return array_merge_recursive($data, $includedData, $availableIncludes, $paginator, $cursor);
+        return array_merge_recursive($data, $includedData, $availableIncludes, $pagination);
     }
 
     /**
