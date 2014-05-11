@@ -1,6 +1,6 @@
-# Fractal
+# Fractal [![Build Status](https://travis-ci.org/thephpleague/fractal.png?branch=master)](https://travis-ci.org/thephpleague/fractal)
 
-[![Build Status](https://travis-ci.org/thephpleague/fractal.png?branch=master)](https://travis-ci.org/thephpleague/fractal)
+[![License](http://img.shields.io/packagist/l/league/fractal.svg)](https://github.com/thephpleague/fractal/blob/master/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
@@ -60,9 +60,8 @@ Contribute to this documentation in the [sculpin branch](https://github.com/thep
 
 ## Todo
 
-- [ ] Switch return array to use instance properties in `transform()`
-- [ ] Implement [HATEOAS](http://en.wikipedia.org/wiki/HATEOAS)/[HAL](http://stateless.co/hal_specification.html) links
-- [ ] Add smart embed syntax, e.g: `?embed=foo:limit(5):order(something,asc)`
+- Wrap optional params in a ParamBag object or similar
+- Complete JSON-API and HAL serializers
 
 ## Testing
 

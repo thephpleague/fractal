@@ -7,19 +7,20 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */
+ **/
 
 namespace League\Fractal;
 
+use InvalidArgumentException;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 
 class Scope
 {
-    protected $availableEmbeds;
+    protected $availableIncludes = array();
 
     protected $currentScope;
 
@@ -29,36 +30,58 @@ class Scope
 
     protected $parentScopes = array();
 
-    public function __construct(Manager $resourceManager, ResourceInterface $resource, $currentScope = null)
+    public function __construct(Manager $manager, ResourceAbstract $resource, $currentScope = null)
     {
-        $this->resourceManager = $resourceManager;
+        $this->manager = $manager;
         $this->currentScope = $currentScope;
         $this->resource = $resource;
     }
 
     public function embedChildScope($scopeIdentifier, $resource)
     {
-        return $this->resourceManager->createData($resource, $scopeIdentifier, $this);
+        return $this->manager->createData($resource, $scopeIdentifier, $this);
     }
 
     /**
      * Getter for currentScope
      *
-     * @return mixed
-     */
+     * @return \League\Fractal\Scope
+     **/
     public function getCurrentScope()
     {
         return $this->currentScope;
     }
 
     /**
+     * Get the unique identifier for this scope
+     *
+     * @param string $appendIdentifier
+     * @return string
+     **/
+    public function getIdentifier($appendIdentifier = null)
+    {
+        $identifierParts = array_merge($this->parentScopes, array($this->currentScope, $appendIdentifier));
+        return implode('.', array_filter($identifierParts));
+    }
+
+    /**
      * Getter for parentScopes
      *
      * @return mixed
-     */
+     **/
     public function getParentScopes()
     {
         return $this->parentScopes;
+    }
+
+    /**
+     * Getter for manager
+     *
+     * @return \League\Fractal\Manager
+     **/
+    public function getManager()
+    {
+        return $this->manager;
     }
 
     public function isRequested($checkScopeSegment)
@@ -72,7 +95,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        $checkAgainstArray = $this->resourceManager->getRequestedScopes();
+        $checkAgainstArray = $this->manager->getRequestedIncludes();
 
         return in_array($scopeString, $checkAgainstArray);
     }
@@ -83,7 +106,7 @@ class Scope
      * @param string $newScope
      *
      * @return int Returns the new number of elements in the array.
-     */
+     **/
     public function pushParentScope($newScope)
     {
         return array_push($this->parentScopes, $newScope);
@@ -95,7 +118,7 @@ class Scope
      * @param mixed $parentScopes Value to set
      *
      * @return self
-     */
+     **/
     public function setParentScopes($parentScopes)
     {
         $this->parentScopes = $parentScopes;
@@ -107,145 +130,121 @@ class Scope
      * Convert the current data for this scope to an array
      *
      * @return array
-     */
+     **/
     public function toArray()
     {
-        $output = array(
-            'data' => $this->runAppropriateTransformer()
-        );
+        list($data, $includedData) = $this->executeResourceTransformer();
 
-        if ($this->availableEmbeds) {
-            $output['embeds'] = $this->availableEmbeds;
-        }
+        $serializer = $this->manager->getSerializer();
+        $resourceKey = $this->resource->getResourceKey();
+
+        $data = $serializer->serializeData($resourceKey, $data);
+        $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
+        $availableIncludes = $serializer->serializeAvailableIncludes($this->availableIncludes);
+
+        $paginator = $cursor = array();
 
         if ($this->resource instanceof Collection) {
-            $paginator = $this->resource->getPaginator();
-
-            if ($paginator !== null && $paginator instanceof PaginatorInterface) {
-                $output['pagination'] = $this->outputPaginator($paginator);
+            if ($this->resource->hasPaginator()) {
+                $paginator = $serializer->serializePaginator($this->resource->getPaginator());
             }
 
-            $cursor = $this->resource->getCursor();
-
-            if ($cursor !== null && $cursor instanceof CursorInterface) {
-                $output['cursor'] = $this->outputCursor($cursor);
+            if ($this->resource->hasCursor()) {
+                $cursor = $serializer->serializeCursor($this->resource->getCursor());
             }
         }
 
-        return $output;
+        return array_merge_recursive($data, $includedData, $availableIncludes, $paginator, $cursor);
     }
 
     /**
      * Convert the current data for this scope to JSON
      *
      * @return string
-     */
+     **/
     public function toJson()
     {
         return json_encode($this->toArray());
     }
 
-    protected function fireTransformer($transformer, $data)
-    {
-        // Fire Main Transformer
-        if (is_callable($transformer)) {
-            return call_user_func($transformer, $data);
-        }
-
-        $processedData = call_user_func(array($transformer, 'transform'), $data);
-
-        // If its an object, process potential embeded resources
-        if ($transformer instanceof TransformerAbstract) {
-            $embededData = $transformer->processEmbededResources($this, $data);
-
-            if ($embededData !== false) {
-                // Push the new embeds in with the main data
-                $processedData = array_merge($processedData, $embededData);
-            }
-
-            $this->availableEmbeds = $transformer->getAvailableEmbeds();
-        }
-
-        return $processedData;
-    }
-
-    protected function outputPaginator(PaginatorInterface $paginator)
-    {
-        $currentPage = (int) $paginator->getCurrentPage();
-        $lastPage = (int) $paginator->getLastPage();
-
-        $pagination = array(
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->getCount(),
-            'per_page' => (int) $paginator->getPerPage(),
-            'current_page' => $currentPage,
-            'total_pages' => $lastPage,
-        );
-
-        $pagination['links'] = array();
-
-        if ($currentPage > 1) {
-            $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
-        }
-
-        if ($currentPage < $lastPage) {
-            $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
-        }
-
-        return $pagination;
-    }
-
     /**
-     * Generates output for cursor adapters. We don't type hint current/next
-     * because they can be either a string or a integer.
-     *
-     * @param  League\Fractal\Pagination\CursorInterface $cursor
+     * Execute the resources transformer and return the data and included data.
+     * 
      * @return array
      */
-    protected function outputCursor(CursorInterface $cursor)
+    protected function executeResourceTransformer()
     {
-        $cursor = array(
-            'current' => $cursor->getCurrent(),
-            'prev' => $cursor->getPrev(),
-            'next' => $cursor->getNext(),
-            'count' => (int) $cursor->getCount(),
-        );
+        $transformer = $this->resource->getTransformer();
+        $data = $includedData = array();
 
-        return $cursor;
-    }
-
-    protected function runAppropriateTransformer()
-    {
-        // if's n shit
         if ($this->resource instanceof Item) {
-            $data = $this->transformItem();
+            $data = $this->fireTransformer($transformer, $this->resource->getData());
+            
+            if ($this->transformerHasIncludes($transformer)) {
+                $includedData = $this->fireIncludedTransformers($transformer, $this->resource->getData());
+            }
         } elseif ($this->resource instanceof Collection) {
-            $data = $this->transformCollection();
+            foreach ($this->resource->getData() as $item) {
+                $data[] = $this->fireTransformer($transformer, $item);
+
+                if ($this->transformerHasIncludes($transformer)) {
+                    $includedData[] = $this->fireIncludedTransformers($transformer, $item);
+                }
+            }
         } else {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Argument $resource should be an instance of Resource\Item or Resource\Collection'
             );
         }
 
-        return $data;
+        return array($data, $includedData);
     }
 
-    protected function transformItem()
+   
+    /**
+     * Fire the main transformer.
+     * 
+     * @param  callable|\League\Fractal\TransformerAbstract  $transformer
+     * @param  mixed  $data
+     * @return array
+     */
+    protected function fireTransformer($transformer, $data)
     {
-        $transformer = $this->resource->getTransformer();
-
-        return $this->fireTransformer($transformer, $this->resource->getData());
-    }
-
-    protected function transformCollection()
-    {
-        $transformer = $this->resource->getTransformer();
-
-        $data = array();
-        foreach ($this->resource->getData() as $itemData) {
-            $data []= $this->fireTransformer($transformer, $itemData);
+        if (is_callable($transformer)) {
+            return call_user_func($transformer, $data);
         }
 
-        return $data;
+        return $transformer->transform($data);
+    }
+
+    /**
+     * Fire the included transformers.
+     * 
+     * @param  \League\Fractal\TransformerAbstract  $transformer
+     * @param  mixed  $data
+     * @return array
+     */
+    protected function fireIncludedTransformers($transformer, $data)
+    {
+        $this->availableIncludes = $transformer->getAvailableIncludes();
+
+        return $transformer->processIncludedResources($this, $data) ?: array();
+    }
+
+    /**
+     * Determine if a transformer has any available includes.
+     * 
+     * @param  callable|\League\Fractal\TransformerAbstract  $transformer
+     * @return bool
+     */
+    protected function transformerHasIncludes($transformer)
+    {
+        if ($transformer instanceof TransformerAbstract) {
+            $availableIncludes = $transformer->getAvailableIncludes();
+
+            return ! empty($availableIncludes);
+        }
+        
+        return false;
     }
 }

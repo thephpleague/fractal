@@ -13,136 +13,151 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Scope;
 
 /**
  * Transformer Abstract
  *
  * All Transformer classes should extend this to utilize the convenience methods 
  * collectionResource(), itemResource() and paginatorResource(), and make 
- * the self::$availableEmbeds property available. Extends it and add a `transform()`
+ * the self::$availableIncludes property available. Extends it and add a `transform()`
  * method to transform any data into a basic array, including embedded content.
  */
 abstract class TransformerAbstract
 {
     /**
-     * Embed if requested
+     * Include if requested
      *
      * @var array
      */
-    protected $availableEmbeds;
+    protected $availableIncludes = array();
 
     /**
-     * Embed without needing it to be requested
+     * Include without needing it to be requested
      *
      * @var array
      */
-    protected $defaultEmbeds;
+    protected $defaultIncludes;
     
     /**
-     * A callable to process the data attached to this resource
+     * Know about the current scope, so we can fetch relevant params
      *
-     * @var League\Fractal\Manager
+     * @var \League\Fractal\Scope
      */
-    protected $manager;
+    protected $currentScope;
 
     /**
-     * Getter for availableEmbeds
+     * Getter for availableIncludes
      *
      * @return array
      */
-    public function getAvailableEmbeds()
+    public function getAvailableIncludes()
     {
-        return $this->availableEmbeds;
+        return $this->availableIncludes;
     }
 
     /**
-     * Getter for defaultEmbeds
+     * Getter for defaultIncludes
      *
      * @return array
-     */
-    public function getDefaultEmbeds()
+     **/
+    public function getDefaultIncludes()
     {
-        return $this->defaultEmbeds;
+        return $this->defaultIncludes;
     }
 
     /**
-     * Getter for manager
+     * Getter for currentScope
      *
-     * @return League\Fractal\Manager
-     */
-    public function getManager()
+     * @return \League\Fractal\Scope
+     **/
+    public function getCurrentScope()
     {
-        return $this->manager;
+        return $this->currentScope;
     }
 
     /**
      * This method is fired to loop through available embeds,
-     * see if any of them are requested and permitted for this 
+     * see if any of them are requested and permitted for this
      * scope.
      *
+     * @param Scope $scope
+     * @param $data
      * @return array
-     */
-    public function processEmbededResources(Scope $scope, $data)
+     **/
+    public function processIncludedResources(Scope $scope, $data)
     {
-        $embededData = array();
-        $embededDataCount = 0;
+        $embeddedData = array();
+        $embeddedDataCount = 0;
 
         // Nothing to do, bail
-        if (is_array($this->defaultEmbeds)) {
+        if (is_array($this->defaultIncludes)) {
 
-            foreach ($this->defaultEmbeds as $defaultEmbed) {
-                if (! ($resource = $this->callEmbedMethod($defaultEmbed, $data))) {
+            foreach ($this->defaultIncludes as $defaultInclude) {
+
+                if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
                     continue;
                 }
 
-                $childScope = $scope->embedChildScope($defaultEmbed, $resource);
+                $childScope = $scope->embedChildScope($defaultInclude, $resource);
 
-                $embededData[$defaultEmbed] = $childScope->toArray();
-                ++$embededDataCount;
+                $embeddedData[$defaultInclude] = $childScope->toArray();
+                ++$embeddedDataCount;
             }
         }
 
         // Nothing more to do? Bail
-        if (is_array($this->availableEmbeds)) {
+        if (is_array($this->availableIncludes)) {
 
-            foreach ($this->availableEmbeds as $potentialEmbed) {
+            foreach ($this->availableIncludes as $potentialInclude) {
                 // Check if an available embed is requested
-                if (! $scope->isRequested($potentialEmbed)) {
+                if (! $scope->isRequested($potentialInclude)) {
                     continue;
                 }
 
-                if (! ($resource = $this->callEmbedMethod($potentialEmbed, $data))) {
+                if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
                     continue;
                 }
 
-                $childScope = $scope->embedChildScope($potentialEmbed, $resource);
+                $childScope = $scope->embedChildScope($potentialInclude, $resource);
 
-                $embededData[$potentialEmbed] = $childScope->toArray();
-                ++$embededDataCount;
+                $embeddedData[$potentialInclude] = $childScope->toArray();
+                ++$embeddedDataCount;
             }
         }
 
-        return $embededDataCount === 0 ? false : $embededData;
+        return $embeddedDataCount === 0 ? false : $embeddedData;
     }
 
-    protected function callEmbedMethod($embed, $data)
+    /**
+     * Call Include Method
+     *
+     * @param \League\Fractal\Scope   $scope
+     * @param string                  $includeName
+     * @param mixed                   $data
+     * @return \League\Fractal\Resource\ResourceInterface
+     **/
+    protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
-        // Check if the method name actually exists
-        $methodName = 'embed'.str_replace(' ', '', ucwords(str_replace('_', ' ', $embed)));
+        $scopeIdentifier = $scope->getIdentifier($includeName);
+        $params = $scope->getManager()->getIncludeParams($scopeIdentifier);
 
-        $resource = call_user_func(array($this, $methodName), $data);
+        // Check if the method name actually exists
+        $methodName = 'include'.str_replace(' ', '', ucwords(str_replace('_', ' ', $includeName)));
+
+        $resource = call_user_func(array($this, $methodName), $data, $params);
 
         if ($resource === null) {
             return false;
         }
 
-        if (! $resource instanceof ResourceInterface) {
+        if (! $resource instanceof ResourceAbstract) {
             throw new \Exception(sprintf(
                 'Invalid return value from %s::%s(). Expected %s, received %s.',
                 __CLASS__,
                 $methodName,
-                'League\Fractal\Resource\ResourceInterface',
+                'League\Fractal\Resource\ResourceAbstract',
                 gettype($resource)
             ));
         }
@@ -151,43 +166,48 @@ abstract class TransformerAbstract
     }
 
     /**
-     * Setter for manager
+     * Setter for availableIncludes
      *
-     * @return self
+     * @param $availableIncludes
+     * @return $this
      */
-    public function setManager($manager)
+    public function setAvailableIncludes($availableIncludes)
     {
-        $this->manager = $manager;
+        $this->availableIncludes = $availableIncludes;
         return $this;
     }
 
     /**
-     * Setter for availableEmbeds
+     * Setter for defaultIncludes
      *
-     * @return self
-     */
-    public function setAvailableEmbeds($availableEmbeds)
+     * @param $defaultIncludes
+     * @return $this
+     **/
+    public function setDefaultIncludes($defaultIncludes)
     {
-        $this->availableEmbeds = $availableEmbeds;
+        $this->defaultIncludes = $defaultIncludes;
         return $this;
     }
 
     /**
-     * Setter for defaultEmbeds
+     * Setter for currentScope
      *
-     * @return self
-     */
-    public function setDefaultEmbeds($defaultEmbeds)
+     * @param $currentScope
+     * @return $this
+     **/
+    public function setCurrentScope($currentScope)
     {
-        $this->defaultEmbeds = $defaultEmbeds;
+        $this->currentScope = $currentScope;
         return $this;
     }
 
     /**
      * Create a new item resource object
      *
-     * @return League\Fractal\Resource\Item
-     */
+     * @param $data
+     * @param $transformer
+     * @return \League\Fractal\Resource\Item
+     **/
     protected function item($data, $transformer)
     {
         return new Item($data, $transformer);
@@ -196,7 +216,9 @@ abstract class TransformerAbstract
     /**
      * Create a new collection resource object
      *
-     * @return League\Fractal\Resource\Collection
+     * @param $data
+     * @param $transformer
+     * @return \League\Fractal\Resource\Collection
      */
     protected function collection($data, $transformer)
     {
