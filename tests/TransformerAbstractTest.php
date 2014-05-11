@@ -103,7 +103,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('book');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
-        $transformer->setManager($manager);
+        $transformer->setCurrentScope($scope);
 
         $transformer->setAvailableIncludes(array('book'));
         $transformer->processIncludedResources($scope, array());
