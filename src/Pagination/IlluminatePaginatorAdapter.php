@@ -40,7 +40,7 @@ class IlluminatePaginatorAdapter extends Paginator implements PaginatorInterface
          */
         $this->setupPaginationContext();
     }
-    
+
     /**
      * Get the number of items for the current page.
      *

@@ -139,7 +139,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->setRequestedScopes(array('book'));
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
-        $transformer->shouldReceive('embedBook')->once()->andReturnUsing(function($data) { 
+        $transformer->shouldReceive('embedBook')->once()->andReturnUsing(function($data) {
             return new Item(array('embedded' => 'thing'), function ($data) { return $data; });
         });
         $transformer->setAvailableEmbeds(array('book', 'publisher'));
@@ -170,7 +170,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers League\Fractal\TransformerAbstract::callEmbedMethod
      * @expectedException Exception
-     * @expectedExceptionMessage Invalid return value from League\Fractal\TransformerAbstract::embedBook(). 
+     * @expectedExceptionMessage Invalid return value from League\Fractal\TransformerAbstract::embedBook().
      */
     public function testCallEmbedMethodReturnsCrap()
     {
@@ -194,7 +194,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager;
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
-        $transformer->shouldReceive('embedBook')->once()->andReturnUsing(function($data) { 
+        $transformer->shouldReceive('embedBook')->once()->andReturnUsing(function($data) {
             return new Item(array('embedded' => 'thing'), function ($data) { return $data; });
         });
         $transformer->setDefaultEmbeds(array('book'));
