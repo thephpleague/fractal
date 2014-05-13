@@ -14,8 +14,8 @@ namespace League\Fractal\Resource;
 /**
  * Item Resource
  *
- * The Item Resource can stored any mixed data, usually an ORM, ODM or 
- * other sort of intelligent result, DataMapper model, etc but could 
+ * The Item Resource can stored any mixed data, usually an ORM, ODM or
+ * other sort of intelligent result, DataMapper model, etc but could
  * be a basic array, object, or whatever you like.
  */
 class Item implements ResourceInterface
@@ -26,7 +26,7 @@ class Item implements ResourceInterface
      * @var mixed
      */
     protected $data;
-    
+
     /**
      * A callable to process the data attached to this resource
      *
@@ -43,7 +43,7 @@ class Item implements ResourceInterface
         $this->data = $data;
         $this->transformer = $transformer;
     }
-    
+
     /**
      * Getter for data
      *

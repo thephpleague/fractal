@@ -18,8 +18,8 @@ use League\Fractal\Resource\ResourceInterface;
 /**
  * Transformer Abstract
  *
- * All Transformer classes should extend this to utilize the convenience methods 
- * collectionResource(), itemResource() and paginatorResource(), and make 
+ * All Transformer classes should extend this to utilize the convenience methods
+ * collectionResource(), itemResource() and paginatorResource(), and make
  * the self::$availableEmbeds property available. Extends it and add a `transform()`
  * method to transform any data into a basic array, including embedded content.
  */
@@ -38,7 +38,7 @@ abstract class TransformerAbstract
      * @var array
      */
     protected $defaultEmbeds;
-    
+
     /**
      * A callable to process the data attached to this resource
      *
@@ -78,7 +78,7 @@ abstract class TransformerAbstract
 
     /**
      * This method is fired to loop through available embeds,
-     * see if any of them are requested and permitted for this 
+     * see if any of them are requested and permitted for this
      * scope.
      *
      * @return array
