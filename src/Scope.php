@@ -83,6 +83,19 @@ class Scope
         return $this->manager;
     }
 
+    /**
+     * Is Requested
+     *
+     * Check if - in relation to the current scope - this specific segment is allowed.
+     * That means, if a.b.c is requested and the current scope is a.b, then c is allowed. If the current
+     * scope is a then c is not allowed, even if it is there and potentially transformable.
+     *
+     * @internal
+     *
+     * @param $checkScopeSegment
+     *
+     * @return int Returns the new number of elements in the array.
+     */
     public function isRequested($checkScopeSegment)
     {
         if ($this->parentScopes) {
@@ -100,23 +113,27 @@ class Scope
     }
 
     /**
+     * Push Parent Scope
+     *
      * Push a scope identifier into parentScopes
      *
-     * @param string $newScope
+     * @internal
+     *
+     * @param string $identifierSegment
      *
      * @return int Returns the new number of elements in the array.
      **/
-    public function pushParentScope($newScope)
+    public function pushParentScope($identifierSegment)
     {
-        return array_push($this->parentScopes, $newScope);
+        return array_push($this->parentScopes, $identifierSegment);
     }
 
     /**
-     * Setter for parentScopes
+     * Set parent scopes
      *
      * @param mixed $parentScopes Value to set
      *
-     * @return self
+     * @return $this
      **/
     public function setParentScopes($parentScopes)
     {
@@ -167,6 +184,13 @@ class Scope
         return json_encode($this->toArray());
     }
 
+    /**
+     * Fire Transformer
+     *
+     * @param $transformer
+     * @param $data
+     * @return array
+     */
     protected function fireTransformer($transformer, $data)
     {
         // Fire Main Transformer

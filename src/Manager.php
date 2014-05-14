@@ -11,6 +11,8 @@
 
 namespace League\Fractal;
 
+use League\Fractal\Resource\ResourceInterface;
+
 class Manager
 {
     /**
@@ -34,7 +36,20 @@ class Manager
      **/
     protected $paramDelimiter = '|';
 
-    public function createData($resource, $scopeIdentifier = null, $parentScopeInstance = null)
+    /**
+     * Create Data
+     *
+     * Main method to kick this all off. Make a resource then pass it over, and use toArray()
+     *
+     * @api
+     *
+     * @param \League\Fractal\Resource\ResourceInterface $resource
+     * @param string|null $scopeIdentifier
+     * @param string|null $parentScopeInstance
+     *
+     * @return Scope
+     */
+    public function createData(ResourceInterface $resource, $scopeIdentifier = null, $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 
@@ -51,6 +66,13 @@ class Manager
         return $scopeInstance;
     }
 
+    /**
+     * Get Requested Include
+     *
+     * @api
+     *
+     * @return array
+     */
     public function getRequestedIncludes()
     {
         return $this->requestedIncludes;
@@ -58,6 +80,8 @@ class Manager
 
     /**
      * Get Include Params
+     *
+     * @api
      *
      * @param string $include
      * @return array|null
@@ -69,6 +93,8 @@ class Manager
 
     /**
      * Parse Include String
+     *
+     * @api
      *
      * @param array|string $includes List of resources to include
      *
@@ -121,8 +147,11 @@ class Manager
 
     /**
      * Auto-include Parents
+     *
      * Look at the requested includes and automatically include the parents if they 
      * are not explicitly requested. E.g: [foo, bar.baz] becomes [foo, bar, bar.baz]
+     *
+     * @internal
      **/
     protected function autoIncludeParents()
     {
