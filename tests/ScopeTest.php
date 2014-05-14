@@ -107,7 +107,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes(array('foo', 'bar', 'baz.bart'));
 
-        $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceInterface'));
+        $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceAbstract'));
 
         $this->assertTrue($scope->isRequested('foo'));
         $this->assertTrue($scope->isRequested('bar'));
@@ -115,7 +115,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($scope->isRequested('baz.bart'));
         $this->assertFalse($scope->isRequested('nope'));
 
-        $childScope = $scope->embedChildScope('baz', Mockery::mock('League\Fractal\Resource\ResourceInterface'));
+        $childScope = $scope->embedChildScope('baz', Mockery::mock('League\Fractal\Resource\ResourceAbstract'));
         $this->assertTrue($childScope->isRequested('bart'));
         $this->assertFalse($childScope->isRequested('foo'));
         $this->assertFalse($childScope->isRequested('bar'));
@@ -130,7 +130,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $resource = Mockery::mock('League\Fractal\Resource\ResourceInterface', array(
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', array(
             array('bar' => 'baz'),
             function() {}
         ))->makePartial();
@@ -139,22 +139,58 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $scope->toArray();
     }
 
-    public function testToArrayWithEmbeds()
+    public function testToArrayWithIncludes()
     {
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform]');
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array('book'));
-        $transformer->shouldReceive('transform')->once()->andReturnUsing(function(array $data) {
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
+        $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
 
         $resource = new Item(array('bar' => 'baz'), $transformer);
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(array('data' => array('bar' => 'baz'), 'embeds' => array('book')), $scope->toArray());
+        $this->assertEquals(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang')), 'includes' => array('book')), $scope->toArray());
+    }
+
+    public function testToArrayWithSideloadedIncludes()
+    {
+        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer[sideloadIncludes,serializeData,serializeIncludedData]');
+        $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
+        $serializer->shouldReceive('serializeData')->andReturnUsing(function ($key, $data) {
+            return array('data' => $data);
+        });
+        $serializer->shouldReceive('serializeIncludedData')->andReturnUsing(function ($key, $data) {
+            return array('sideloaded' => array_pop($data));
+        });
+
+        $manager = new Manager();
+        $manager->parseIncludes('book');
+        $manager->setSerializer($serializer);
+
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
+        $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
+            return $data;
+        });
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
+
+        $resource = new Item(array('bar' => 'baz'), $transformer);
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'data' => array('bar' => 'baz'),
+            'sideloaded' => array('book' => array('yin' => 'yang')),
+            'includes' => array('book')
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
 
 
@@ -180,8 +216,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
-        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -194,8 +229,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
-        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array());
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(null);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
@@ -204,7 +238,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::runAppropriateTransformer
+     * @covers League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item or Resource\Collection
      */
@@ -214,7 +248,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $resource = Mockery::mock('League\Fractal\Resource\ResourceInterface', array($this->simpleItem, $transformer))->makePartial();
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', array($this->simpleItem, $transformer))->makePartial();
         $scope = $manager->createData($resource);
         $scope->toArray();
     }
@@ -267,7 +301,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     'foo' => 'bar',
                     'baz' => 'ban',
                 ),
-            ),
+            )
         );
 
         $this->assertEquals($expectedOutput, $rootScope->toArray());

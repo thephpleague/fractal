@@ -13,7 +13,7 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Scope;
 
 /**
@@ -27,21 +27,21 @@ use League\Fractal\Scope;
 abstract class TransformerAbstract
 {
     /**
-     * Include if requested
+     * Resources that can be included if requested
      *
      * @var array
      */
-    protected $availableIncludes;
+    protected $availableIncludes = array();
 
     /**
-     * Include without needing it to be requested
+     * Include resources without needing it to be requested
      *
      * @var array
      */
     protected $defaultIncludes;
     
     /**
-     * Know about the current scope, so we can fetch relevant params
+     * The transformer should know about the current scope, so we can fetch relevant params
      *
      * @var \League\Fractal\Scope
      */
@@ -82,6 +82,7 @@ abstract class TransformerAbstract
      * see if any of them are requested and permitted for this
      * scope.
      *
+     * @internal
      * @param Scope $scope
      * @param $data
      * @return array
@@ -133,11 +134,13 @@ abstract class TransformerAbstract
     /**
      * Call Include Method
      *
-     * @param \League\Fractal\Scope   $scope
-     * @param string                  $includeName
-     * @param mixed                   $data
+     * @internal
+     * @param \League\Fractal\Scope $scope
+     * @param string $includeName
+     * @param mixed $data
+     * @throws \Exception
      * @return \League\Fractal\Resource\ResourceInterface
-     **/
+     */
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
         $scopeIdentifier = $scope->getIdentifier($includeName);
@@ -152,12 +155,12 @@ abstract class TransformerAbstract
             return false;
         }
 
-        if (! $resource instanceof ResourceInterface) {
+        if (! $resource instanceof ResourceAbstract) {
             throw new \Exception(sprintf(
                 'Invalid return value from %s::%s(). Expected %s, received %s.',
                 __CLASS__,
                 $methodName,
-                'League\Fractal\Resource\ResourceInterface',
+                'League\Fractal\Resource\ResourceAbstract',
                 gettype($resource)
             ));
         }
@@ -168,6 +171,7 @@ abstract class TransformerAbstract
     /**
      * Setter for availableIncludes
      *
+     * @api
      * @param $availableIncludes
      * @return $this
      */
@@ -180,6 +184,7 @@ abstract class TransformerAbstract
     /**
      * Setter for defaultIncludes
      *
+     * @api
      * @param $defaultIncludes
      * @return $this
      **/
@@ -192,6 +197,7 @@ abstract class TransformerAbstract
     /**
      * Setter for currentScope
      *
+     * @api
      * @param $currentScope
      * @return $this
      **/
@@ -204,24 +210,28 @@ abstract class TransformerAbstract
     /**
      * Create a new item resource object
      *
+     * @api
      * @param $data
      * @param $transformer
+     * @param $resourceKey
      * @return \League\Fractal\Resource\Item
      **/
-    protected function item($data, $transformer)
+    protected function item($data, $transformer, $resourceKey = null)
     {
-        return new Item($data, $transformer);
+        return new Item($data, $transformer, $resourceKey);
     }
 
     /**
      * Create a new collection resource object
      *
+     * @api
      * @param $data
      * @param $transformer
+     * @param $resourceKey
      * @return \League\Fractal\Resource\Collection
      */
-    protected function collection($data, $transformer)
+    protected function collection($data, $transformer, $resourceKey = null)
     {
-        return new Collection($data, $transformer);
+        return new Collection($data, $transformer, $resourceKey);
     }
 }

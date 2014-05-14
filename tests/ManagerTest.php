@@ -28,6 +28,41 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('limit' => array('5', '1'), 'order' => array('-something')), $manager->getIncludeParams('foo'));
     }
 
+    public function testRecursionLimiting()
+    {
+        $manager = new Manager();
+
+        // Should limit to 10 by default
+        $manager->parseIncludes('a.b.c.d.e.f.g.h.i.j.NEVER');
+        $this->assertEquals(
+            array(
+                'a',
+                'a.b',
+                'a.b.c',
+                'a.b.c.d',
+                'a.b.c.d.e',
+                'a.b.c.d.e.f',
+                'a.b.c.d.e.f.g',
+                'a.b.c.d.e.f.g.h',
+                'a.b.c.d.e.f.g.h.i',
+                'a.b.c.d.e.f.g.h.i.j',
+            ),
+            $manager->getRequestedIncludes()
+        );
+
+        // Try setting to 3 and see what happens
+        $manager->setRecursionLimit(3);
+        $manager->parseIncludes('a.b.c.NEVER');
+        $this->assertEquals(
+            array(
+                'a',
+                'a.b',
+                'a.b.c',
+            ),
+            $manager->getRequestedIncludes()
+        );
+    }
+
     public function testCreateDataWithCallback()
     {
         $manager = new Manager();
