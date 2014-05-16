@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Ben Glassman <bglassman@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,9 +11,7 @@
 
 namespace League\Fractal;
 
-use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Scope;
 
 /**
  * Transformer Interface
@@ -28,4 +26,5 @@ interface TransformerInterface
     public function getDefaultEmbeds();
     public function setDefaultEmbeds($defaultEmbeds);
     public function processEmbededResources(Scope $scope, $data);
+    public function transform($data);
 }

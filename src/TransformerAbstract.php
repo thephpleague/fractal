@@ -183,6 +183,8 @@ abstract class TransformerAbstract implements TransformerInterface
         return $this;
     }
 
+    abstract public function transform($data);
+
     /**
      * Create a new item resource object
      *
