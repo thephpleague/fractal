@@ -155,7 +155,7 @@ class Scope
         $processedData = call_user_func(array($transformer, 'transform'), $data);
 
         // If its an object, process potential embeded resources
-        if ($transformer instanceof TransformerAbstract) {
+        if ($transformer instanceof TransformerInterface) {
             $embededData = $transformer->processEmbededResources($this, $data);
 
             if ($embededData !== false) {

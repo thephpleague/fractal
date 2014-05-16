@@ -23,7 +23,7 @@ use League\Fractal\Resource\ResourceInterface;
  * the self::$availableEmbeds property available. Extends it and add a `transform()`
  * method to transform any data into a basic array, including embedded content.
  */
-abstract class TransformerAbstract
+abstract class TransformerAbstract implements TransformerInterface
 {
     /**
      * Embed if requested
