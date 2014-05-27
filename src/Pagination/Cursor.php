@@ -28,7 +28,7 @@ class Cursor implements CursorInterface
 
     /**
      * Prev cursor value
-     * 
+     *
      * @var mixed
      */
     protected $prev;

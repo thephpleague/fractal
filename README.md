@@ -5,14 +5,14 @@
 [![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
 
-Fractal provides a presentation and transformation layer for complex data output, the like found in 
+Fractal provides a presentation and transformation layer for complex data output, the like found in
 RESTful APIs, and works really well with JSON.
 
 When building an API it is common for people to just grab stuff from the database and pass it
 to `json_encode()`. This might be passable for "trivial" API's but if they are in use by the public,
 or used by an iPhone application then this will quickly lead to inconsistent output.
 
-## Goals 
+## Goals
 
 * Create a "barrier" between source data and output, so schema changes do not affect users
 * Systematic type-casting of data, to avoid foreach()ing through and (bool)ing everything
@@ -42,14 +42,14 @@ Via Composer
 
 ## Requirements
 
-The following versions of PHP are supported by this version. 
+The following versions of PHP are supported by this version.
 
 * PHP 5.3
 * PHP 5.4
 * PHP 5.5
 * PHP 5.6
 
-HHVM support is also experimentally supported. It basically works, but CodeSniffer installation is screwing it up on 
+HHVM support is also experimentally supported. It basically works, but CodeSniffer installation is screwing it up on
 Travis-CI.
 
 ## Documentation
