@@ -6,22 +6,23 @@
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
 
 Fractal provides a presentation and transformation layer for complex data output, the like found in
-RESTful APIs, and works really well with JSON.
+RESTful APIs, and works really well with JSON. Think of this as a view layer for your JSON/YAML/etc.
 
 When building an API it is common for people to just grab stuff from the database and pass it
-to `json_encode()`. This might be passable for "trivial" API's but if they are in use by the public,
-or used by an iPhone application then this will quickly lead to inconsistent output.
+to `json_encode()`. This might be passable for "trivial" APIs but if they are in use by the public,
+or used by mobile applications then this will quickly lead to inconsistent output.
 
 ## Goals
 
 * Create a "barrier" between source data and output, so schema changes do not affect users
-* Systematic type-casting of data, to avoid foreach()ing through and (bool)ing everything
-* Embed (or nest) relationships for complex data structures
+* Systematic type-casting of data, to avoid `foreach()`ing through and `(bool)`ing everything
+* Include (a.k.a embedding, nesting or side-loading) relationships for complex data structures
+* Work with standards like HAL and JSON-API but also allow custom serialization
 * Support the pagination of data results, for small and large data sets alike
 * Generally ease the subtle complexities of outputting data in a non-trivial API
 
-This package is compliant with [PSR-1][], [PSR-2][] and [PSR-4][]. If you
-notice compliance oversights, please send a patch via pull request.
+This package is compliant with [PSR-1], [PSR-2] and [PSR-4]. If you notice compliance oversights,
+please send a patch via pull request.
 
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
@@ -48,9 +49,7 @@ The following versions of PHP are supported by this version.
 * PHP 5.4
 * PHP 5.5
 * PHP 5.6
-
-HHVM support is also experimentally supported. It basically works, but CodeSniffer installation is screwing it up on
-Travis-CI.
+* HHVM
 
 ## Documentation
 
@@ -61,7 +60,7 @@ Contribute to this documentation in the [sculpin branch](https://github.com/thep
 ## Todo
 
 - Wrap optional params in a ParamBag object or similar
-- Complete JSON-API and HAL serializers
+- Add JSON-API (kinda done) and HAL serializers
 
 ## Testing
 
@@ -76,6 +75,7 @@ Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CO
 
 ## Credits
 
+- [Jason Lewis](https://github.com/jasonlewis)
 - [Phil Sturgeon](https://github.com/philsturgeon)
 - [All Contributors](https://github.com/thephpleague/fractal/contributors)
 

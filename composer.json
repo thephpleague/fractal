@@ -4,7 +4,8 @@
     "keywords": [
         "league",
         "api",
-        "json"
+        "json",
+        "rest"
     ],
     "homepage": "http://fractal.thephpleague.com/",
     "license": "MIT",

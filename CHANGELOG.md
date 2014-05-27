@@ -1,3 +1,18 @@
+## 0.8.0 (2014-05-27)
+
+Features:
+
+  - Added Serializers with ArraySerializer, DataArraySerializer (default) and a provisional JsonApiSerializer. See [Issue #47].
+  - Added `ResourceAbstract::setMeta('foo', mixed)` to allow custom meta data
+  - Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can
+  also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query
+  param: `/foo?include=bars:limit(5|1):order(-something)`.
+  - Made all pagination (paginators and cursors) use meta output logic, so it sits with your custom meta data
+  - Moved `League\Fractal\Cursor\Cursor` and `League\Fractal\Cursor\CursorInterface` into `League\Fractal\Pagination`.
+
+[Issue #27]: https://github.com/thephpleague/fractal/issues/27
+[Issue #47]: https://github.com/thephpleague/fractal/pull/47
+
 ## 0.7.0 (2014-02-01)
 
 Features:
