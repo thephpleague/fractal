@@ -67,6 +67,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
+        // Item
         $resource = new Item(array('foo' => 'bar'), function (array $data) {
             return $data;
         });
@@ -77,7 +78,21 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
         $this->assertEquals('{"data":{"foo":"bar"}}', $rootScope->toJson());
+
+        // Collection
+        $resource = new Collection(array(array('foo' => 'bar')), function (array $data) {
+            return $data;
+        });
+
+        $rootScope = $manager->createData($resource);
+
+        $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
+
+        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $rootScope->toArray());
+        $this->assertEquals('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
     }
+
+
 
     public function tearDown()
     {

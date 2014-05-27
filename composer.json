@@ -35,7 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "League\\Fractal\\Tests\\": "tests"
+            "League\\Fractal\\Test\\": "test"
         }
     },
     "extra": {

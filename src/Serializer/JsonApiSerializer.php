@@ -17,18 +17,19 @@ class JsonApiSerializer extends ArraySerializer
 {
     /**
      * Serialize the top level data.
-     * 
+     *
+     * @param string $resourceKey
      * @param array $data
-     * 
+     *
      * @return array
      */
     public function serializeData($resourceKey, array $data)
     {
         if (! $resourceKey) {
-            throw new RuntimeException('The $resourceKey parameter has not been set on the resource.');
+            throw new RuntimeException('The $resourceKey parameter must be provided when using '.__CLASS__);
         }
 
-        if (count($data) == count($data, COUNT_RECURSIVE)) {
+        if (count($data) === count($data, COUNT_RECURSIVE)) {
             $data = array($data);
         }
 
@@ -71,7 +72,7 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * Indicates if includes should be sideloaded.
+     * Indicates if includes should be side-loaded.
      * 
      * @return bool
      */
