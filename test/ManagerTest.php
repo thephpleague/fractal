@@ -19,6 +19,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes(array('foo', 'bar', 'bar.baz'));
         $this->assertEquals(array('foo', 'bar', 'bar.baz'), $manager->getRequestedIncludes());
 
+        // Are repeated things stripped
+        $manager->parseIncludes(array('foo', 'foo', 'bar'));
+        $this->assertEquals(array('foo', 'bar'), $manager->getRequestedIncludes());
+
         // Do requests for `baz.bart` also request `baz`?
         $manager->parseIncludes(array('foo.bar'));
         $this->assertEquals(array('foo', 'foo.bar'), $manager->getRequestedIncludes());

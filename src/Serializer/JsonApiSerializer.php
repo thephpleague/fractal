@@ -45,10 +45,6 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function serializeIncludedData($resourceKey, array $data)
     {
-        if (empty($data)) {
-            return array();
-        }
-
         $serializedData = array();
 
         foreach ($data as $value) {
@@ -58,21 +54,6 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         return empty($serializedData) ? array() : array('linked' => $serializedData);
-    }
-
-    /**
-     * Serialize the meta
-     *
-     * @param  array  $meta
-     * @return array
-     */
-    public function serializeMeta(array $meta)
-    {
-        if (empty($meta)) {
-            return array();
-        }
-
-        return array('meta' => $meta);
     }
 
     /**

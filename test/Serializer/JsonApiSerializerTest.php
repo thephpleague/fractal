@@ -9,11 +9,17 @@ use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
 
-    public function testSerializingItemResource()
+    private $manager;
+
+    public function setUp()
     {
-        $manager = new Manager();
-        $manager->parseIncludes('author');
-        $manager->setSerializer(new JsonApiSerializer());
+        $this->manager = new Manager();
+        $this->manager->setSerializer(new JsonApiSerializer());
+    }
+
+    public function testSerializingEmptyIncludes()
+    {
+        $this->manager->parseIncludes('author');
 
         $bookData = array(
             'title' => 'Foo',
@@ -25,7 +31,45 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
 
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
 
-        $scope = new Scope($manager, $resource);
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'book' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                )
+            ),
+            'linked' => array(
+                'author' => array(
+                    array(
+                        'name' => 'Dave'
+                    )
+                )
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResource()
+    {
+        $this->manager->parseIncludes('author');
+
+        $bookData = array(
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => array(
+                'name' => 'Dave',
+            ),
+        );
+
+        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+
+        $scope = new Scope($this->manager, $resource);
 
         $expected = array(
             'book' => array(
@@ -51,9 +95,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
 
     public function testSerializingCollectionResource()
     {
-        $manager = new Manager();
-        $manager->parseIncludes('author');
-        $manager->setSerializer(new JsonApiSerializer());
+        $this->manager->parseIncludes('author');
 
         $booksData = array(
             array(
@@ -73,7 +115,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         );
 
         $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
-        $scope = new Scope($manager, $resource);
+        $scope = new Scope($this->manager, $resource);
 
         $expected = array(
             'book' => array(
@@ -103,9 +145,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
 
     public function testSerializingItemResourceWithMeta()
     {
-        $manager = new Manager();
-        $manager->parseIncludes('author');
-        $manager->setSerializer(new JsonApiSerializer());
+        $this->manager->parseIncludes('author');
 
         $bookData = array(
             'title' => 'Foo',
@@ -118,7 +158,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
         $resource->setMetaValue('foo', 'bar');
 
-        $scope = new Scope($manager, $resource);
+        $scope = new Scope($this->manager, $resource);
 
         $expected = array(
             'book' => array(
@@ -147,10 +187,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
 
     public function testSerializingCollectionResourceWithMeta()
     {
-
-        $manager = new Manager();
-        $manager->parseIncludes('author');
-        $manager->setSerializer(new JsonApiSerializer());
+        $this->manager->parseIncludes('author');
 
         $booksData = array(
             array(
@@ -172,7 +209,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
         $resource->setMetaValue('foo', 'bar');
 
-        $scope = new Scope($manager, $resource);
+        $scope = new Scope($this->manager, $resource);
 
         $expected = array(
             'book' => array(
@@ -208,8 +245,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
      **/
     public function testResourceKeyMissing()
     {
-        $manager = new Manager();
-        $manager->setSerializer(new JsonApiSerializer());
+        $this->manager->setSerializer(new JsonApiSerializer());
 
         $bookData = array(
             'title' => 'Foo',
@@ -217,7 +253,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         );
 
         $resource = new Item($bookData, new GenericBookTransformer());
-        $scope = new Scope($manager, $resource);
+        $scope = new Scope($this->manager, $resource);
 
         $scope->toArray();
     }
