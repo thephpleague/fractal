@@ -10,20 +10,27 @@ abstract class ResourceAbstract
      * @var mixed
      */
     protected $data;
-    
+
+    /**
+     * Array of meta data
+     *
+     * @var array
+     */
+    protected $meta = array();
+
+    /**
+     * The resource key.
+     *
+     * @var string
+     */
+    protected $resourceKey;
+
     /**
      * A callable to process the data attached to this resource
      *
      * @var callable|string
      */
     protected $transformer;
-
-    /**
-     * The resource key.
-     * 
-     * @var string
-     */
-    protected $resourceKey;
 
     /**
      * Create a new resource instance.
@@ -50,6 +57,37 @@ abstract class ResourceAbstract
     }
 
     /**
+     * Get the meta data
+     *
+     * @return array
+     **/
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * Get the meta data
+     *
+     * @param $metaKey
+     * @return array
+     */
+    public function getMetaValue($metaKey)
+    {
+        return $this->meta[$metaKey];
+    }
+
+    /**
+     * Get the resource key.
+     *
+     * @return string
+     */
+    public function getResourceKey()
+    {
+        return $this->resourceKey;
+    }
+
+    /**
      * Get the transformer.
      *
      * @return callable|string
@@ -57,6 +95,20 @@ abstract class ResourceAbstract
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+    /**
+     * Set the meta data
+     *
+     * @param string $metaKey
+     * @param mixed $metaValue
+     *
+     * @return $this
+     **/
+    public function setMetaValue($metaKey, $metaValue)
+    {
+        $this->meta[$metaKey] = $metaValue;
+        return $this;
     }
 
     /**
@@ -69,15 +121,5 @@ abstract class ResourceAbstract
     {
         $this->resourceKey = $resourceKey;
         return $this;
-    }
-
-    /**
-     * Get the resource key.
-     * 
-     * @return string
-     */
-    public function getResourceKey()
-    {
-        return $this->resourceKey;
     }
 }

@@ -144,7 +144,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
         $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
@@ -155,7 +155,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang')), 'includes' => array('book')), $scope->toArray());
+        $this->assertEquals(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang'))), $scope->toArray());
     }
 
     public function testToArrayWithSideloadedIncludes()
@@ -173,7 +173,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('book');
         $manager->setSerializer($serializer);
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract[getAvailableIncludes,transform,processIncludedResources]');
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
         $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
@@ -187,7 +187,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'data' => array('bar' => 'baz'),
             'sideloaded' => array('book' => array('yin' => 'yang')),
-            'includes' => array('book')
         );
 
         $this->assertEquals($expected, $scope->toArray());
@@ -269,7 +268,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $perPage = $count = 5;
         $currentPage = 2;
         $lastPage = 20;
-        $lastPage = 20;
 
         $paginator->shouldReceive('getTotal')->once()->andReturn($total);
         $paginator->shouldReceive('count')->once()->andReturn($count);
@@ -285,15 +283,17 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $rootScope = $manager->createData($collection);
 
         $expectedOutput = array(
-            'pagination' => array(
-                'total' => $total,
-                'count' => $count,
-                'per_page' => $perPage,
-                'current_page' => $currentPage,
-                'total_pages' => $lastPage,
-                'links' => array(
-                    'previous' => 'http://example.com/foo?page=1',
-                    'next' => 'http://example.com/foo?page=3',
+            'meta' => array(
+                'pagination' => array(
+                    'total' => $total,
+                    'count' => $count,
+                    'per_page' => $perPage,
+                    'current_page' => $currentPage,
+                    'total_pages' => $lastPage,
+                    'links' => array(
+                        'previous' => 'http://example.com/foo?page=1',
+                        'next' => 'http://example.com/foo?page=3',
+                    ),
                 ),
             ),
             'data' => array(
@@ -311,14 +311,14 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $inputCollection = array(
+        $inputData = array(
             array(
                 'foo' => 'bar',
                 'baz' => 'ban',
             )
         );
 
-        $collection = new Collection($inputCollection, function (array $data) {
+        $collection = new Collection($inputData, function (array $data) {
             return $data;
         });
 
@@ -329,13 +329,15 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $rootScope = $manager->createData($collection);
 
         $expectedOutput = array(
-            'cursor' => array(
-                'current' => 0,
-                'prev' => 'ban',
-                'next' => 'ban',
-                'count' => 2,
+            'meta' => array(
+                'cursor' => array(
+                    'current' => 0,
+                    'prev' => 'ban',
+                    'next' => 'ban',
+                    'count' => 2,
+                ),
             ),
-            'data' => $inputCollection,
+            'data' => $inputData,
         );
 
         $this->assertEquals($expectedOutput, $rootScope->toArray());

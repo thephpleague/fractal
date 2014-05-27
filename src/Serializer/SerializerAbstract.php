@@ -20,10 +20,10 @@ abstract class SerializerAbstract
     abstract public function serializeIncludedData($resourceKey, array $data);
     abstract public function serializePaginator(PaginatorInterface $paginator);
     abstract public function serializeCursor(CursorInterface $cursor);
-    abstract public function serializeAvailableIncludes(array $includes);
+    abstract public function serializeMeta(array $meta);
 
     /**
-     * Indicates if includes should be sideloaded.
+     * Indicates if includes should be side-loaded
      * 
      * @return bool
      */

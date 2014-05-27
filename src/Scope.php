@@ -156,7 +156,7 @@ class Scope
 
         $data = $serializer->serializeData($resourceKey, $data);
 
-        // If the serializer wants the includes to be sideloaded then we'll
+        // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
@@ -164,19 +164,24 @@ class Scope
             $data = array_merge($data, $includedData);
         }
 
-        $availableIncludes = $serializer->serializeAvailableIncludes($this->availableIncludes);
-
-        $pagination = array();
-
         if ($this->resource instanceof Collection) {
+
             if ($this->resource->hasCursor()) {
                 $pagination = $serializer->serializeCursor($this->resource->getCursor());
+
             } elseif ($this->resource->hasPaginator()) {
                 $pagination = $serializer->serializePaginator($this->resource->getPaginator());
             }
+
+            if (! empty($pagination)) {
+                $this->resource->setMetaValue(key($pagination), current($pagination));
+            }
         }
 
-        return array_merge($data, $availableIncludes, $pagination);
+        // Pull out all of OUR metadata and any custom meta data to merge with the main level data
+        $meta = $serializer->serializeMeta($this->resource->getMeta());
+
+        return array_merge($data, $meta);
     }
 
     /**
@@ -207,7 +212,7 @@ class Scope
             list ($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
 
         } elseif ($this->resource instanceof Collection) {
-            foreach ($data as $key => $value) {
+            foreach ($data as $value) {
                 list ($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
             }
         } else {
@@ -240,7 +245,7 @@ class Scope
         if ($this->transformerHasIncludes($transformer)) {
             $includedData = $this->fireIncludedTransformers($transformer, $data);
 
-            // If the serializer does not want the includes to be sideloaded then
+            // If the serializer does not want the includes to be side-loaded then
             // the included data must be merged with the transformed data.
             if (! $this->manager->getSerializer()->sideloadIncludes()) {
                 $transformedData = array_merge($transformedData, $includedData);

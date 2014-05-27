@@ -29,7 +29,7 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
-     * Serialize the included data.
+     * Serialize the included data
      * 
      * @param  string  $resourceKey
      * @param  array  $data
@@ -41,26 +41,26 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
-     * Serialize the available includes.
+     * Serialize the meta
      * 
-     * @param  array  $includes
+     * @param  array  $meta
      * @return array
      */
-    public function serializeAvailableIncludes(array $includes)
+    public function serializeMeta(array $meta)
     {
-        if (empty($includes)) {
+        if (empty($meta)) {
             return array();
         }
 
-        return array('includes' => $includes);
+        return array('meta' => $meta);
     }
 
     /**
-     * Serialize the paginator.
-     * 
-     * @param  \League\Fractal\Pagination\PaginatorInterface  $pagination
+     * Serialize the paginator
+     *
+     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
      * @return array
-     */
+     **/
     public function serializePaginator(PaginatorInterface $paginator)
     {
         $currentPage = (int) $paginator->getCurrentPage();
@@ -88,11 +88,11 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
-     * Serialize the cursor.
+     * Serialize the cursor
      * 
      * @param  \League\Fractal\Pagination\CursorInterface  $cursor
      * @return array
-     */
+     **/
     public function serializeCursor(CursorInterface $cursor)
     {
         $cursor = array(

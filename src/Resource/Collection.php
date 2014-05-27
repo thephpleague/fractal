@@ -11,6 +11,7 @@
 
 namespace League\Fractal\Resource;
 
+use ArrayIterator;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 
@@ -26,53 +27,35 @@ class Collection extends ResourceAbstract
      * A collection of data
      *
      * @var array|ArrayIterator
-     */
+     **/
     protected $data;
 
     /**
      * A collection of data
      *
      * @var League\Fractal\Pagination\PaginatorInterface
-     */
+     **/
     protected $paginator;
 
     /**
      * Cursor implementation.
      *
      * @var League\Fractal\Pagination\CursorInterface
-     */
+     **/
     protected $cursor;
 
     /**
      * A callable to process the data attached to this resource
      *
      * @var callable|string
-     */
+     **/
     protected $transformer;
-
-    /**
-     * Array of meta data
-     * 
-     * @var array
-     */
-    protected $meta = array();
-
-    /**
-     * @param array|ArrayIterator $data
-     * @param callable|string $transformer
-     */
-    public function __construct($data, $transformer, $resourceKey = null)
-    {
-        $this->data = $data;
-        $this->transformer = $transformer;
-        $this->resourceKey = $resourceKey;
-    }
 
     /**
      * Getter for data
      *
      * @return array|ArrayIterator
-     */
+     **/
     public function getData()
     {
         return $this->data;
@@ -81,38 +64,38 @@ class Collection extends ResourceAbstract
     /**
      * Getter for paginator
      *
-     * @return League\Fractal\Pagination\PaginatorInterface
-     */
+     * @return \League\Fractal\Pagination\PaginatorInterface
+     **/
     public function getPaginator()
     {
         return $this->paginator;
     }
 
     /**
-     * Determine if the resouce has a paginator implementation.
+     * Determine if the resource has a paginator implementation
      * 
      * @return bool
-     */
+     **/
     public function hasPaginator()
     {
         return $this->paginator instanceof PaginatorInterface;
     }
 
     /**
-     * Set the cursor implementation.
+     * Set the cursor implementation
      *
-     * @return League\Fractal\Pagination\CursorInterface
-     */
+     * @return \League\Fractal\Pagination\CursorInterface
+     **/
     public function getCursor()
     {
         return $this->cursor;
     }
 
     /**
-     * Determine if the resouce has a cursor implementation.
+     * Determine if the resource has a cursor implementation
      * 
      * @return bool
-     */
+     **/
     public function hasCursor()
     {
         return $this->cursor instanceof CursorInterface;
@@ -122,7 +105,7 @@ class Collection extends ResourceAbstract
      * Getter for transformer
      *
      * @return callable|string
-     */
+     **/
     public function getTransformer()
     {
         return $this->transformer;
@@ -131,10 +114,10 @@ class Collection extends ResourceAbstract
     /**
      * Setter for paginator
      *
-     * @param League\Fractal\Pagination\PaginatorInterface $paginator
+     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
      *
-     * @return self
-     */
+     * @return $this
+     **/
     public function setPaginator(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
@@ -144,34 +127,12 @@ class Collection extends ResourceAbstract
     /**
      * Set the cursor implementation.
      *
-     * @param League\Fractal\Pagination\CursorInterface $cursor
-     */
+     * @param \League\Fractal\Pagination\CursorInterface $cursor
+     * @return $this
+     **/
     public function setCursor(CursorInterface $cursor)
     {
         $this->cursor = $cursor;
         return $this;
-    }
-
-    /**
-     * Set the meta data
-     * 
-     * @param array $meta
-     * 
-     * @return self
-     */
-    public function setMeta(array $meta)
-    {
-        $this->meta = $meta;
-        return $this;
-    }
-
-    /**
-     * Get the meta data
-     * 
-     * @return array
-     */
-    public function getMeta()
-    {
-        return $this->meta;
     }
 }

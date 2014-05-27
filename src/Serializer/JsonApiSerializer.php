@@ -51,7 +51,7 @@ class JsonApiSerializer extends ArraySerializer
 
         $serializedData = array();
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $value) {
             foreach ($value as $includeKey => $includeValue) {
                 $serializedData = array_merge_recursive($serializedData, $includeValue);
             }
@@ -61,14 +61,18 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * Serialize the available includes.
-     * 
-     * @param  array  $includes
+     * Serialize the meta
+     *
+     * @param  array  $meta
      * @return array
      */
-    public function serializeAvailableIncludes(array $includes)
+    public function serializeMeta(array $meta)
     {
-        return array();
+        if (empty($meta)) {
+            return array();
+        }
+
+        return array('meta' => $meta);
     }
 
     /**

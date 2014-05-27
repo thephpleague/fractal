@@ -23,6 +23,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
             ),
         );
 
+        // Try without metadata
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
         $scope = new Scope($manager, $resource);
 
@@ -36,7 +37,30 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
                     ),
                 ),
             ),
-            'includes' => array('author'),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+
+        // Same again with metadata
+        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'meta' => array(
+                'foo' => 'bar',
+            ),
+            'data' => array(
+                'title' => 'Foo',
+                'year' => 1991,
+                'author' => array(
+                    'data' => array(
+                        'name' => 'Dave',
+                    ),
+                ),
+            ),
         );
 
         $this->assertEquals($expected, $scope->toArray());
@@ -65,7 +89,9 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
             ),
         );
 
+        // Try without metadata
         $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
+
         $scope = new Scope($manager, $resource);
 
         $expected = array(
@@ -89,10 +115,49 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
                     ),
                 ),
             ),
-            'includes' => array('author'),
         );
 
         $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+
+        // Same again with meta
+        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'meta' => array(
+                'foo' => 'bar',
+            ),
+            'data' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                    'author' => array(
+                        'data' => array(
+                            'name' => 'Dave',
+                        ),
+                    ),
+                ),
+                array(
+                    'title' => 'Bar',
+                    'year' => 1997,
+                    'author' => array(
+                        'data' => array(
+                            'name' => 'Bob',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}],"meta":{"foo":"bar"}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
     }
 
 
