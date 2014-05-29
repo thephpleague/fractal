@@ -43,7 +43,7 @@ Learn more about the general concepts of Fractal.
     have a <em>transformer</em> attached, for when it is eventually transformed ready to be serialized and output.</dd>
 
     <dt id="term-scope">Serializer</dt>
-    <dd>A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. REST has many output structures, two popular ones being HAL and JSON-API. Twitter and Facebook output data differently to each other, and Google does it differently too. <em>Serializers</em> let you switch between various output formats 
+    <dd>A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. There are many output structures for APIs, two popular ones being [HAL] and [JSON-API]. Twitter and Facebook output data differently to each other, and Google does it differently too. <em>Serializers</em> let you switch between various output formats 
     with minimal effect on your <em>Transformers</em>.</dd>
 
     <dt id="term-transformer">Transformer</dt>
@@ -54,4 +54,6 @@ Learn more about the general concepts of Fractal.
 
 </dl>
 
+[HAL]: http://stateless.co/hal_specification.html
+[JSON-API]: http://jsonapi.org/
 [Object-relational impedance mismatch]: https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch
