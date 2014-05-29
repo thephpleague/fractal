@@ -52,27 +52,29 @@ way of fetching results. One of the approches is to use cursors that will indica
 fetching results. You can set a new cursor on your collections using the
 `League\Fractal\Resource\Collection::setCursor()` method.
 
-The cursor must implement `League\Fractal\Cursor\CursorInterface` and it's specified methods.
+The cursor must implement `League\Fractal\Pagination\CursorInterface` and it's specified methods.
 
-Fractal currently ships with a very basic adapter: `League\Fractal\Cursor\Cursor`. It's really easy to use:
+Fractal currently ships with a very basic adapter: `League\Fractal\Pagination\Cursor`. It's really easy to use:
 
 ~~~.language-php
 use Acme\Model\Book;
 use Acme\Transformer\BookTransformer;
-use League\Fractal\Cursor\Cursor;
+use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 
-if ($current = Input::get('cursor', false)) {
-    $books = Book::where('id', '>', $current)->take(5)->get();
+if ($currentCursorStr = Input::get('cursor', false)) {
+    $books = Book::where('id', '>', $currentCursorStr)->take(5)->get();
 } else {
     $books = Book::take(5)->get();	
 }
 
-$cursor = new Cursor($current, $books->last()->id, $books->count());
+$newCursorStr = $books->last()->id;
+$cursor = new Cursor($currentCursorStr, $newCursorStr, $books->count());
 
 $resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
 ~~~
 
-These examples are for Laravel's Illuminate\Database package, but you can obviously do it however you like. Simply make 
-sure that the current cursor is used as a marker, for where to get your next chunk of content.
+These examples are for Laravel's Illuminate\Database package, but you can do it however you like. The cursor 
+also happens to be constructed from the `id` field, but it could just as easily be an offset number. Whatever
+is picked to represent a cursor, maybe consider using `base64_encode()` and `base64_decode()` on the values to make sure API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.

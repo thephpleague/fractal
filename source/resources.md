@@ -16,6 +16,9 @@ Two types of resource exist:
 The `Item` and `Collection` constructors will take any kind of data you wish to send it
 as the first argument, and then a "transformer" as the second argument. 
 
+These examples use callback transformers instead of creating classes, purely for demonstrative 
+purposes.
+
 ### Item Example
 
 ~~~.language-php
@@ -26,9 +29,15 @@ $book = Book::find($id);
 
 $resource = new Fractal\Resource\Item($book, function(Book $book) {
     return [
-        'id' => (int) $book->id,
-        'title' => $book->title,
-        'year' => $book->yr,
+        'id'      => (int) $book->id,
+        'title'   => $book->title,
+        'year'    => (int) $book->yr,
+        'links'   => [
+            [
+                'rel' => 'self',
+                'uri' => '/books/'.$book->id,
+            ]
+        ]
     ];
 });
 ~~~
@@ -45,12 +54,18 @@ $resource = new Fractal\Resource\Collection($books, function(Book $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
-        'year' => $book->yr,
+        'year' => (year) $book->yr,
+        'links'   => [
+            [
+                'rel' => 'self',
+                'uri' => '/books/'.$book->id,
+            ]
+        ]
     ];
 });
 ~~~
 
 In this example `$books` is an array of `Acme\Model\Book` instances, or a collection class 
-that implemented [ArrayIterator][].
+that implemented [ArrayIterator].
 
 [ArrayIterator]: http://php.net/ArrayIterator

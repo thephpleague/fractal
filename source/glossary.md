@@ -16,16 +16,17 @@ Learn more about the general concepts of Fractal.
     it impossible to know if the "next" page exists, meaning an API client would 
     need to keep making HTTP Requests until no data could be found (404).</dd>
 
-    <dt id="term-embed">Embed</dt>
-    <dd>Data - regardless of the source - usually has relationships. Users have posts, posts have 
+    <dt id="term-embed">Include</dt>
+    <dd>Data usually has relationships to other data. Users have posts, posts have 
     comments, comments belong to posts, etc. When represented in RESTful APIs this data is usually 
-    embedded (or nested) into the main response. Fractal calls these embedded resources: <em>embeds</em>.
-    A transformer will contain <code>embedFoo()</code> methods, which allow for resource embedding to occur.</dd>
+    data is "included" (a.k.a embedded or nested) into the resource.
+    A transformer will contain <code>includePosts()</code> methods, which will expect a resource to be 
+    returned, so it can be placed inside the parent resource.</dd>
 
     <dt id="term-manager">Manager</dt>
     <dd>Fractal has a class named <em>Manager</em>, which is responsible for maintaining 
-    a record of what embedded data has been requested, and converting the nested 
-    data into JSON recursively.</dd>
+    a record of what embedded data has been requested, and converting the nested data into
+    arrays, JSON, YAML, etc. recursively.</dd>
 
     <dt id="term-pagination">Pagination</dt>
     <dd><em>Pagination</em> is the process of dividing content into pages, which in 
@@ -34,22 +35,23 @@ Learn more about the general concepts of Fractal.
 
     <dt id="term-paginator">Paginator</dt>
     <dd>A <em>paginator</em> is an intelligent form of <en>Pagination</en>, which will require 
-    a total count of how much data is in the database. This adds a <code>"paginator"</code> namespace to 
-    the data response, which will contain meta data and next/previous links when applicable.</dd>
+    a total count of how much data is in the database. This adds a <code>"paginator"</code> item to 
+    the response meta data, which will contain next/previous links when applicable.</dd>
 
     <dt id="term-resource">Resource</dt>
-    <dd>A <em>resource</em> is an object which acts as a wrapper for data. A <em>resource</em> will
-    have a <em>transformer</em> attached, for when it is eventually transformed/output.</dd>
+    <dd>A <em>resource</em> is an object which acts as a wrapper for generic data. A <em>resource</em> will
+    have a <em>transformer</em> attached, for when it is eventually transformed ready to be serialized and output.</dd>
 
-    <dt id="term-scope">Scope</dt>
-    <dd><em>Resources</em> can be <em>embedded</em> inside other <em>resources</em>, but only if it 
-    is within the correct scope. For example, if <code>books.comments</code> are requested, only comments directly 
-    related to the book will be displayed, not comments on the authors profile. <em>Scopes</em> are 
-    objects which track their location in the hierarchy, and control input or output.</dd>
+    <dt id="term-scope">Serializer</dt>
+    <dd>A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. REST has many output structures, two popular ones being HAL and JSON-API. Twitter and Facebook output data differently to each other, and Google does it differently too. <em>Serializers</em> let you switch between various output formats 
+    with minimal effect on your <em>Transformers</em>.</dd>
 
     <dt id="term-transformer">Transformer</dt>
     <dd><em>Transformers</em> are classes, or anonymous functions, which are responsible for taking 
-    one instance of the resource data and converting it to a basic array. This array can then be turned 
-    into JSON, YML, or any other data structure.</dd>
+    one instance of the resource data and converting it to a basic array. This process is done to obfuscate
+    your data store, avoiding [Object-relational impedance mismatch] and allowing you to even glue various 
+    elements together from different data stores if you wish. The data is taken from these complex data store(s) and made into a format that is more manageable, and ready to be <em>Serialized</em>.</dd>
 
 </dl>
+
+[Object-relational impedance mismatch]: https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch
