@@ -48,7 +48,7 @@ class Manager
     /**
      * Serializer
      * 
-     * @var \League\Fractal\Serializer\SerializerInterface
+     * @var \League\Fractal\Serializer\SerializerAbstract
      **/
     protected $serializer;
 
