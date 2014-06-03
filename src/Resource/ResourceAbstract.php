@@ -2,7 +2,7 @@
 
 namespace League\Fractal\Resource;
 
-abstract class ResourceAbstract
+abstract class ResourceAbstract implements ResourceInterface
 {
     /**
      * Any item to process
