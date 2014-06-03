@@ -13,6 +13,7 @@ namespace League\Fractal\Serializer;
 
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
+use League\Fractal\TransformerAbstract;
 
 class ArraySerializer extends SerializerAbstract
 {
@@ -103,5 +104,16 @@ class ArraySerializer extends SerializerAbstract
         );
 
         return array('cursor' => $cursor);
+    }
+
+    /**
+     * Serialize available includes
+     *
+     * @param TransformerAbstract $transformer
+     * @return array
+     */
+    public function serializeDisplayAvailableIncludes(TransformerAbstract $transformer)
+    {
+        return array('availableIncludes' => $transformer->getAvailableIncludes());
     }
 }

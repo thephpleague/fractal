@@ -96,7 +96,24 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
     }
 
+    public function testCreateDataAndDisplayAvailableIncludes()
+    {
+        $manager = new Manager();
+        $manager->displayAvailableIncludes(true);
 
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
+        $transformer->shouldReceive('getAvailableIncludes')->andReturn(array('foo', 'bar'));
+        $transformer->shouldReceive('transform')->andReturn(array('foo' => 'bar'));
+        $transformer->shouldReceive('processIncludedResources');
+
+        // Item
+        $resource = new Item(array('foo' => 'bar'), $transformer);
+
+        $rootScope = $manager->createData($resource);
+
+        $this->assertEquals(array('data' => array('foo' => 'bar'), 'meta' => array('availableIncludes' => array('foo', 'bar'))), $rootScope->toArray());
+        $this->assertEquals('{"data":{"foo":"bar"},"meta":{"availableIncludes":["foo","bar"]}}', $rootScope->toJson());
+    }
 
     public function tearDown()
     {
