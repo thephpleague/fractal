@@ -8,16 +8,29 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
 {
     public function testPaginationAdapter()
     {
-        $paginator   = Mockery::mock('Illuminate\Pagination\Paginator')
-            ->makePartial();
-        $environment = Mockery::mock('Illuminate\Pagination\Environment')
+        $paginator = Mockery::mock('Illuminate\Pagination\Paginator')
             ->makePartial();
 
-        $environment->setCurrentPage(2);
-        $environment->setBaseUrl('http://example.com/foo');
-        $environment->setPageName('page');
+        if (class_exists('Illuminate\Pagination\Factory')) {
+            $class = 'Illuminate\Pagination\Factory';
+        } elseif (class_exists('Illuminate\Pagination\Environment')) {
+            $class = 'Illuminate\Pagination\Environment';
+        } else {
+            return $this->markTestSkipped('A pagination class was not available.');
+        }
 
-        $paginator->shouldReceive('getEnvironment')->andReturn($environment);
+        $factory = Mockery::mock($class)->makePartial();
+
+        $factory->setCurrentPage(2);
+        $factory->setBaseUrl('http://example.com/foo');
+        $factory->setPageName('page');
+
+        if ($class === 'Illuminate\Pagination\Factory') {
+            $paginator->shouldReceive('getFactory')->andReturn($factory);
+        } else {
+            $paginator->shouldReceive('getEnvironment')->andReturn($factory);
+        }
+
         $paginator->shouldReceive('getItems')->andReturn(array(
             'Item 0',
             'Item 1',
