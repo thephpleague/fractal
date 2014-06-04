@@ -1,6 +1,8 @@
 <?php
 namespace League\Fractal\Test\Pagination;
 
+use Illuminate\Pagination\Factory as PaginationFactory;
+use Illuminate\Pagination\Paginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Mockery;
 
@@ -8,28 +10,21 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
 {
     public function testPaginationAdapter()
     {
-        $paginator   = Mockery::mock('Illuminate\Pagination\Paginator')
-            ->makePartial();
-        $environment = Mockery::mock('Illuminate\Pagination\Environment')
-            ->makePartial();
+        $factory = new PaginationFactory('page');
 
-        $environment->setCurrentPage(2);
-        $environment->setBaseUrl('http://example.com/foo');
-        $environment->setPageName('page');
+        $perPage = 2;
+        $total = 10;
 
-        $paginator->shouldReceive('getEnvironment')->andReturn($environment);
-        $paginator->shouldReceive('getItems')->andReturn(array(
-            'Item 0',
+        // 2 Items, because perPage is 2. Normally the paginate() method would have that covered
+        $items = array(
             'Item 1',
             'Item 2',
-            'Item 3',
-            'Item 4'
-        ));
-        $paginator->shouldReceive('getCurrentPage')->andReturn('2');
-        $paginator->shouldReceive('getLastPage')->andReturn('10');
-        $paginator->shouldReceive('getTotal')->andReturn('50');
-        $paginator->shouldReceive('getCount')->andReturn('5');
-        $paginator->shouldReceive('getPerPage')->andReturn('5');
+        );
+
+        $factory->setBaseUrl('http://example.com/foo');
+        $factory->setCurrentPage(2);
+
+        $paginator = $factory->make($items, $total, $perPage);
 
         $adapter = new IlluminatePaginatorAdapter($paginator);
 
@@ -39,10 +34,10 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(2, $adapter->getCurrentPage());
-        $this->assertEquals(10, $adapter->getLastPage());
-        $this->assertEquals(50, $adapter->getTotal());
-        $this->assertEquals(5, $adapter->getCount());
-        $this->assertEquals(5, $adapter->getPerPage());
+        $this->assertEquals(5, $adapter->getLastPage());
+        $this->assertEquals($total, $adapter->getTotal());
+        $this->assertEquals($perPage, $adapter->getPerPage());
+        $this->assertEquals($perPage, $adapter->getCount());
         $this->assertEquals(
             'http://example.com/foo?page=1',
             $adapter->getUrl(1)
