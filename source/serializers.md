@@ -7,7 +7,7 @@ title: Serializers
 
 A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. There are many output
 structures for APIs, two popular ones being [HAL] and [JSON-API]. Twitter and Facebook output data
-differently to each other, and Google does it differently too. Most of the differences between thes
+differently to each other, and Google does it differently too. Most of the differences between these
 serializers are how data is namespaced.
 
 <em>Serializer</em> classes let you switch between various output formats with minimal effect on your <em>Transformers</em>.
@@ -268,6 +268,6 @@ $manager->setSerializer(new CustomSerializer());
 ~~~
 
 The structure of serializers will change at some point, to allow items and collections to be handled differently
-and to improve side-loading logic. Keep an eye on the change log, but do not be affraid to make one.
+and to improve side-loading logic. Keep an eye on the change log, but do not be afraid to make one.
 
 [SerializerAbstract]: https://github.com/thephpleague/fractal/blob/master/src/Serializer/SerializerAbstract.php
