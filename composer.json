@@ -23,7 +23,7 @@
     "require-dev": {
         "phpunit/phpunit": "~4.0",
         "mockery/mockery": "~0.9",
-        "illuminate/pagination": "4.1.*",
+        "illuminate/pagination": "~4.1",
         "squizlabs/php_codesniffer": "~1.5"
     },
     "suggest": {
