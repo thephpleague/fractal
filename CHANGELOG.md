@@ -1,3 +1,9 @@
+## 0.9.0 (2014-??-??)
+
+Features:
+
+  - Added support for 4.2.x's more de-coupled pagination component
+
 ## 0.8.1 (2014-06-05)
 
 Features:
