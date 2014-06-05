@@ -4,11 +4,11 @@ layout: layout
 
 # Fractal
 
-[![Build Status](https://travis-ci.org/thephpleague/fractal.png)](https://travis-ci.org/thephpleague/fractal)
-[![License](http://img.shields.io/packagist/l/league/fractal.svg)](https://github.com/thephpleague/fractal/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
-[![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
+[![Build Status](https://travis-ci.org/thephpleague/fractal.svg?branch=master)](https://travis-ci.org/thephpleague/fractal)
 [![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
+[![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
+[![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
+[![License](http://img.shields.io/packagist/l/league/fractal.svg)](https://github.com/thephpleague/fractal/blob/master/LICENSE)
 
 <ul class="quick_links">
     <li><a class="github" href="https://github.com/thephpleague/fractal">View Source</a></li>
