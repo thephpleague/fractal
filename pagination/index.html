@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="icon" type="image/x-icon" href="/themes/thephpleague/thephpleague.github.com/img/favicon.ico" />
+                <link rel="apple-touch-icon-precomposed" href="/themes/thephpleague/thephpleague.github.com/img/apple-touch-icon-precomposed.png">
+                <title>Pagination - Fractal</title>
+                <meta name="description" content="Fractal provides a presentation and transformation layer for complex data output, the like found in AJAX and RESTful APIs.">
+                <link rel="stylesheet" href="/themes/thephpleague/thephpleague.github.com/css/all.css">
+    </head>
+<body>
+
+<section class="all_packages">
+    <a href="http://thephpleague.com/">
+        <img src="/themes/thephpleague/thephpleague.github.com/img/loep_logo.png" width="195" height="200" alt="The League of Extraordinary Packages">
+    </a>
+    <h2>Our Packages:</h2>
+    <ul>
+    </ul>
+</section>
+
+<header>
+    <a class="logo" href="/">
+                <span class="name">Fractal</span>
+        <span class="tagline">Output complex, flexible, AJAX/RESTful data structures.</span>
+    </a>
+    <a href="http://thephpleague.com/" class="league">
+        Presented by The League of Extraordinary Packages
+    </a>
+</header>
+
+<input type="checkbox" id="menu">
+<label for="menu" onclick>
+    <div class="closed">&#9776; Menu</div>
+    <div class="open">&#9776; Hide Menu</div>
+</label>
+
+<main>
+    <menu>
+                    <h2>Getting Started</h2>
+            <ul>
+                                    <li >
+                        <a href="/">Introduction</a>
+                    </li>
+                                    <li >
+                        <a href="/simple-example/">Simple Example</a>
+                    </li>
+                                    <li >
+                        <a href="/installation/">Installation</a>
+                    </li>
+                                    <li >
+                        <a href="/glossary/">Glossary</a>
+                    </li>
+                            </ul>
+                    <h2>Concepts</h2>
+            <ul>
+                                    <li >
+                        <a href="/resources/">Resources</a>
+                    </li>
+                                    <li >
+                        <a href="/serializers/">Serializers</a>
+                    </li>
+                                    <li >
+                        <a href="/transformers/">Transformers</a>
+                    </li>
+                                    <li class="selected">
+                        <a href="/pagination/">Pagination</a>
+                    </li>
+                            </ul>
+            </menu>
+    <article>
+        <h1>Pagination</h1>
+
+<p>When working with a large data set it obviously makes sense to offer pagination options to the endpoint,
+otherwise that data can get very slow. To avoid writing your own pagination output into every endpoint, 
+Fractal provides you with two solutions:</p>
+
+<ul>
+<li>Paginator</li>
+<li>Cursor</li>
+</ul>
+
+<h2>Using Paginators</h2>
+
+<p>Paginators offer more information about your result-set including total, and have next/previous links 
+which will only show if there is more data available. This intelligence comes at the cost of having to 
+count the number of entries in a database on each call.</p>
+
+<p>For some data sets this might not be an issue, but for some it certainly will. If pure speed is an issue, 
+consider using Cursors instead.</p>
+
+<p>Paginator objects are created, and must implement <code>League\Fractal\Pagination\PaginatorInterface</code>
+and it's specified methods. The instantiated object must then be passed to the <code>League\Fractal\Resource\Collection::setPaginator()</code> method.</p>
+
+<p>Fractal currently only ships with an adapter for Laravel's <code>illuminate/pagination</code> package as
+<code>League\Fractal\Pagination\IlluminatePaginatorAdapter</code>, but more may be added at some point.</p>
+
+<p>Inside of Laravel 4, using the Eloquent or Query Builder method <code>paginate()</code>, the following syntax is
+possible:</p>
+
+<pre><code class="language-php">use League\Fractal\Resource\Collection;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Acme\Model\Book;
+use Acme\Transformer\BookTransformer;
+
+$paginator = Book::paginate();
+$books = $paginator-&gt;getCollection();
+
+$resource = new Collection($books, new BookTransformer);
+$resource-&gt;setPaginator(new IlluminatePaginatorAdapter($paginator));
+</code></pre>
+
+<h2>Using Cursors</h2>
+
+<p>When we have large sets of data and running a <code>SELECT COUNT(*) FROM whatever</code> isn't really an option, we need a proper
+way of fetching results. One of the approches is to use cursors that will indicate to your backend where to start
+fetching results. You can set a new cursor on your collections using the
+<code>League\Fractal\Resource\Collection::setCursor()</code> method.</p>
+
+<p>The cursor must implement <code>League\Fractal\Pagination\CursorInterface</code> and it's specified methods.</p>
+
+<p>Fractal currently ships with a very basic adapter: <code>League\Fractal\Pagination\Cursor</code>. It's really easy to use:</p>
+
+<pre><code class="language-php">use Acme\Model\Book;
+use Acme\Transformer\BookTransformer;
+use League\Fractal\Pagination\Cursor;
+use League\Fractal\Resource\Collection;
+
+if ($currentCursorStr = Input::get('cursor', false)) {
+    $books = Book::where('id', '&gt;', $currentCursorStr)-&gt;take(5)-&gt;get();
+} else {
+    $books = Book::take(5)-&gt;get();  
+}
+
+$newCursorStr = $books-&gt;last()-&gt;id;
+$cursor = new Cursor($currentCursorStr, $newCursorStr, $books-&gt;count());
+
+$resource = new Collection($books, new BookTransformer);
+$resource-&gt;setCursor($cursor);
+</code></pre>
+
+<p>These examples are for Laravel's Illuminate\Database package, but you can do it however you like. The cursor 
+also happens to be constructed from the <code>id</code> field, but it could just as easily be an offset number. Whatever
+is picked to represent a cursor, maybe consider using <code>base64_encode()</code> and <code>base64_decode()</code> on the values to make sure API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.</p>
+    </article>
+</main>
+
+<footer>
+    <span>&copy; Copyright The League of Extraordinary Packages.</span>
+    <span>Site design by <a href="http://reinink.ca">Jonathan Reinink</a>.</span>
+    <span>Powered by <a href="https://sculpin.io">Sculpin</a>.</span>
+</footer>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="/themes/thephpleague/thephpleague.github.com/js/scripts.js"></script>
+<script src="/themes/thephpleague/thephpleague.github.com/js/prism.js"></script>
+
+    <script>
+        (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+        ga('create','UA-46050814-4');ga('send','pageview');
+    </script>
+
+</body>
+</html>
