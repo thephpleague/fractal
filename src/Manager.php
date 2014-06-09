@@ -127,11 +127,19 @@ class Manager
      **/
     public function parseIncludes($includes)
     {
+        if (empty($includes)) {
+            return $this;
+        }
+
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = array();
 
         if (is_string($includes)) {
             $includes = explode(',', $includes);
+        }
+
+        if (! is_array($includes)) {
+            throw new InvalidArgumentException('The parseIncludes() method expects a string or an array');
         }
 
         foreach ($includes as $include) {
