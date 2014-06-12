@@ -118,7 +118,7 @@ $resource = new Fractal\Resource\Collection($books, function(array $book) {
         'links'   =&gt; [
             [
                 'rel' =&gt; 'self',
-                'uri' =&gt; '/books/'.$book-&gt;id,
+                'uri' =&gt; '/books/'. (int) $book['id'],
             ]
         ]
     ];
