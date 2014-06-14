@@ -135,7 +135,9 @@ class Manager
         }
 
         if (! is_array($includes)) {
-            throw new \InvalidArgumentException('The parseIncludes() method expects a string or an array. '.gettype($includes).' given');
+            throw new \InvalidArgumentException(
+                'The parseIncludes() method expects a string or an array. '.gettype($includes).' given'
+            );
         }
 
         foreach ($includes as $include) {

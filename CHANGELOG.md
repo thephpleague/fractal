@@ -1,3 +1,17 @@
+## 0.8.3 (2014-06-14)
+
+Features:
+
+  - Default Includes no longer need to be in Available Includes. [Issue #58]
+
+[Issue #58]: https://github.com/thephpleague/fractal/issues/58
+
+## 0.8.2 (2014-06-09)
+
+Bug:
+
+  - A `null` value for `Manager::parseIncludes()` could have weird results
+
 ## 0.8.1 (2014-06-05)
 
 Features:
