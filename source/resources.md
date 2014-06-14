@@ -54,7 +54,7 @@ $resource = new Fractal\Resource\Collection($books, function(Book $book) {
     return [
         'id' => (int) $book->id,
         'title' => $book->title,
-        'year' => (year) $book->yr,
+        'year' => (int) $book->yr,
         'links'   => [
             [
                 'rel' => 'self',
