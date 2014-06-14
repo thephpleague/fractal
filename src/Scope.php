@@ -279,11 +279,12 @@ class Scope
      **/
     protected function transformerHasIncludes($transformer)
     {
-        if ($transformer instanceof TransformerAbstract) {
-            $availableIncludes = $transformer->getAvailableIncludes();
-            return ! empty($availableIncludes);
+        if (! $transformer instanceof TransformerAbstract) {
+            return false;
         }
-
-        return false;
+        
+        $defaultIncludes = $transformer->getDefaultIncludes();
+        $availableIncludes = $transformer->getAvailableIncludes();
+        return ! empty($defaultIncludes) or ! empty($availableIncludes);
     }
 }
