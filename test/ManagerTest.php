@@ -7,6 +7,36 @@ use Mockery;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testParseIncludeSelfie()
+    {
+        $manager = new Manager();
+
+        // Test that some includes provided returns self
+        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(array('foo')));
+    }
+    
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
+     */
+    public function testInvalidParseInclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseIncludes(null);
+    }
+    
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
+     */
+    public function testIceTParseInclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseIncludes(99);
+    }
+
     public function testParseIncludes()
     {
         $manager = new Manager();
