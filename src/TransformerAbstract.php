@@ -86,7 +86,7 @@ abstract class TransformerAbstract
     {
         if (isset($data)) {
             $scope->getManager()->parseIncludes($data);
-        }        
+        }
     }
 
     /**
@@ -105,7 +105,7 @@ abstract class TransformerAbstract
         $embeddedDataCount = 0;
 
         if (isset($_GET['include'])) {
-            $this->setCurrentIncludes($scope, $_GET['include']);            
+            $this->setCurrentIncludes($scope, $_GET['include']);
         }
 
         // Nothing to do, bail
