@@ -80,9 +80,9 @@ abstract class TransformerAbstract
     /**
      * Parse Includes wrapper
      *
-     * @return \League\Fractal\Scope
+     * 
      **/
-    public function setCurrentIncludes(Scope $scope, $data)
+    protected function setCurrentIncludes(Scope $scope, $data)
     {
         if (isset($data)) {
             $scope->getManager()->parseIncludes($data);
