@@ -104,11 +104,10 @@ abstract class TransformerAbstract
         $embeddedData = array();
         $embeddedDataCount = 0;
 
-        if(isset($_GET['include']))
-        {
+        if (isset($_GET['include'])) {
             $this->setCurrentIncludes($scope, $_GET['include']);            
         }
-        
+
         // Nothing to do, bail
         if (is_array($this->defaultIncludes)) {
 
