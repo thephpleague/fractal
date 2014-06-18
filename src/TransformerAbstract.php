@@ -78,6 +78,18 @@ abstract class TransformerAbstract
     }
 
     /**
+     * Parse Includes wrapper
+     *
+     * @return \League\Fractal\Scope
+     **/
+    public function setCurrentIncludes(Scope $scope, $data)
+    {
+        if (isset($data)) {
+            $scope->getManager()->parseIncludes($data);
+        }        
+    }
+
+    /**
      * This method is fired to loop through available embeds,
      * see if any of them are requested and permitted for this
      * scope.
@@ -92,6 +104,11 @@ abstract class TransformerAbstract
         $embeddedData = array();
         $embeddedDataCount = 0;
 
+        if(isset($_GET['include']))
+        {
+            $this->setCurrentIncludes($scope, $_GET['include']);            
+        }
+        
         // Nothing to do, bail
         if (is_array($this->defaultIncludes)) {
 
