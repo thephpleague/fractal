@@ -239,10 +239,6 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage The $resourceKey parameter must be provided when using League\Fractal\Serializer\JsonApiSerializer
-     **/
     public function testResourceKeyMissing()
     {
         $this->manager->setSerializer(new JsonApiSerializer());
@@ -255,7 +251,16 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $resource = new Item($bookData, new GenericBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
-        $scope->toArray();
+        $expected = array(
+            'data' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
 
 

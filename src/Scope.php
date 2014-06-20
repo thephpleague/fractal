@@ -14,7 +14,8 @@ namespace League\Fractal;
 use InvalidArgumentException;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Serializer\SerializerAbstract;
 
 class Scope
 {
@@ -28,7 +29,7 @@ class Scope
 
     protected $parentScopes = array();
 
-    public function __construct(Manager $manager, ResourceAbstract $resource, $currentScope = null)
+    public function __construct(Manager $manager, ResourceInterface $resource, $currentScope = null)
     {
         $this->manager = $manager;
         $this->currentScope = $currentScope;
@@ -149,17 +150,17 @@ class Scope
      **/
     public function toArray()
     {
+        list($rawData, $rawIncludedData) = $this->executeResourceTransformers();
+
         $serializer = $this->manager->getSerializer();
-        $resourceKey = $this->resource->getResourceKey();
 
-        list($data, $includedData) = $this->executeResourceTransformers();
-
-        $data = $serializer->serializeData($resourceKey, $data);
+        $data = $this->serializeResource($serializer, $rawData);
 
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
-            $includedData = $serializer->serializeIncludedData($resourceKey, $includedData);
+
+            $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
             $data = array_merge($data, $includedData);
         }
@@ -167,10 +168,10 @@ class Scope
         if ($this->resource instanceof Collection) {
 
             if ($this->resource->hasCursor()) {
-                $pagination = $serializer->serializeCursor($this->resource->getCursor());
+                $pagination = $serializer->cursor($this->resource->getCursor());
 
             } elseif ($this->resource->hasPaginator()) {
-                $pagination = $serializer->serializePaginator($this->resource->getPaginator());
+                $pagination = $serializer->paginator($this->resource->getPaginator());
             }
 
             if (! empty($pagination)) {
@@ -179,7 +180,7 @@ class Scope
         }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
-        $meta = $serializer->serializeMeta($this->resource->getMeta());
+        $meta = $serializer->meta($this->resource->getMeta());
 
         return array_merge($data, $meta);
     }
@@ -217,13 +218,33 @@ class Scope
             }
         } else {
             throw new InvalidArgumentException(
-                'Argument $resource should be an instance of Resource\Item or Resource\Collection'
+                'Argument $resource should be an instance of League\Fractal\Resource\Item'
+                . ' or League\Fractal\Resource\Collection'
             );
         }
 
         return array($transformedData, $includedData);
     }
    
+    /**
+     * Serialize a resource
+     *
+     * @internal
+     * @param  callable|\League\Fractal\Serializer\SerializerAbstract  $serializer
+     * @param  mixed  $data
+     * @return array
+     */
+    protected function serializeResource(SerializerAbstract $serializer, $data)
+    {
+        $resourceKey = $this->resource->getResourceKey();
+
+        if ($this->resource instanceof Collection) {
+            return $serializer->collection($resourceKey, $data);
+        } else {
+            return $serializer->item($resourceKey, $data);
+        }
+    }
+
     /**
      * Fire the main transformer.
      *

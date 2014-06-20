@@ -80,24 +80,26 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
             ),
         );
 
-        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
+        $resource = new Collection($booksData, new GenericBookTransformer(), 'books');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            array(
-                'title' => 'Foo',
-                'year' => 1991,
-                'author' => array(
-                    'name' => 'Dave',
+            'books' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                    'author' => array(
+                        'name' => 'Dave',
+                    ),
                 ),
-            ),
-            array(
-                'title' => 'Bar',
-                'year' => 1997,
-                'author' => array(
-                    'name' => 'Bob',
+                array(
+                    'title' => 'Bar',
+                    'year' => 1997,
+                    'author' => array(
+                        'name' => 'Bob',
+                    ),
                 ),
             ),
         );
@@ -105,7 +107,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $scope->toArray());
 
         // JSON array of JSON objects
-        $expectedJson = '[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]';
+        $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
         $this->assertEquals($expectedJson, $scope->toJson());
 
         // Same again with metadata
@@ -114,18 +116,20 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            array(
-                'title' => 'Foo',
-                'year' => 1991,
-                'author' => array(
-                    'name' => 'Dave',
+            'books' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                    'author' => array(
+                        'name' => 'Dave',
+                    ),
                 ),
-            ),
-            array(
-                'title' => 'Bar',
-                'year' => 1997,
-                'author' => array(
-                    'name' => 'Bob',
+                array(
+                    'title' => 'Bar',
+                    'year' => 1997,
+                    'author' => array(
+                        'name' => 'Bob',
+                    ),
                 ),
             ),
             'meta' => array(
@@ -136,7 +140,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $scope->toArray());
 
         // This JSON sucks, because when you add a string key then it has to string up all the other keys. Using meta in Array is shit
-        $expectedJson = '{"0":{"title":"Foo","year":1991,"author":{"name":"Dave"}},"1":{"title":"Bar","year":1997,"author":{"name":"Bob"}},"meta":{"foo":"bar"}}';
+        $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 

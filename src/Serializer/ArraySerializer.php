@@ -17,13 +17,25 @@ use League\Fractal\Pagination\PaginatorInterface;
 class ArraySerializer extends SerializerAbstract
 {
     /**
-     * Serialize the top level data.
+     * Serialize a collection
      * 
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
-     */
-    public function serializeData($resourceKey, array $data)
+     **/
+    public function collection($resourceKey, array $data)
+    {
+        return array($resourceKey => $data);
+    }
+
+    /**
+     * Serialize an item
+     * 
+     * @param  string  $resourceKey
+     * @param  array  $data
+     * @return array
+     **/
+    public function item($resourceKey, array $data)
     {
         return $data;
     }
@@ -34,8 +46,8 @@ class ArraySerializer extends SerializerAbstract
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
-     */
-    public function serializeIncludedData($resourceKey, array $data)
+     **/
+    public function includedData($resourceKey, array $data)
     {
         return $data;
     }
@@ -45,8 +57,8 @@ class ArraySerializer extends SerializerAbstract
      * 
      * @param  array  $meta
      * @return array
-     */
-    public function serializeMeta(array $meta)
+     **/
+    public function meta(array $meta)
     {
         if (empty($meta)) {
             return array();
@@ -61,7 +73,7 @@ class ArraySerializer extends SerializerAbstract
      * @param \League\Fractal\Pagination\PaginatorInterface $paginator
      * @return array
      **/
-    public function serializePaginator(PaginatorInterface $paginator)
+    public function paginator(PaginatorInterface $paginator)
     {
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();
@@ -93,7 +105,7 @@ class ArraySerializer extends SerializerAbstract
      * @param  \League\Fractal\Pagination\CursorInterface  $cursor
      * @return array
      **/
-    public function serializeCursor(CursorInterface $cursor)
+    public function cursor(CursorInterface $cursor)
     {
         $cursor = array(
             'current' => $cursor->getCurrent(),

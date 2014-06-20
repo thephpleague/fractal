@@ -162,12 +162,12 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testToArrayWithSideloadedIncludes()
     {
-        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer[sideloadIncludes,serializeData,serializeIncludedData]');
+        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer')->makePartial();
         $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
-        $serializer->shouldReceive('serializeData')->andReturnUsing(function ($key, $data) {
+        $serializer->shouldReceive('item')->andReturnUsing(function ($key, $data) {
             return array('data' => $data);
         });
-        $serializer->shouldReceive('serializeIncludedData')->andReturnUsing(function ($key, $data) {
+        $serializer->shouldReceive('includedData')->andReturnUsing(function ($key, $data) {
             return array('sideloaded' => array_pop($data));
         });
 
@@ -243,7 +243,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item or Resource\Collection
+     * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
     public function testCreateDataWithClassFuckKnows()
     {

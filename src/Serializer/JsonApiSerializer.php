@@ -11,29 +11,32 @@
 
 namespace League\Fractal\Serializer;
 
-use RuntimeException;
-
 class JsonApiSerializer extends ArraySerializer
 {
     /**
-     * Serialize the top level data.
+     * Serialize an item resource
      *
      * @param string $resourceKey
      * @param array $data
      *
      * @return array
      */
-    public function serializeData($resourceKey, array $data)
+    public function collection($resourceKey, array $data)
     {
-        if (! $resourceKey) {
-            throw new RuntimeException('The $resourceKey parameter must be provided when using '.__CLASS__);
-        }
+        return array($resourceKey ?: 'data' => $data);
+    }
 
-        if (count($data) === count($data, COUNT_RECURSIVE)) {
-            $data = array($data);
-        }
-
-        return array($resourceKey => $data);
+    /**
+     * Serialize an item resource
+     *
+     * @param string $resourceKey
+     * @param array $data
+     *
+     * @return array
+     */
+    public function item($resourceKey, array $data)
+    {
+        return array($resourceKey ?: 'data' => array($data));
     }
 
     /**
@@ -43,7 +46,7 @@ class JsonApiSerializer extends ArraySerializer
      * @param  array  $data
      * @return array
      */
-    public function serializeIncludedData($resourceKey, array $data)
+    public function includedData($resourceKey, array $data)
     {
         $serializedData = array();
 
