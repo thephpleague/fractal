@@ -44,6 +44,7 @@ class JsonApiSerializer extends ArraySerializer
      * 
      * @param  string  $resourceKey
      * @param  array  $data
+     *
      * @return array
      */
     public function includedData($resourceKey, array $data)
@@ -61,7 +62,7 @@ class JsonApiSerializer extends ArraySerializer
 
     /**
      * Indicates if includes should be side-loaded.
-     * 
+     *
      * @return bool
      */
     public function sideloadIncludes()
