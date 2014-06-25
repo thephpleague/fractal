@@ -56,6 +56,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         // Do requests for `baz.bart` also request `baz`?
         $manager->parseIncludes(array('foo.bar'));
         $this->assertEquals(array('foo', 'foo.bar'), $manager->getRequestedIncludes());
+        
+        // Strip spaces in params
+        $manager->parseIncludes(array('foo', ' bar'));
+        $this->assertEquals(array('foo', 'bar'), $manager->getRequestedIncludes());
 
         // See if fancy syntax works
         $manager->parseIncludes('foo:limit(5|1):order(-something)');
