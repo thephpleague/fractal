@@ -165,7 +165,9 @@ response.
 
 These includes can be nested with dot notation too, to include resources within other resources. 
 
-**E.g:** `/books?include=author,publishers,publishers.somethingelse`
+**E.g:** `/books?include=author,publishers.somethingelse`
+
+Note: `publishers` will also be included with `somethingelse` nested under it. This is shorthand for `publishers,publishers.somethingelse`.
 
 This can be done to a limit of 10 levels. To increase or decrease the level of embedding here, use the `Manager::setRecursionLimit(5)` 
 method with any number you like, to strip it to that many levels. Maybe 4 or 5 would be a smart number, depending on the API.
