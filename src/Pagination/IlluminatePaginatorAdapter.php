@@ -16,10 +16,15 @@ use Illuminate\Pagination\Paginator;
 /**
  * A paginator adapter for illuminate/pagination
  *
- * @author Marc Addeo <marcaddeo@gmail.com>
  */
-class IlluminatePaginatorAdapter extends Paginator implements PaginatorInterface
+class IlluminatePaginatorAdapter implements PaginatorInterface
 {
+    /**
+     * The paginator
+     * @var object
+     */
+    protected $paginator;
+
     /**
      * Setup our adapter
      *
@@ -27,27 +32,70 @@ class IlluminatePaginatorAdapter extends Paginator implements PaginatorInterface
      */
     public function __construct(Paginator $paginator)
     {
-        parent::__construct(
-            (method_exists($paginator, 'getFactory') ? $paginator->getFactory() : $paginator->getEnvironment()),
-            $paginator->getItems(),
-            $paginator->getTotal(),
-            $paginator->getPerPage()
-        );
-
-        /**
-         * Pagination contexts need to be setup after we've called our parent
-         * constructor
-         */
-        $this->setupPaginationContext();
+        $this->paginator = $paginator;
     }
 
     /**
-     * Get the number of items for the current page.
-     *
-     * @return int
+     * Get current page
+     * @return string
+     */
+    public function getCurrentPage()
+    {
+        return $this->paginator->getCurrentPage();
+    }
+
+    /**
+     * Get last page
+     * @return string
+     */
+    public function getLastPage()
+    {
+         return $this->paginator->getLastPage();
+    }
+
+    /**
+     * Get total
+     * @return integer
+     */
+    public function getTotal()
+    {
+         return $this->paginator->getTotal();
+    }
+
+    /**
+     * Get count
+     * @return integer
      */
     public function getCount()
     {
-        return $this->count();
+        return $this->paginator->count();
+    }
+
+    /**
+     * Get per page
+     * @return integer
+     */
+    public function getPerPage()
+    {
+        return $this->paginator->getPerPage();
+    }
+
+    /**
+     * Get url for the given page
+     * @param  integer $page
+     * @return string
+     */
+    public function getUrl($page)
+    {
+        return $this->paginator->getUrl($page);
+    }
+
+    /**
+     * Get the paginator
+     * @return object
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
     }
 }

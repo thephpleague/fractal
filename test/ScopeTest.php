@@ -274,7 +274,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $lastPage = 20;
 
         $paginator->shouldReceive('getTotal')->once()->andReturn($total);
-        $paginator->shouldReceive('count')->once()->andReturn($count);
+        $paginator->shouldReceive('getCount')->once()->andReturn($count);
         $paginator->shouldReceive('getPerPage')->once()->andReturn($perPage);
         $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);

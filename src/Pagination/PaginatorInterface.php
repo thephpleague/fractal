@@ -24,4 +24,5 @@ interface PaginatorInterface
     public function getCount();
     public function getPerPage();
     public function getUrl($page);
+    public function getPaginator();
 }
