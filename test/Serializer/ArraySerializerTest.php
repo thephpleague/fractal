@@ -139,9 +139,32 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($expected, $scope->toArray());
 
-        // This JSON sucks, because when you add a string key then it has to string up all the other keys. Using meta in Array is shit
+         // This JSON sucks, because when you add a string key then it has to string up all the other keys. Using meta in Array is shit
         $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
+
+        // Test not suppling a resourceKey to the collection does not attempt to add a blank/empty resource key
+        $resource = new Collection($booksData, new GenericBookTransformer());
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            array(
+                'title' => 'Foo',
+                'year' => 1991,
+                'author' => array(
+                    'name' => 'Dave',
+                ),
+            ),
+            array(
+                'title' => 'Bar',
+                'year' => 1997,
+                'author' => array(
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
 
 

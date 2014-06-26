@@ -25,7 +25,7 @@ class ArraySerializer extends SerializerAbstract
      **/
     public function collection($resourceKey, array $data)
     {
-        return array($resourceKey => $data);
+        return $resourceKey === null ? $data : array($resourceKey => $data);
     }
 
     /**
