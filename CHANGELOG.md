@@ -1,3 +1,11 @@
+## 0.9.0 (2014-07-06)
+
+Features:
+
+  - Implemented serializer methods for item and collection separately [Issue #71]
+
+[Issue #71]: https://github.com/thephpleague/fractal/issues/71
+
 ## 0.8.3 (2014-06-14)
 
 Features:
