@@ -15,7 +15,8 @@ use Illuminate\Pagination\Paginator;
 
 /**
  * A paginator adapter for illuminate/pagination
- *
+ * 
+ * @author Marc Addeo <marcaddeo@gmail.com>
  */
 class IlluminatePaginatorAdapter implements PaginatorInterface
 {
