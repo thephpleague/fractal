@@ -70,7 +70,7 @@ class ArraySerializer extends SerializerAbstract
     /**
      * Serialize the paginator
      *
-     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
+     * @param  PaginatorInterface $paginator
      * @return array
      **/
     public function paginator(PaginatorInterface $paginator)
@@ -102,7 +102,7 @@ class ArraySerializer extends SerializerAbstract
     /**
      * Serialize the cursor
      * 
-     * @param  \League\Fractal\Pagination\CursorInterface  $cursor
+     * @param  CursorInterface  $cursor
      * @return array
      **/
     public function cursor(CursorInterface $cursor)
