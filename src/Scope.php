@@ -306,6 +306,6 @@ class Scope
         
         $defaultIncludes = $transformer->getDefaultIncludes();
         $availableIncludes = $transformer->getAvailableIncludes();
-        return ! empty($defaultIncludes) or ! empty($availableIncludes);
+        return ! empty($defaultIncludes) || ! empty($availableIncludes);
     }
 }
