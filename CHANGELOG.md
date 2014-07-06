@@ -1,3 +1,11 @@
+## 0.9.1 (2014-07-06)
+
+Bug:
+
+  - Using ArraySerializer without a resource key would lead to an empty string as a key in JSON. [Issue #78]
+
+[Issue #78]: https://github.com/thephpleague/fractal/issues/78
+
 ## 0.9.0 (2014-07-06)
 
 Features:
