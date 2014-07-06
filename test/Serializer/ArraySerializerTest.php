@@ -9,21 +9,40 @@ use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class ArraySerializerTest extends PHPUnit_Framework_TestCase {
 
+    private $bookItemInput = array(
+        'title' => 'Foo',
+        'year' => '1991',
+        '_author' => array(
+            'name' => 'Dave',
+        ),
+    );
+
+    private $bookCollectionInput = array(
+        array(
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => array(
+                'name' => 'Dave',
+            ),
+        ),
+        array(
+            'title' => 'Bar',
+            'year' => '1997',
+            '_author' => array(
+                'name' => 'Bob',
+            ),
+        ),
+    );
+
     public function testSerializingItemResource()
     {
         $manager = new Manager();
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $bookData = array(
-            'title' => 'Foo',
-            'year' => '1991',
-            '_author' => array(
-                'name' => 'Dave',
-            ),
-        );
 
-        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+
+        $resource = new Item($this->bookItemInput, new GenericBookTransformer(), 'book');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -63,24 +82,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $booksData = array(
-            array(
-                'title' => 'Foo',
-                'year' => '1991',
-                '_author' => array(
-                    'name' => 'Dave',
-                ),
-            ),
-            array(
-                'title' => 'Bar',
-                'year' => '1997',
-                '_author' => array(
-                    'name' => 'Bob',
-                ),
-            ),
-        );
-
-        $resource = new Collection($booksData, new GenericBookTransformer(), 'books');
+        $resource = new Collection($this->bookCollectionInput, new GenericBookTransformer(), 'books');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -139,8 +141,32 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($expected, $scope->toArray());
 
-        // This JSON sucks, because when you add a string key then it has to string up all the other keys. Using meta in Array is shit
         $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+
+    public function testSerializingCollectionResourceWithoutName()
+    {
+        $manager = new Manager();
+        $manager->parseIncludes('author');
+        $manager->setSerializer(new ArraySerializer());
+
+        $resource = new Collection($this->bookCollectionInput, new GenericBookTransformer());
+
+        // Try without metadata
+        $scope = new Scope($manager, $resource);
+
+        // JSON array of JSON objects
+        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+
+        // Same again with metadata
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($manager, $resource);
+
+        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -149,5 +175,4 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
     {
         Mockery::close();
     }
-
 }
