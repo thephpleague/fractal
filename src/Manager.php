@@ -134,6 +134,12 @@ class Manager
             $includes = explode(',', $includes);
         }
 
+        if (! is_array($includes)) {
+            throw new \InvalidArgumentException(
+                'The parseIncludes() method expects a string or an array. '.gettype($includes).' given'
+            );
+        }
+
         foreach ($includes as $include) {
             
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
