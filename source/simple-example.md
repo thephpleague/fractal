@@ -12,10 +12,11 @@ and JSON conversion into seperate parts of your application.
 
 ~~~.language-php
 <?php
-use League\Fractal;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 
 // Create a top level instance somewhere
-$fractal = new Fractal\Manager();
+$fractal = new Manager();
 
 // Get data from some sort of source
 // Most PHP extensions for SQL engines return everything as a string, historically
@@ -40,7 +41,7 @@ $books = [
 // Pass this array (collection) into a resource, which will also have a "Transformer"
 // This "Transformer" can be a callback or a new instance of a Transformer object
 // We type hint for array, because each item in the $books var is an array
-$resource = new Fractal\Resource\Collection($books, function(array $book) {
+$resource = new Collection($books, function(array $book) {
     return [
         'id'      => (int) $book['id'],
         'title'   => $book['title'],
