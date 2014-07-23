@@ -59,7 +59,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         // See if fancy syntax works
         $manager->parseIncludes('foo:limit(5|1):order(-something)');
-        $this->assertEquals(array('limit' => array('5', '1'), 'order' => array('-something')), $manager->getIncludeParams('foo'));
+
+        $params = $manager->getIncludeParams('foo');
+
+        $this->assertInstanceOf('League\Fractal\ParamBag', $params);
+        
+        $this->assertEquals(array('5', '1'), $params['limit']);
+        $this->assertEquals(array('-something'), $params['order']);
+        $this->assertNull($params['totallymadeup']);
     }
 
     public function testRecursionLimiting()

@@ -226,6 +226,22 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
+    public function testParamBagIsProvidedForIncludes()
+    {
+        $manager = new Manager;
+        $manager->parseIncludes('book:foo(bar)');
+
+        $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
+        
+        $transformer->shouldReceive('includeBook')
+            ->with(m::any(), m::type('\League\Fractal\ParamBag'))
+            ->once();
+
+        $transformer->setAvailableIncludes(array('book'));
+        $scope = new Scope($manager, new Item(array(), $transformer));
+        $included = $transformer->processIncludedResources($scope, array());
+    }
+
     /**
      * @covers League\Fractal\TransformerAbstract::processIncludedResources
      * @covers League\Fractal\TransformerAbstract::callIncludeMethod

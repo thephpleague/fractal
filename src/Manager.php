@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,6 +15,13 @@ use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
 
+/**
+ * Manager
+ *
+ * Not a wildly creative name, but the manager is what a Fractal user will interact
+ * with the most. The manager has various configurable options, and allows users
+ * to create the "root scope" easily.
+ */
 class Manager
 {
     /**
@@ -85,11 +92,17 @@ class Manager
      *
      * @api
      * @param string $include
-     * @return array|null
+     * @return \League\Fractal\ParamBag|null
      **/
     public function getIncludeParams($include)
     {
-        return isset($this->includeParams[$include]) ? $this->includeParams[$include] : null;
+        if (! isset($this->includeParams[$include])) {
+            return null;
+        }
+
+        $params = $this->includeParams[$include];
+
+        return new ParamBag($params);
     }
     
     /**
