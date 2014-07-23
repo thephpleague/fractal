@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,6 +17,13 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 
+/**
+ * Scope
+ *
+ * The scope class acts as a tracker, relating a specific resource in a specific
+ * context. For example, the same resource could be attached to multiple scopes.
+ * There are root scopes, parent scopes and child scopes.
+ */
 class Scope
 {
     protected $availableIncludes = array();

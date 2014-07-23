@@ -19,11 +19,10 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertTrue(is_callable($resource->getTransformer()));
 
-        $transformer = function() {};
+        $transformer = 'thismightbeacallablestring';
         $resource = new Item($this->simpleItem, $transformer);
         $this->assertEquals($resource->getTransformer(), $transformer);
     }
-
 
     /**
      * @covers League\Fractal\Resource\Item::setResourceKey
@@ -43,6 +42,4 @@ class ItemResourceTest extends \PHPUnit_Framework_TestCase
         $collection->setResourceKey('foo');
         $this->assertEquals('foo', $collection->getResourceKey());
     }
-
-
 }

@@ -14,7 +14,7 @@ or used by mobile applications then this will quickly lead to inconsistent outpu
 
 ## Goals
 
-* Create a "barrier" between source data and output, so schema changes do not affect users
+* Create a protective shield between source data and output, so schema changes do not affect users
 * Systematic type-casting of data, to avoid `foreach()`ing through and `(bool)`ing everything
 * Include (a.k.a embedding, nesting or side-loading) relationships for complex data structures
 * Work with standards like HAL and JSON-API but also allow custom serialization
