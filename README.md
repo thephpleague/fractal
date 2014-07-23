@@ -59,7 +59,6 @@ Contribute to this documentation in the [sculpin branch](https://github.com/thep
 
 ## Todo
 
-- Wrap optional params in a ParamBag object or similar
 - Add JSON-API (kinda done) and HAL serializers
 
 ## Testing

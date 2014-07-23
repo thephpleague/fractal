@@ -16,45 +16,109 @@ namespace League\Fractal;
  */
 class ParamBag implements \ArrayAccess
 {
-	protected $params = array();
+    protected $params = array();
 
-	public function __construct(array $params)
-	{
-		$this->params = $params;
-	}
+    public function __construct(array $params)
+    {
+        $this->params = $params;
+    }
 
+    /**
+     * Get parameter values out of the bag
+     *
+     * @param string $key
+     * @return mixed
+     **/
     public function get($key)
     {
         return $this->__get($key);
     }
 
+    /**
+     * Get parameter values out of the bag via the property access magic method
+     *
+     * @param string $key
+     * @return mixed
+     **/
     public function __get($key)
     {
         return isset($this->params[$key]) ? $this->params[$key] : null;
     }
 
+    /**
+     * Check if a param exists in the bag via an isset() check on the property
+     *
+     * @param string $key
+     * @return bool
+     **/
     public function __isset($key)
     {
         return isset($this->params[$key]);
     }
 
-    public function offsetExists($offset)
+    /**
+     * Disallow changing the value of params in the data bag via property access
+     *
+     * @param string $key
+     * @throws \LogicException
+     **/
+    public function __set($key, $value)
     {
-    	return $this->__isset($offset);
+        throw new \LogicException('Modifying parameters is not permitted');
     }
 
-    public function offsetGet($offset)
+    /**
+     * Disallow unsetting params in the data bag via property access
+     *
+     * @param string $key
+     * @throws \LogicException
+     **/
+    public function __unset($key)
     {
-    	return $this->__get($offset);
+        throw new \LogicException('Modifying parameters is not permitted');
     }
 
-    public function offsetSet($offset, $value)
+    /**
+     * Check if a param exists in the bag via an isset() and array access 
+     *
+     * @param string $key
+     * @return bool
+     **/
+    public function offsetExists($key)
     {
-    	throw new \Exception('NO SET FOR YOU!');
+        return $this->__isset($key);
     }
 
-    public function offsetUnset($offset)
+    /**
+     * Get parameter values out of the bag via array access
+     *
+     * @param string $key
+     * @return mixed
+     **/
+    public function offsetGet($key)
     {
-    	throw new \Exception('NO UNSET FOR YOU!');
+        return $this->__get($key);
+    }
+
+    /**
+     * Disallow changing the value of params in the data bag via array access
+     *
+     * @param string $key
+     * @throws \LogicException
+     **/
+    public function offsetSet($key, $value)
+    {
+        throw new \LogicException('Modifying parameters is not permitted');
+    }
+
+    /**
+     * Disallow unsetting params in the data bag via array access
+     *
+     * @param string $key
+     * @throws \LogicException
+     **/
+    public function offsetUnset($key)
+    {
+        throw new \LogicException('Modifying parameters is not permitted');
     }
 }

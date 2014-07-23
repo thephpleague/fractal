@@ -31,14 +31,26 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($params['totallymadeup']);
     }
 
-    public function testObjectAccess()
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Modifying parameters is not permitted
+     */
+    public function testArrayAccessSetFails()
     {
-        $params = new ParamBag(array('foo' => 'bar', 'baz' => 'ban'));
+        $params = new ParamBag(array('foo' => 'bar'));
 
-        $this->assertEquals('bar', $params->foo);
-        $this->assertEquals('ban', $params->baz);
-        $this->assertNull($params->totallymadeup);
-        $this->assertTrue(isset($params->foo));
+        $params['foo'] = 'someothervalue';
+    }
+
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Modifying parameters is not permitted
+     */
+    public function testArrayAccessUnsetFails()
+    {
+        $params = new ParamBag(array('foo' => 'bar'));
+
+        unset($params['foo']);
     }
 
     public function testObjectAccess()
@@ -51,5 +63,26 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($params->foo));
     }
 
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Modifying parameters is not permitted
+     */
+    public function testObjectAccessSetFails()
+    {
+        $params = new ParamBag(array('foo' => 'bar'));
+
+        $params->foo = 'someothervalue';
+    }
+
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Modifying parameters is not permitted
+     */
+    public function testObjectAccessUnsetFails()
+    {
+        $params = new ParamBag(array('foo' => 'bar'));
+
+        unset($params->foo);
+    }
 
 }
