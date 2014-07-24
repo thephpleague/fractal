@@ -212,7 +212,7 @@ abstract class TransformerAbstract
      *
      * @api
      * @param mixed $data
-     * @param self|callable $transformer
+     * @param TransformerAbstract|callable $transformer
      * @param string $resourceKey
      * @return Item
      **/
@@ -226,7 +226,7 @@ abstract class TransformerAbstract
      *
      * @api
      * @param mixed $data
-     * @param self|callable $transformer
+     * @param TransformerAbstract|callable $transformer
      * @param string $resourceKey
      * @return Collection
      */
