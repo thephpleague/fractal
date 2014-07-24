@@ -55,7 +55,7 @@ class Manager
     /**
      * Serializer
      * 
-     * @var \League\Fractal\Serializer\SerializerInterface
+     * @var SerializerAbstract
      **/
     protected $serializer;
     
@@ -65,7 +65,7 @@ class Manager
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @api
-     * @param \League\Fractal\Resource\ResourceAbstract $resource
+     * @param ResourceAbstract $resource
      * @param string $scopeIdentifier
      * @param string $parentScopeInstance
      * @return \League\Fractal\Scope
@@ -204,7 +204,7 @@ class Manager
      * Set Recursion Limit
      *
      * @api
-     * @param \League\Fractal\Serializer\SerializerInterface
+     * @param int $recursionLimit
      * @return $this
      **/
     public function setRecursionLimit($recursionLimit)
@@ -217,7 +217,7 @@ class Manager
      * Set Serializer
      *
      * @api
-     * @param \League\Fractal\Serializer\SerializerAbstract $serializer
+     * @param SerializerAbstract $serializer
      * @return $this
      **/
     public function setSerializer(SerializerAbstract $serializer)
@@ -260,6 +260,7 @@ class Manager
      * by trains or whatever the hell that movie was about.
      *
      * @internal
+     * @param string $includeName
      **/
     protected function trimToAcceptableRecursionLevel($includeName)
     {

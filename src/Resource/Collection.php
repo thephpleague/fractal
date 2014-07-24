@@ -64,7 +64,7 @@ class Collection extends ResourceAbstract
     /**
      * Getter for paginator
      *
-     * @return \League\Fractal\Pagination\PaginatorInterface
+     * @return PaginatorInterface
      **/
     public function getPaginator()
     {
@@ -114,7 +114,7 @@ class Collection extends ResourceAbstract
     /**
      * Setter for paginator
      *
-     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
+     * @param PaginatorInterface $paginator
      *
      * @return $this
      **/
