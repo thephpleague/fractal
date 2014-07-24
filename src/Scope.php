@@ -26,14 +26,29 @@ use League\Fractal\Serializer\SerializerAbstract;
  */
 class Scope
 {
+    /**
+     * @var array
+     **/
     protected $availableIncludes = array();
 
+    /**
+     * @var \League\Fractal\Scope
+     **/
     protected $currentScope;
 
+    /**
+     * @var \League\Fractal\Manager
+     **/
     protected $manager;
 
+    /**
+     * @var ResourceInterface
+     **/
     protected $resource;
 
+    /**
+     * @var array
+     **/
     protected $parentScopes = array();
 
     public function __construct(Manager $manager, ResourceInterface $resource, $currentScope = null)
@@ -43,6 +58,11 @@ class Scope
         $this->resource = $resource;
     }
 
+    /**
+     * Embed a scope as a child of the currenct scope
+     *
+     * @return \League\Fractal\Scope
+     **/
     public function embedChildScope($scopeIdentifier, $resource)
     {
         return $this->manager->createData($resource, $scopeIdentifier, $this);
@@ -139,7 +159,7 @@ class Scope
      * Set parent scopes
      *
      * @internal
-     * @param mixed $parentScopes Value to set
+     * @param array $parentScopes Value to set
      * @return $this
      **/
     public function setParentScopes($parentScopes)
@@ -217,11 +237,11 @@ class Scope
         $transformedData = $includedData = array();
 
         if ($this->resource instanceof Item) {
-            list ($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
+            list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
 
         } elseif ($this->resource instanceof Collection) {
             foreach ($data as $value) {
-                list ($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
+                list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
             }
         } else {
             throw new InvalidArgumentException(
@@ -262,7 +282,7 @@ class Scope
      */
     protected function fireTransformer($transformer, $data)
     {
-        $transformedData = $includedData = array();
+        $includedData = array();
 
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);

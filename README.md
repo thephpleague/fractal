@@ -1,9 +1,11 @@
-# Fractal [![Build Status](https://travis-ci.org/thephpleague/fractal.png?branch=master)](https://travis-ci.org/thephpleague/fractal)
+# Fractal
 
-[![License](http://img.shields.io/packagist/l/league/fractal.svg)](https://github.com/thephpleague/fractal/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
-[![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
-[![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
+[![Build Status](https://img.shields.io/travis/thephpleague/fractal/master.svg?style=flat)](https://travis-ci.org/thephpleague/fractal)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![Latest Version](https://img.shields.io/github/release/thephpleague/fractal.svg?style=flat)](https://github.com/thephpleague/fractal/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/league/fractal.svg?style=flat)](https://packagist.org/packages/league/fractal)
 
 Fractal provides a presentation and transformation layer for complex data output, the like found in
 RESTful APIs, and works really well with JSON. Think of this as a view layer for your JSON/YAML/etc.
