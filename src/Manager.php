@@ -11,7 +11,8 @@
 
 namespace League\Fractal;
 
-use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -65,12 +66,12 @@ class Manager
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @api
-     * @param ResourceAbstract $resource
+     * @param ResourceInterface $resource
      * @param string $scopeIdentifier
-     * @param string $parentScopeInstance
-     * @return \League\Fractal\Scope
+     * @param Scope $parentScopeInstance
+     * @return Scope
      **/
-    public function createData(ResourceAbstract $resource, $scopeIdentifier = null, $parentScopeInstance = null)
+    public function createData(ResourceInterface $resource, $scopeIdentifier = null, $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 
