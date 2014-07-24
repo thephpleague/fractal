@@ -38,7 +38,7 @@ abstract class TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes;
+    protected $defaultIncludes = array();
 
     /**
      * The transformer should know about the current scope, so we can fetch relevant params
