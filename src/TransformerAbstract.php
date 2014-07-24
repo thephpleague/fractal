@@ -86,46 +86,58 @@ abstract class TransformerAbstract
      * @param mixed $data
      * @return array
      **/
-    public function processIncludedResources(Scope $scope, $data)
-    {
-        $includedData = array_merge(
-            $this->tryDefaultIncludes($scope, $data),
-            $this->tryAvailableIncludes($scope, $data)
-        );
- 
-        return $includedData === array() ? false : $includedData;
-    }
- 
-    protected function tryDefaultIncludes($scope, $data)
+     public function processIncludedResources(Scope $scope, $data)
     {
         $includedData = array();
+ 
         foreach ($this->defaultIncludes as $defaultInclude) {
-            if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
-                continue;
-            }
- 
-            $childScope = $scope->embedChildScope($defaultInclude, $resource);
-            $includedData[$defaultInclude] = $childScope->toArray();
+            $includedData = $this->includeResourceIfAvailable(
+                $scope,
+                $data,
+                $includedData,
+                $defaultInclude
+            );
         }
-        return $includedData;
-    }
  
-    protected function tryAvailableIncludes($scope, $data)
-    {
-        $includedData = array();
         foreach ($this->availableIncludes as $potentialInclude) {
             // Check if an available embed is requested
             if (! $scope->isRequested($potentialInclude)) {
                 continue;
             }
  
-            if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
-                continue;
-            }
- 
-            $childScope = $scope->embedChildScope($potentialInclude, $resource);
-            $includedData[$potentialInclude] = $childScope->toArray();
+            $includedData = $this->includeResourceIfAvailable(
+                $scope,
+                $data,
+                $includedData,
+                $potentialInclude
+            );
         }
+ 
+        return empty($includedData) ? false : $includedData;
+    }
+ 
+    /**
+     * Include a resource only if it is available on the method
+     *
+     * @internal
+     * @param Scope $scope
+     * @param mixed $data
+     * @param array $includedData
+     * @param string $include
+     * @return array
+     */
+    private function includeResourceIfAvailable(
+        Scope $scope,
+        $data,
+        $includedData,
+        $include
+    ) {
+        if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
+            $childScope = $scope->embedChildScope($include, $resource);
+ 
+            $includedData[$include] = $childScope->toArray();
+        }
+ 
         return $includedData;
     }
 
