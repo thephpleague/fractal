@@ -1,10 +1,10 @@
 # Fractal
 
+[![Latest Version](https://img.shields.io/github/release/thephpleague/fractal.svg?style=flat)](https://github.com/thephpleague/fractal/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/thephpleague/fractal/master.svg?style=flat)](https://travis-ci.org/thephpleague/fractal)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
-[![Latest Version](https://img.shields.io/github/release/thephpleague/fractal.svg?style=flat)](https://github.com/thephpleague/fractal/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/league/fractal.svg?style=flat)](https://packagist.org/packages/league/fractal)
 
 Fractal provides a presentation and transformation layer for complex data output, the like found in

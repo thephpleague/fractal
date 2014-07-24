@@ -167,7 +167,7 @@ class Scope
      * Set parent scopes
      *
      * @internal
-     * @param array $parentScopes Value to set
+     * @param string[] $parentScopes Value to set
      * @return $this
      **/
     public function setParentScopes($parentScopes)
@@ -284,7 +284,7 @@ class Scope
      * Fire the main transformer.
      *
      * @internal
-     * @param  callable|\League\Fractal\TransformerAbstract  $transformer
+     * @param  TransformerAbstract|callable  $transformer
      * @param  mixed  $data
      * @return array
      */
@@ -330,7 +330,7 @@ class Scope
      * Determine if a transformer has any available includes.
      *
      * @internal
-     * @param  callable|\League\Fractal\TransformerAbstract  $transformer
+     * @param  TransformerAbstract|callable  $transformer
      * @return bool
      **/
     protected function transformerHasIncludes($transformer)
