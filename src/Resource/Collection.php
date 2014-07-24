@@ -33,14 +33,14 @@ class Collection extends ResourceAbstract
     /**
      * A collection of data
      *
-     * @var League\Fractal\Pagination\PaginatorInterface
+     * @var PaginatorInterface
      **/
     protected $paginator;
 
     /**
      * Cursor implementation.
      *
-     * @var League\Fractal\Pagination\CursorInterface
+     * @var CursorInterface
      **/
     protected $cursor;
 
@@ -84,7 +84,7 @@ class Collection extends ResourceAbstract
     /**
      * Set the cursor implementation
      *
-     * @return \League\Fractal\Pagination\CursorInterface
+     * @return CursorInterface
      **/
     public function getCursor()
     {
@@ -127,7 +127,7 @@ class Collection extends ResourceAbstract
     /**
      * Set the cursor implementation.
      *
-     * @param \League\Fractal\Pagination\CursorInterface $cursor
+     * @param CursorInterface $cursor
      * @return $this
      **/
     public function setCursor(CursorInterface $cursor)
