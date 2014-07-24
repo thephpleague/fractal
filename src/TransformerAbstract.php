@@ -212,9 +212,9 @@ abstract class TransformerAbstract
      *
      * @api
      * @param mixed $data
-     * @param self $transformer
+     * @param self|callable $transformer
      * @param string $resourceKey
-     * @return \League\Fractal\Resource\Item
+     * @return Item
      **/
     protected function item($data, $transformer, $resourceKey = null)
     {
@@ -226,9 +226,9 @@ abstract class TransformerAbstract
      *
      * @api
      * @param mixed $data
-     * @param self $transformer
+     * @param self|callable $transformer
      * @param string $resourceKey
-     * @return \League\Fractal\Resource\Collection
+     * @return Collection
      */
     protected function collection($data, $transformer, $resourceKey = null)
     {
