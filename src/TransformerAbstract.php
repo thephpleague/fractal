@@ -77,6 +77,18 @@ abstract class TransformerAbstract
         return $this->currentScope;
     }
 
+    private function getIncludes($scope)
+    {
+        $includes = $this->defaultIncludes;
+        foreach ($this->availableIncludes as $include) {
+            if ($scope->isRequested($include)) {
+                $includes[] = $include;
+            }
+        }
+        return $includes;
+    }
+    
+
     /**
      * This method is fired to loop through available includes, see if any of 
      * them are requested and permitted for this scope.
@@ -86,34 +98,22 @@ abstract class TransformerAbstract
      * @param mixed $data
      * @return array
      **/
-     public function processIncludedResources(Scope $scope, $data)
+    public function processIncludedResources(Scope $scope, $data)
     {
         $includedData = array();
- 
-        foreach ($this->defaultIncludes as $defaultInclude) {
+
+        $includes = $this->getIncludes($scope);
+        
+        foreach ($includes as $include) {
             $includedData = $this->includeResourceIfAvailable(
                 $scope,
                 $data,
                 $includedData,
-                $defaultInclude
+                $include
             );
         }
- 
-        foreach ($this->availableIncludes as $potentialInclude) {
-            // Check if an available embed is requested
-            if (! $scope->isRequested($potentialInclude)) {
-                continue;
-            }
- 
-            $includedData = $this->includeResourceIfAvailable(
-                $scope,
-                $data,
-                $includedData,
-                $potentialInclude
-            );
-        }
- 
-        return empty($includedData) ? false : $includedData;
+        
+        return $includedData === array() ? false : $includedData;
     }
  
     /**
