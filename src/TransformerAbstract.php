@@ -22,7 +22,7 @@ use League\Fractal\Scope;
  * All Transformer classes should extend this to utilize the convenience methods
  * collectionResource(), itemResource() and paginatorResource(), and make
  * the self::$availableIncludes property available. Extends it and add a `transform()`
- * method to transform any data into a basic array, including embedded content.
+ * method to transform any data into a basic array, including included content.
  */
 abstract class TransformerAbstract
 {
@@ -88,38 +88,45 @@ abstract class TransformerAbstract
      **/
     public function processIncludedResources(Scope $scope, $data)
     {
-        $embeddedData = array();
-        $embeddedDataCount = 0;
-
+        $includedData = array_merge(
+            $this->tryDefaultIncludes($scope, $data),
+            $this->tryAvailableIncludes($scope, $data)
+        );
+ 
+        return $includedData === array() ? false : $includedData;
+    }
+ 
+    protected function tryDefaultIncludes($scope, $data)
+    {
+        $includedData = array();
         foreach ($this->defaultIncludes as $defaultInclude) {
-
             if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
                 continue;
             }
-
+ 
             $childScope = $scope->embedChildScope($defaultInclude, $resource);
-
-            $embeddedData[$defaultInclude] = $childScope->toArray();
-            ++$embeddedDataCount;
+            $includedData[$defaultInclude] = $childScope->toArray();
         }
-
+        return $includedData;
+    }
+ 
+    protected function tryAvailableIncludes($scope, $data)
+    {
+        $includedData = array();
         foreach ($this->availableIncludes as $potentialInclude) {
             // Check if an available embed is requested
             if (! $scope->isRequested($potentialInclude)) {
                 continue;
             }
-
+ 
             if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
                 continue;
             }
-
+ 
             $childScope = $scope->embedChildScope($potentialInclude, $resource);
-
-            $embeddedData[$potentialInclude] = $childScope->toArray();
-            ++$embeddedDataCount;
+            $includedData[$potentialInclude] = $childScope->toArray();
         }
-
-        return $embeddedDataCount === 0 ? false : $embeddedData;
+        return $includedData;
     }
 
     /**
