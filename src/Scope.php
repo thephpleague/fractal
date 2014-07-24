@@ -12,8 +12,8 @@
 namespace League\Fractal;
 
 use InvalidArgumentException;
-use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -51,6 +51,9 @@ class Scope
      **/
     protected $parentScopes = array();
 
+    /**
+     * @param string $currentScope
+     */
     public function __construct(Manager $manager, ResourceInterface $resource, $currentScope = null)
     {
         $this->manager = $manager;
@@ -121,7 +124,7 @@ class Scope
      *
      * @param $checkScopeSegment
      *
-     * @return int Returns the new number of elements in the array.
+     * @return boolean Returns the new number of elements in the array.
      */
     public function isRequested($checkScopeSegment)
     {
@@ -252,12 +255,12 @@ class Scope
 
         return array($transformedData, $includedData);
     }
-   
+
     /**
      * Serialize a resource
      *
      * @internal
-     * @param  callable|\League\Fractal\Serializer\SerializerAbstract  $serializer
+     * @param  SerializerAbstract  $serializer
      * @param  mixed  $data
      * @return array
      */
@@ -289,7 +292,7 @@ class Scope
         } else {
             $transformedData = $transformer->transform($data);
         }
-            
+
         if ($this->transformerHasIncludes($transformer)) {
             $includedData = $this->fireIncludedTransformers($transformer, $data);
 
@@ -299,7 +302,7 @@ class Scope
                 $transformedData = array_merge($transformedData, $includedData);
             }
         }
-        
+
         return array($transformedData, $includedData);
     }
 
@@ -330,7 +333,7 @@ class Scope
         if (! $transformer instanceof TransformerAbstract) {
             return false;
         }
-        
+
         $defaultIncludes = $transformer->getDefaultIncludes();
         $availableIncludes = $transformer->getAvailableIncludes();
         return ! empty($defaultIncludes) || ! empty($availableIncludes);

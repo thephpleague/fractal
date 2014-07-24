@@ -21,5 +21,9 @@ interface CursorInterface
     public function getCurrent();
     public function getPrev();
     public function getNext();
+
+    /**
+     * @return integer
+     */
     public function getCount();
 }

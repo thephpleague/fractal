@@ -232,7 +232,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('book:foo(bar)');
 
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        
+
         $transformer->shouldReceive('includeBook')
             ->with(m::any(), m::type('\League\Fractal\ParamBag'))
             ->once();

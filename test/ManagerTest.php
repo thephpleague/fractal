@@ -1,8 +1,8 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use Mockery;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +14,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         // Test that some includes provided returns self
         $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(array('foo')));
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
@@ -25,7 +25,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $manager->parseIncludes(null);
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
@@ -63,7 +63,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $params = $manager->getIncludeParams('foo');
 
         $this->assertInstanceOf('League\Fractal\ParamBag', $params);
-        
+
         $this->assertEquals(array('5', '1'), $params['limit']);
         $this->assertEquals(array('-something'), $params['order']);
         $this->assertNull($params['totallymadeup']);
@@ -132,8 +132,6 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $rootScope->toArray());
         $this->assertEquals('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
     }
-
-
 
     public function tearDown()
     {

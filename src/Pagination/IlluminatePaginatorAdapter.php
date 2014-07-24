@@ -15,7 +15,7 @@ use Illuminate\Pagination\Paginator;
 
 /**
  * A paginator adapter for illuminate/pagination
- * 
+ *
  * @author Marc Addeo <marcaddeo@gmail.com>
  */
 class IlluminatePaginatorAdapter implements PaginatorInterface
@@ -29,7 +29,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     /**
      * Setup our adapter
      *
-     * @param Illuminate\Pagination\Paginator $paginator
+     * @param Paginator $paginator
      */
     public function __construct(Paginator $paginator)
     {

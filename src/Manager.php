@@ -54,11 +54,11 @@ class Manager
 
     /**
      * Serializer
-     * 
+     *
      * @var SerializerAbstract
      **/
     protected $serializer;
-    
+
     /**
      * Create Data
      *
@@ -104,7 +104,7 @@ class Manager
 
         return new ParamBag($params);
     }
-    
+
     /**
      * Get Requested Includes
      *
@@ -115,12 +115,12 @@ class Manager
     {
         return $this->requestedIncludes;
     }
-    
+
     /**
      * Get Serializer
      *
      * @api
-     * @return $this
+     * @return SerializerAbstract
      **/
     public function getSerializer()
     {
@@ -154,7 +154,7 @@ class Manager
         }
 
         foreach ($includes as $include) {
-            
+
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
 
             // Trim it down to a cool level of recursion
@@ -180,13 +180,13 @@ class Manager
             $modifierArr = array();
 
             for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
-                
+
                 // [1] is the modifier
                 $modifierName = $allModifiersArr[1][$modifierIt];
 
                 // and [2] is delimited params
                 $modifierParamStr = $allModifiersArr[2][$modifierIt];
-                
+
                 // Make modifier array key with an array of params as the value
                 $modifierArr[$modifierName] = explode($this->paramDelimiter, $modifierParamStr);
             }

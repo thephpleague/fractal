@@ -43,7 +43,7 @@ abstract class ResourceAbstract implements ResourceInterface
 
     /**
      * Create a new resource instance.
-     * 
+     *
      * @param  mixed  $data
      * @param  callable|string  $transformer
      * @param  string  $resourceKey
@@ -54,7 +54,7 @@ abstract class ResourceAbstract implements ResourceInterface
         $this->transformer = $transformer;
         $this->resourceKey = $resourceKey;
     }
-    
+
     /**
      * Get the data.
      *
@@ -122,7 +122,7 @@ abstract class ResourceAbstract implements ResourceInterface
 
     /**
      * Set the resource key.
-     * 
+     *
      * @param  string  $resourceKey
      * @return \League\Fractal\Resource\ResourceAbstract
      */

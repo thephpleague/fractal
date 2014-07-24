@@ -41,7 +41,7 @@ class JsonApiSerializer extends ArraySerializer
 
     /**
      * Serialize the included data.
-     * 
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      *

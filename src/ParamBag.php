@@ -79,7 +79,7 @@ class ParamBag implements \ArrayAccess
     }
 
     /**
-     * Check if a param exists in the bag via an isset() and array access 
+     * Check if a param exists in the bag via an isset() and array access
      *
      * @param string $key
      * @return bool

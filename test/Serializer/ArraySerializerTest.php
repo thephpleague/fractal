@@ -1,10 +1,10 @@
 <?php
 
-use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
+use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class ArraySerializerTest extends PHPUnit_Framework_TestCase {
@@ -39,8 +39,6 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $manager = new Manager();
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
-
-
 
         $resource = new Item($this->bookItemInput, new GenericBookTransformer(), 'book');
 
@@ -145,7 +143,6 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-
     public function testSerializingCollectionResourceWithoutName()
     {
         $manager = new Manager();
@@ -169,7 +166,6 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
-
 
     public function tearDown()
     {

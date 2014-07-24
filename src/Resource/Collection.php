@@ -73,7 +73,7 @@ class Collection extends ResourceAbstract
 
     /**
      * Determine if the resource has a paginator implementation
-     * 
+     *
      * @return bool
      **/
     public function hasPaginator()
@@ -93,7 +93,7 @@ class Collection extends ResourceAbstract
 
     /**
      * Determine if the resource has a cursor implementation
-     * 
+     *
      * @return bool
      **/
     public function hasCursor()

@@ -19,8 +19,8 @@ use League\Fractal\Scope;
 /**
  * Transformer Abstract
  *
- * All Transformer classes should extend this to utilize the convenience methods 
- * collectionResource(), itemResource() and paginatorResource(), and make 
+ * All Transformer classes should extend this to utilize the convenience methods
+ * collectionResource(), itemResource() and paginatorResource(), and make
  * the self::$availableIncludes property available. Extends it and add a `transform()`
  * method to transform any data into a basic array, including embedded content.
  */
@@ -39,11 +39,11 @@ abstract class TransformerAbstract
      * @var array
      */
     protected $defaultIncludes;
-    
+
     /**
      * The transformer should know about the current scope, so we can fetch relevant params
      *
-     * @var \League\Fractal\Scope
+     * @var Scope
      */
     protected $currentScope;
 
@@ -84,7 +84,7 @@ abstract class TransformerAbstract
      *
      * @internal
      * @param Scope $scope
-     * @param $data
+     * @param mixed $data
      * @return array
      **/
     public function processIncludedResources(Scope $scope, $data)
@@ -135,7 +135,7 @@ abstract class TransformerAbstract
      * Call Include Method
      *
      * @internal
-     * @param \League\Fractal\Scope $scope
+     * @param Scope $scope
      * @param string $includeName
      * @param mixed $data
      * @throws \Exception
@@ -172,7 +172,7 @@ abstract class TransformerAbstract
      * Setter for availableIncludes
      *
      * @api
-     * @param $availableIncludes
+     * @param array $availableIncludes
      * @return $this
      */
     public function setAvailableIncludes($availableIncludes)
@@ -185,7 +185,7 @@ abstract class TransformerAbstract
      * Setter for defaultIncludes
      *
      * @api
-     * @param $defaultIncludes
+     * @param array $defaultIncludes
      * @return $this
      **/
     public function setDefaultIncludes($defaultIncludes)
@@ -198,7 +198,7 @@ abstract class TransformerAbstract
      * Setter for currentScope
      *
      * @api
-     * @param $currentScope
+     * @param Scope $currentScope
      * @return $this
      **/
     public function setCurrentScope($currentScope)
@@ -211,9 +211,9 @@ abstract class TransformerAbstract
      * Create a new item resource object
      *
      * @api
-     * @param $data
-     * @param $transformer
-     * @param $resourceKey
+     * @param mixed $data
+     * @param self $transformer
+     * @param string $resourceKey
      * @return \League\Fractal\Resource\Item
      **/
     protected function item($data, $transformer, $resourceKey = null)
@@ -225,9 +225,9 @@ abstract class TransformerAbstract
      * Create a new collection resource object
      *
      * @api
-     * @param $data
-     * @param $transformer
-     * @param $resourceKey
+     * @param mixed $data
+     * @param self $transformer
+     * @param string $resourceKey
      * @return \League\Fractal\Resource\Collection
      */
     protected function collection($data, $transformer, $resourceKey = null)

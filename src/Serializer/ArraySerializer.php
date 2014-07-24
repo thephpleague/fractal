@@ -18,7 +18,7 @@ class ArraySerializer extends SerializerAbstract
 {
     /**
      * Serialize a collection
-     * 
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
@@ -30,7 +30,7 @@ class ArraySerializer extends SerializerAbstract
 
     /**
      * Serialize an item
-     * 
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
@@ -42,7 +42,7 @@ class ArraySerializer extends SerializerAbstract
 
     /**
      * Serialize the included data
-     * 
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
@@ -54,7 +54,7 @@ class ArraySerializer extends SerializerAbstract
 
     /**
      * Serialize the meta
-     * 
+     *
      * @param  array  $meta
      * @return array
      **/
@@ -101,7 +101,7 @@ class ArraySerializer extends SerializerAbstract
 
     /**
      * Serialize the cursor
-     * 
+     *
      * @param  CursorInterface  $cursor
      * @return array
      **/

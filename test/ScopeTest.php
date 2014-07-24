@@ -1,9 +1,9 @@
 <?php namespace League\Fractal\Test;
 
+use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
@@ -194,7 +194,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
     }
 
-
     public function testPushParentScope()
     {
         $manager = new Manager();
@@ -256,7 +255,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $scope->toArray();
     }
 
-
     public function testPaginatorOutput()
     {
         $manager = new Manager();
@@ -266,7 +264,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter')->makePartial();
-
 
         $total = 100;
         $perPage = $count = 5;

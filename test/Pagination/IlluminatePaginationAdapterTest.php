@@ -37,7 +37,6 @@ class IlluminatePaginationAdapterTest extends \PHPUnit_Framework_TestCase
 
         $paginator = Mockery::mock('Illuminate\Pagination\Paginator', array($env, $items, $total, $perPage))->makePartial();
 
-
         $paginator->shouldReceive('getCurrentPage')->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->andReturn($lastPage);
 

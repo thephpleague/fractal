@@ -14,5 +14,9 @@ namespace League\Fractal\Resource;
 interface ResourceInterface
 {
     public function getData();
+
+    /**
+     * @return callable
+     */
     public function getTransformer();
 }
