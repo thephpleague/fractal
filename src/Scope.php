@@ -32,9 +32,9 @@ class Scope
     protected $availableIncludes = array();
 
     /**
-     * @var \League\Fractal\Scope
+     * @var string
      **/
-    protected $currentScope;
+    protected $scopeIdentifer;
 
     /**
      * @var \League\Fractal\Manager
@@ -52,18 +52,23 @@ class Scope
     protected $parentScopes = array();
 
     /**
-     * @param string $currentScope
+     * @param Manager $manager
+     * @param ResourceInterface $resource
+     * @param string $scopeIdentifer
      */
-    public function __construct(Manager $manager, ResourceInterface $resource, $currentScope = null)
+    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifer = null)
     {
         $this->manager = $manager;
-        $this->currentScope = $currentScope;
         $this->resource = $resource;
+        $this->scopeIdentifer = $scopeIdentifer;
     }
 
     /**
      * Embed a scope as a child of the currenct scope
      *
+     * @internal
+     * @param string $scopeIdentifier
+     * @param ResourceInterface $resource
      * @return \League\Fractal\Scope
      **/
     public function embedChildScope($scopeIdentifier, $resource)
@@ -72,13 +77,13 @@ class Scope
     }
 
     /**
-     * Get Current Scope
+     * Get the current identifier
      *
-     * @return \League\Fractal\Scope
+     * @return string
      **/
-    public function getCurrentScope()
+    public function getScopeIdentifier()
     {
-        return $this->currentScope;
+        return $this->scopeIdentifer;
     }
 
     /**
@@ -89,7 +94,7 @@ class Scope
      **/
     public function getIdentifier($appendIdentifier = null)
     {
-        $identifierParts = array_merge($this->parentScopes, array($this->currentScope, $appendIdentifier));
+        $identifierParts = array_merge($this->parentScopes, array($this->scopeIdentifer, $appendIdentifier));
         return implode('.', array_filter($identifierParts));
     }
 
@@ -130,7 +135,7 @@ class Scope
     {
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);
-            array_push($scopeArray, $this->currentScope, $checkScopeSegment);
+            array_push($scopeArray, $this->scopeIdentifer, $checkScopeSegment);
         } else {
             $scopeArray = array($checkScopeSegment);
         }

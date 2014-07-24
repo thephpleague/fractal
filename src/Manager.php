@@ -79,7 +79,7 @@ class Manager
 
             // This will be the new children list of parents (parents parents, plus the parent)
             $scopeArray = $parentScopeInstance->getParentScopes();
-            $scopeArray[] = $parentScopeInstance->getCurrentScope();
+            $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
 
             $scopeInstance->setParentScopes($scopeArray);
         }

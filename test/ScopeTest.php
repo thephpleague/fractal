@@ -22,7 +22,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
+        $this->assertEquals($scope->getScopeIdentifier(), 'book');
         $childScope = $scope->embedChildScope('author', $resource);
 
         $this->assertInstanceOf('League\Fractal\Scope', $childScope);
@@ -62,13 +62,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals('book', $scope->getCurrentScope());
+        $this->assertEquals('book', $scope->getScopeIdentifier());
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals('author', $childScope->getCurrentScope());
+        $this->assertEquals('author', $childScope->getScopeIdentifier());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals('profile', $grandChildScope->getCurrentScope());
+        $this->assertEquals('profile', $grandChildScope->getScopeIdentifier());
     }
 
     public function testGetIdentifier()
