@@ -78,9 +78,8 @@ abstract class TransformerAbstract
     }
 
     /**
-     * This method is fired to loop through available embeds,
-     * see if any of them are requested and permitted for this
-     * scope.
+     * This method is fired to loop through available includes, see if any of 
+     * them are requested and permitted for this scope.
      *
      * @internal
      * @param Scope $scope
@@ -92,40 +91,32 @@ abstract class TransformerAbstract
         $embeddedData = array();
         $embeddedDataCount = 0;
 
-        // Nothing to do, bail
-        if (is_array($this->defaultIncludes)) {
+        foreach ($this->defaultIncludes as $defaultInclude) {
 
-            foreach ($this->defaultIncludes as $defaultInclude) {
-
-                if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
-                    continue;
-                }
-
-                $childScope = $scope->embedChildScope($defaultInclude, $resource);
-
-                $embeddedData[$defaultInclude] = $childScope->toArray();
-                ++$embeddedDataCount;
+            if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
+                continue;
             }
+
+            $childScope = $scope->embedChildScope($defaultInclude, $resource);
+
+            $embeddedData[$defaultInclude] = $childScope->toArray();
+            ++$embeddedDataCount;
         }
 
-        // Nothing more to do? Bail
-        if (is_array($this->availableIncludes)) {
-
-            foreach ($this->availableIncludes as $potentialInclude) {
-                // Check if an available embed is requested
-                if (! $scope->isRequested($potentialInclude)) {
-                    continue;
-                }
-
-                if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
-                    continue;
-                }
-
-                $childScope = $scope->embedChildScope($potentialInclude, $resource);
-
-                $embeddedData[$potentialInclude] = $childScope->toArray();
-                ++$embeddedDataCount;
+        foreach ($this->availableIncludes as $potentialInclude) {
+            // Check if an available embed is requested
+            if (! $scope->isRequested($potentialInclude)) {
+                continue;
             }
+
+            if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
+                continue;
+            }
+
+            $childScope = $scope->embedChildScope($potentialInclude, $resource);
+
+            $embeddedData[$potentialInclude] = $childScope->toArray();
+            ++$embeddedDataCount;
         }
 
         return $embeddedDataCount === 0 ? false : $embeddedData;
