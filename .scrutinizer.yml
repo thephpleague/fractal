@@ -1,11 +1,3 @@
-build:
-    tests:
-        override:
-            -
-                command: 'phpunit --coverage-clover=coverage'
-                coverage:
-                    file: 'coverage'
-                    format: 'php-clover'
 checks:
     php:
         code_rating: true
@@ -23,8 +15,16 @@ checks:
         fix_identation_4spaces: true
         fix_doc_comments: true
 tools:
+    external_code_coverage: true
+    php_code_coverage: false
     php_code_sniffer:
         config:
             standard: PSR2
         filter:
             paths: ['src']
+    php_loc:
+        enabled: true
+        excluded_dirs: [vendor, test]
+    php_cpd:
+        enabled: true
+        excluded_dirs: [vendor, test]
