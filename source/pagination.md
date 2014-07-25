@@ -63,13 +63,14 @@ use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 
 if ($currentCursorStr = Input::get('cursor', false)) {
-    $books = Book::where('id', '>', $currentCursorStr)->take(5)->get();
+        $books = Book::where('id', '>', $currentCursorStr)->take(5)->get();
 } else {
-    $books = Book::take(5)->get();	
+        $books = Book::take(5)->get();  
 }
 
+$prevCursorStr = Input::get('prevCursor', 6); // If prevCursor is not present, then indicate to fetch the first five results instead.
 $newCursorStr = $books->last()->id;
-$cursor = new Cursor($currentCursorStr, $newCursorStr, $books->count());
+$cursor = new Cursor($currentCursorStr, $prevCursorStr, $newCursorStr, $books->count());
 
 $resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
