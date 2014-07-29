@@ -79,10 +79,11 @@ abstract class ResourceAbstract implements ResourceInterface
      **/
     public function getMeta($inline = false)
     {
-        if ($inline)
+        if ($inline) {
             return $this->inlineMeta;
-        else
+        } else {
             return $this->meta;
+        }
     }
 
     /**
@@ -93,10 +94,11 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     public function getMetaValue($metaKey, $inline = false)
     {
-        if ($inline)
+        if ($inline) {
             return $this->inlineMeta[$metaKey];
-        else
+        } else {
             return $this->meta[$metaKey];
+        }
     }
 
     /**
@@ -129,10 +131,11 @@ abstract class ResourceAbstract implements ResourceInterface
      **/
     public function setMetaValue($metaKey, $metaValue, $inline = false)
     {
-        if ($inline)
+        if ($inline) {
             $this->inlineMeta[$metaKey] = $metaValue;
-        else
+        } else {
             $this->meta[$metaKey] = $metaValue;
+        }
         return $this;
     }
 
