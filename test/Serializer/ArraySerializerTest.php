@@ -143,6 +143,46 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
+    public function testInlineMetaInResource()
+    {
+        $manager = new Manager();
+        $manager->parseIncludes('author');
+        $manager->setSerializer(new ArraySerializer());
+
+        $resource = new Collection($this->bookCollectionInput, new GenericBookTransformer(), 'books');
+
+
+        // with metadata inline
+        $resource->setMetaValue('foo', 'bar', true);
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'books' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                    'author' => array(
+                        'name' => 'Dave',
+                    ),
+                ),
+                array(
+                    'title' => 'Bar',
+                    'year' => 1997,
+                    'author' => array(
+                        'name' => 'Bob',
+                    ),
+                ),
+            ),
+            'foo' => 'bar'
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"foo":"bar"}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingCollectionResourceWithoutName()
     {
         $manager = new Manager();

@@ -58,13 +58,15 @@ class ArraySerializer extends SerializerAbstract
      * @param  array  $meta
      * @return array
      **/
-    public function meta(array $meta)
+    public function meta(array $meta, $inline=false)
     {
         if (empty($meta)) {
             return array();
         }
-
-        return array('meta' => $meta);
+        if ( $inline )
+            return $meta;
+        else
+            return array('meta' => $meta);
     }
 
     /**
