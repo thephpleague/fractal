@@ -93,7 +93,7 @@ abstract class TransformerAbstract
     }
 
     /**
-     * This method is fired to loop through available includes, see if any of 
+     * This method is fired to loop through available includes, see if any of
      * them are requested and permitted for this scope.
      *
      * @internal
@@ -115,10 +115,10 @@ abstract class TransformerAbstract
                 $include
             );
         }
-        
+
         return $includedData === array() ? false : $includedData;
     }
- 
+
     /**
      * Include a resource only if it is available on the method
      *
@@ -137,10 +137,10 @@ abstract class TransformerAbstract
     ) {
         if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
             $childScope = $scope->embedChildScope($include, $resource);
- 
+
             $includedData[$include] = $childScope->toArray();
         }
- 
+
         return $includedData;
     }
 
