@@ -127,7 +127,7 @@ class Scope
      *
      * @internal
      *
-     * @param $checkScopeSegment
+     * @param string $checkScopeSegment
      *
      * @return boolean Returns the new number of elements in the array.
      */

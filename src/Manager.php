@@ -71,7 +71,7 @@ class Manager
      * @param Scope $parentScopeInstance
      * @return Scope
      **/
-    public function createData(ResourceInterface $resource, $scopeIdentifier = null, $parentScopeInstance = null)
+    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 

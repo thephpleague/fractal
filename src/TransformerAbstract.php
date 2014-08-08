@@ -76,8 +76,12 @@ abstract class TransformerAbstract
     {
         return $this->currentScope;
     }
-
-    private function getIncludes($scope)
+    
+    /**
+     * @internal
+     * @param Scope $scope
+     **/
+    private function figureOutWhichIncludes(Scope $scope)
     {
         $includes = $this->defaultIncludes;
         foreach ($this->availableIncludes as $include) {
@@ -87,7 +91,6 @@ abstract class TransformerAbstract
         }
         return $includes;
     }
-    
 
     /**
      * This method is fired to loop through available includes, see if any of 
@@ -102,7 +105,7 @@ abstract class TransformerAbstract
     {
         $includedData = array();
 
-        $includes = $this->getIncludes($scope);
+        $includes = $this->figureOutWhichIncludes($scope);
         
         foreach ($includes as $include) {
             $includedData = $this->includeResourceIfAvailable(
