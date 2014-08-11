@@ -1,10 +1,10 @@
 <?php
 
-use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
+use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
@@ -142,7 +142,6 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-
     public function testSerializingItemResourceWithMeta()
     {
         $this->manager->parseIncludes('author');
@@ -239,10 +238,6 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage The $resourceKey parameter must be provided when using League\Fractal\Serializer\JsonApiSerializer
-     **/
     public function testResourceKeyMissing()
     {
         $this->manager->setSerializer(new JsonApiSerializer());
@@ -255,10 +250,17 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
         $resource = new Item($bookData, new GenericBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
-        $scope->toArray();
+        $expected = array(
+            'data' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
-
-
 
     public function tearDown()
     {

@@ -1,10 +1,12 @@
 <?php namespace League\Fractal\Test;
 
+use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
+use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +22,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals($scope->getCurrentScope(), 'book');
+        $this->assertEquals($scope->getScopeIdentifier(), 'book');
         $childScope = $scope->embedChildScope('author', $resource);
 
         $this->assertInstanceOf('League\Fractal\Scope', $childScope);
@@ -60,13 +62,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals('book', $scope->getCurrentScope());
+        $this->assertEquals('book', $scope->getScopeIdentifier());
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals('author', $childScope->getCurrentScope());
+        $this->assertEquals('author', $childScope->getScopeIdentifier());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals('profile', $grandChildScope->getCurrentScope());
+        $this->assertEquals('profile', $grandChildScope->getScopeIdentifier());
     }
 
     public function testGetIdentifier()
@@ -160,12 +162,12 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testToArrayWithSideloadedIncludes()
     {
-        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer[sideloadIncludes,serializeData,serializeIncludedData]');
+        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer')->makePartial();
         $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
-        $serializer->shouldReceive('serializeData')->andReturnUsing(function ($key, $data) {
+        $serializer->shouldReceive('item')->andReturnUsing(function ($key, $data) {
             return array('data' => $data);
         });
-        $serializer->shouldReceive('serializeIncludedData')->andReturnUsing(function ($key, $data) {
+        $serializer->shouldReceive('includedData')->andReturnUsing(function ($key, $data) {
             return array('sideloaded' => array_pop($data));
         });
 
@@ -192,7 +194,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
     }
 
-
     public function testPushParentScope()
     {
         $manager = new Manager();
@@ -216,6 +217,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
+        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn(array());
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -229,6 +231,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
+        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn(array());
 
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
@@ -239,7 +242,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an instance of Resource\Item or Resource\Collection
+     * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
     public function testCreateDataWithClassFuckKnows()
     {
@@ -252,7 +255,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $scope->toArray();
     }
 
-
     public function testPaginatorOutput()
     {
         $manager = new Manager();
@@ -263,14 +265,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter')->makePartial();
 
-
         $total = 100;
         $perPage = $count = 5;
         $currentPage = 2;
         $lastPage = 20;
 
         $paginator->shouldReceive('getTotal')->once()->andReturn($total);
-        $paginator->shouldReceive('count')->once()->andReturn($count);
+        $paginator->shouldReceive('getCount')->once()->andReturn($count);
         $paginator->shouldReceive('getPerPage')->once()->andReturn($perPage);
         $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
@@ -341,6 +342,27 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals($expectedOutput, $rootScope->toArray());
+    }
+
+    public function testDefaultIncludeSuccess()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializer());
+
+        // Send this stub junk, it has a specific format anyhow
+        $resource = new Item(array(), new DefaultIncludeBookTransformer());
+
+        // Try without metadata
+        $scope = new Scope($manager, $resource);
+
+        $expected = array(
+            'a' => 'b',
+            'author' => array(
+                'c' => 'd',
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
     }
 
     public function tearDown()

@@ -1,12 +1,42 @@
 <?php namespace League\Fractal\Test;
 
-use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 use Mockery;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testParseIncludeSelfie()
+    {
+        $manager = new Manager();
+
+        // Test that some includes provided returns self
+        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(array('foo')));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
+     */
+    public function testInvalidParseInclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseIncludes(null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
+     */
+    public function testIceTParseInclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseIncludes(99);
+    }
+
     public function testParseIncludes()
     {
         $manager = new Manager();
@@ -29,7 +59,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         // See if fancy syntax works
         $manager->parseIncludes('foo:limit(5|1):order(-something)');
-        $this->assertEquals(array('limit' => array('5', '1'), 'order' => array('-something')), $manager->getIncludeParams('foo'));
+
+        $params = $manager->getIncludeParams('foo');
+
+        $this->assertInstanceOf('League\Fractal\ParamBag', $params);
+
+        $this->assertEquals(array('5', '1'), $params['limit']);
+        $this->assertEquals(array('-something'), $params['order']);
+        $this->assertNull($params['totallymadeup']);
     }
 
     public function testRecursionLimiting()
@@ -103,6 +140,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('getAvailableIncludes')->andReturn(array('foo', 'bar'));
+        $transformer->shouldReceive('getDefaultIncludes')->andReturn(array());
         $transformer->shouldReceive('transform')->andReturn(array('foo' => 'bar'));
         $transformer->shouldReceive('processIncludedResources');
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,36 +18,48 @@ use League\Fractal\TransformerAbstract;
 class ArraySerializer extends SerializerAbstract
 {
     /**
-     * Serialize the top level data.
-     * 
+     * Serialize a collection
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
-     */
-    public function serializeData($resourceKey, array $data)
+     **/
+    public function collection($resourceKey, array $data)
+    {
+        return array($resourceKey ?: 'data' => $data);
+    }
+
+    /**
+     * Serialize an item
+     *
+     * @param  string  $resourceKey
+     * @param  array  $data
+     * @return array
+     **/
+    public function item($resourceKey, array $data)
     {
         return $data;
     }
 
     /**
      * Serialize the included data
-     * 
+     *
      * @param  string  $resourceKey
      * @param  array  $data
      * @return array
-     */
-    public function serializeIncludedData($resourceKey, array $data)
+     **/
+    public function includedData($resourceKey, array $data)
     {
         return $data;
     }
 
     /**
      * Serialize the meta
-     * 
+     *
      * @param  array  $meta
      * @return array
-     */
-    public function serializeMeta(array $meta)
+     **/
+    public function meta(array $meta)
     {
         if (empty($meta)) {
             return array();
@@ -59,10 +71,10 @@ class ArraySerializer extends SerializerAbstract
     /**
      * Serialize the paginator
      *
-     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
+     * @param  PaginatorInterface $paginator
      * @return array
      **/
-    public function serializePaginator(PaginatorInterface $paginator)
+    public function paginator(PaginatorInterface $paginator)
     {
         $currentPage = (int) $paginator->getCurrentPage();
         $lastPage = (int) $paginator->getLastPage();
@@ -90,11 +102,11 @@ class ArraySerializer extends SerializerAbstract
 
     /**
      * Serialize the cursor
-     * 
-     * @param  \League\Fractal\Pagination\CursorInterface  $cursor
+     *
+     * @param  CursorInterface  $cursor
      * @return array
      **/
-    public function serializeCursor(CursorInterface $cursor)
+    public function cursor(CursorInterface $cursor)
     {
         $cursor = array(
             'current' => $cursor->getCurrent(),

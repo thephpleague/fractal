@@ -1,9 +1,11 @@
-# Fractal [![Build Status](https://travis-ci.org/thephpleague/fractal.png?branch=master)](https://travis-ci.org/thephpleague/fractal)
+# Fractal
 
-[![License](http://img.shields.io/packagist/l/league/fractal.svg)](https://github.com/thephpleague/fractal/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/thephpleague/fractal/badge.png)](https://coveralls.io/r/thephpleague/fractal)
-[![Total Downloads](https://poser.pugx.org/league/fractal/downloads.png)](https://packagist.org/packages/league/fractal)
-[![Latest Stable Version](https://poser.pugx.org/league/fractal/v/stable.png)](https://packagist.org/packages/league/fractal)
+[![Latest Version](https://img.shields.io/github/release/thephpleague/fractal.svg?style=flat)](https://github.com/thephpleague/fractal/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/thephpleague/fractal/master.svg?style=flat)](https://travis-ci.org/thephpleague/fractal)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/fractal.svg?style=flat)](https://scrutinizer-ci.com/g/thephpleague/fractal)
+[![Total Downloads](https://img.shields.io/packagist/dt/league/fractal.svg?style=flat)](https://packagist.org/packages/league/fractal)
 
 Fractal provides a presentation and transformation layer for complex data output, the like found in
 RESTful APIs, and works really well with JSON. Think of this as a view layer for your JSON/YAML/etc.
@@ -14,7 +16,7 @@ or used by mobile applications then this will quickly lead to inconsistent outpu
 
 ## Goals
 
-* Create a "barrier" between source data and output, so schema changes do not affect users
+* Create a protective shield between source data and output, so schema changes do not affect users
 * Systematic type-casting of data, to avoid `foreach()`ing through and `(bool)`ing everything
 * Include (a.k.a embedding, nesting or side-loading) relationships for complex data structures
 * Work with standards like HAL and JSON-API but also allow custom serialization
@@ -36,7 +38,7 @@ Via Composer
 ``` json
 {
     "require": {
-        "league/fractal": "0.8.*"
+        "league/fractal": "0.9.*"
     }
 }
 ```
@@ -59,7 +61,6 @@ Contribute to this documentation in the [sculpin branch](https://github.com/thep
 
 ## Todo
 
-- Wrap optional params in a ParamBag object or similar
 - Add JSON-API (kinda done) and HAL serializers
 
 ## Testing

@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,10 +18,36 @@ namespace League\Fractal\Pagination;
  */
 interface PaginatorInterface
 {
+    /**
+     * @return string
+     */
     public function getCurrentPage();
+
+    /**
+     * @return string
+     */
     public function getLastPage();
+
+    /**
+     * @return integer
+     */
     public function getTotal();
+
+    /**
+     * @return integer
+     */
     public function getCount();
+
+    /**
+     * @return integer
+     */
     public function getPerPage();
+
+    /**
+     * @param integer $page
+     *
+     * @return string
+     */
     public function getUrl($page);
+    public function getPaginator();
 }

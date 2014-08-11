@@ -53,41 +53,24 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers League\Fractal\Resource\Collection::setPaginator
+     * @covers League\Fractal\Resource\Collection::getPaginator
      */
-    public function testSetPaginator()
+    public function testGetSetPaginator()
     {
         $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter');
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setPaginator($paginator));
-    }
-
-    /**
-     * @covers League\Fractal\Resource\Collection::getPaginator
-     */
-    public function testGetPaginator()
-    {
-        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter');
-        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
-        $collection->setPaginator($paginator);
-        $this->assertInstanceOf('Illuminate\Pagination\Paginator', $collection->getPaginator());
+        $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $collection->getPaginator());
     }
 
     /**
      * @covers League\Fractal\Resource\Collection::setMetaValue
+     * @covers League\Fractal\Resource\Collection::getMetaValue
      */
-    public function testSetMetaValue()
+    public function testGetSetMeta()
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setMetaValue('foo', 'bar'));
-    }
-
-    /**
-     * @covers League\Fractal\Resource\Collection::getMetaValue
-     */
-    public function testGetMeta()
-    {
-        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
-        $collection->setMetaValue('foo', 'bar');
         $this->assertEquals(array('foo' => 'bar'), $collection->getMeta());
         $this->assertEquals('bar', $collection->getMetaValue('foo'));
     }
@@ -110,7 +93,6 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $collection->setResourceKey('foo');
         $this->assertEquals('foo', $collection->getResourceKey());
     }
-
 
     public function tearDown()
     {

@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -50,7 +50,7 @@ class Cursor implements CursorInterface
     /**
      * Create a new Cursor instance.
      *
-     * @param mixed   $current
+     * @param integer   $current
      * @param mixed   $next
      * @param integer $count
      */
@@ -75,8 +75,8 @@ class Cursor implements CursorInterface
     /**
      * Set the current cursor value.
      *
-     * @param  mixed $current
-     * @return League\Fractal\Pagination\PaginatorInterface
+     * @param  integer $current
+     * @return Cursor
      */
     public function setCurrent($current)
     {
@@ -97,8 +97,8 @@ class Cursor implements CursorInterface
     /**
      * Set the prev cursor value.
      *
-     * @param  mixed $prev
-     * @return League\Fractal\Pagination\PaginatorInterface
+     * @param  integer $prev
+     * @return Cursor
      */
     public function setPrev($prev)
     {
@@ -119,8 +119,8 @@ class Cursor implements CursorInterface
     /**
      * Set the next cursor value.
      *
-     * @param  mixed $next
-     * @return League\Fractal\Pagination\PaginatorInterface
+     * @param  integer $next
+     * @return Cursor
      */
     public function setNext($next)
     {
@@ -142,7 +142,7 @@ class Cursor implements CursorInterface
      * Set the total items in the current cursor.
      *
      * @param integer $count
-     * @return League\Fractal\Pagination\PaginatorInterface
+     * @return Cursor
      */
     public function setCount($count)
     {

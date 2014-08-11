@@ -1,14 +1,55 @@
+## 0.9.1 (2014-07-06)
+
+Bug:
+
+  - Using ArraySerializer without a resource key would lead to an empty string as a key in JSON. [Issue #78]
+
+[Issue #78]: https://github.com/thephpleague/fractal/issues/78
+
+## 0.9.0 (2014-07-06)
+
+Features:
+
+  - Implemented serializer methods for item and collection separately [Issue #71]
+
+[Issue #71]: https://github.com/thephpleague/fractal/issues/71
+
+## 0.8.3 (2014-06-14)
+
+Features:
+
+  - Default Includes no longer need to be in Available Includes. [Issue #58]
+
+[Issue #58]: https://github.com/thephpleague/fractal/issues/58
+
+## 0.8.2 (2014-06-09)
+
+Bug:
+
+  - A `null` value for `Manager::parseIncludes()` could have weird results
+
+## 0.8.1 (2014-06-05)
+
+Features:
+
+  - Make `ResourceAbstract` implement `ResourceInterface`
+
+Bug:
+
+  - Fixed tests for Laravel 4.2 usage
+
+
 ## 0.8.0 (2014-05-27)
 
 Features:
 
-  - Added Serializers with ArraySerializer, DataArraySerializer (default) and a provisional JsonApiSerializer. See [Issue #47].
+  - Added Serializers with ArraySerializer, DataArraySerializer (default) and a provisional JsonApiSerializer. See [Issue #47]
   - Added `ResourceAbstract::setMeta('foo', mixed)` to allow custom meta data
   - Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can
   also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query
-  param: `/foo?include=bars:limit(5|1):order(-something)`.
+  param: `/foo?include=bars:limit(5|1):order(-something)`
   - Made all pagination (paginators and cursors) use meta output logic, so it sits with your custom meta data
-  - Moved `League\Fractal\Cursor\Cursor` and `League\Fractal\Cursor\CursorInterface` into `League\Fractal\Pagination`.
+  - Moved `League\Fractal\Cursor\Cursor` and `League\Fractal\Cursor\CursorInterface` into `League\Fractal\Pagination`
 
 [Issue #27]: https://github.com/thephpleague/fractal/issues/27
 [Issue #47]: https://github.com/thephpleague/fractal/pull/47

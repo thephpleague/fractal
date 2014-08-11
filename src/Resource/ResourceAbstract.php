@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the League\Fractal package.
+ *
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace League\Fractal\Resource;
 
 abstract class ResourceAbstract implements ResourceInterface
@@ -34,7 +43,7 @@ abstract class ResourceAbstract implements ResourceInterface
 
     /**
      * Create a new resource instance.
-     * 
+     *
      * @param  mixed  $data
      * @param  callable|string  $transformer
      * @param  string  $resourceKey
@@ -45,7 +54,7 @@ abstract class ResourceAbstract implements ResourceInterface
         $this->transformer = $transformer;
         $this->resourceKey = $resourceKey;
     }
-    
+
     /**
      * Get the data.
      *
@@ -113,7 +122,7 @@ abstract class ResourceAbstract implements ResourceInterface
 
     /**
      * Set the resource key.
-     * 
+     *
      * @param  string  $resourceKey
      * @return \League\Fractal\Resource\ResourceAbstract
      */

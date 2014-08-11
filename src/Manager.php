@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +11,18 @@
 
 namespace League\Fractal;
 
-use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
 
+/**
+ * Manager
+ *
+ * Not a wildly creative name, but the manager is what a Fractal user will interact
+ * with the most. The manager has various configurable options, and allows users
+ * to create the "root scope" easily.
+ */
 class Manager
 {
     /**
@@ -46,9 +54,7 @@ class Manager
     protected $recursionLimit = 10;
 
     /**
-     * Serializer
-     * 
-     * @var \League\Fractal\Serializer\SerializerAbstract
+     * @var SerializerAbstract
      **/
     protected $serializer;
 
@@ -66,12 +72,12 @@ class Manager
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @api
-     * @param \League\Fractal\Resource\ResourceAbstract $resource
+     * @param ResourceInterface $resource
      * @param string $scopeIdentifier
-     * @param string $parentScopeInstance
-     * @return \League\Fractal\Scope
+     * @param Scope $parentScopeInstance
+     * @return Scope
      **/
-    public function createData(ResourceAbstract $resource, $scopeIdentifier = null, $parentScopeInstance = null)
+    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 
@@ -85,7 +91,7 @@ class Manager
 
             // This will be the new children list of parents (parents parents, plus the parent)
             $scopeArray = $parentScopeInstance->getParentScopes();
-            $scopeArray[] = $parentScopeInstance->getCurrentScope();
+            $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
 
             $scopeInstance->setParentScopes($scopeArray);
         }
@@ -98,13 +104,19 @@ class Manager
      *
      * @api
      * @param string $include
-     * @return array|null
+     * @return \League\Fractal\ParamBag|null
      **/
     public function getIncludeParams($include)
     {
-        return isset($this->includeParams[$include]) ? $this->includeParams[$include] : null;
+        if (! isset($this->includeParams[$include])) {
+            return null;
+        }
+
+        $params = $this->includeParams[$include];
+
+        return new ParamBag($params);
     }
-    
+
     /**
      * Get Requested Includes
      *
@@ -115,12 +127,12 @@ class Manager
     {
         return $this->requestedIncludes;
     }
-    
+
     /**
      * Get Serializer
      *
      * @api
-     * @return $this
+     * @return SerializerAbstract
      **/
     public function getSerializer()
     {
@@ -147,8 +159,14 @@ class Manager
             $includes = explode(',', $includes);
         }
 
+        if (! is_array($includes)) {
+            throw new \InvalidArgumentException(
+                'The parseIncludes() method expects a string or an array. '.gettype($includes).' given'
+            );
+        }
+
         foreach ($includes as $include) {
-            
+
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
 
             // Trim it down to a cool level of recursion
@@ -174,13 +192,13 @@ class Manager
             $modifierArr = array();
 
             for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
-                
+
                 // [1] is the modifier
                 $modifierName = $allModifiersArr[1][$modifierIt];
 
                 // and [2] is delimited params
                 $modifierParamStr = $allModifiersArr[2][$modifierIt];
-                
+
                 // Make modifier array key with an array of params as the value
                 $modifierArr[$modifierName] = explode($this->paramDelimiter, $modifierParamStr);
             }
@@ -198,7 +216,7 @@ class Manager
      * Set Recursion Limit
      *
      * @api
-     * @param \League\Fractal\Serializer\SerializerInterface
+     * @param int $recursionLimit
      * @return $this
      **/
     public function setRecursionLimit($recursionLimit)
@@ -211,7 +229,7 @@ class Manager
      * Set Serializer
      *
      * @api
-     * @param \League\Fractal\Serializer\SerializerAbstract $serializer
+     * @param SerializerAbstract $serializer
      * @return $this
      **/
     public function setSerializer(SerializerAbstract $serializer)
@@ -264,6 +282,7 @@ class Manager
      * by trains or whatever the hell that movie was about.
      *
      * @internal
+     * @param string $includeName
      **/
     protected function trimToAcceptableRecursionLevel($includeName)
     {

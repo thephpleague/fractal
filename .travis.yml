@@ -9,13 +9,11 @@ php:
 
 before_script:
   - composer self-update
-  - composer require satooshi/php-coveralls:dev-master --no-update --dev
   - composer install
 
 script:
-  - mkdir -p build/logs
-  - phpunit --coverage-text
-  - ./vendor/bin/phpcs src --standard=psr2
+  - phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
-  - php vendor/bin/coveralls
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,10 +19,10 @@ use League\Fractal\Scope;
 /**
  * Transformer Abstract
  *
- * All Transformer classes should extend this to utilize the convenience methods 
- * collectionResource(), itemResource() and paginatorResource(), and make 
+ * All Transformer classes should extend this to utilize the convenience methods
+ * collectionResource(), itemResource() and paginatorResource(), and make
  * the self::$availableIncludes property available. Extends it and add a `transform()`
- * method to transform any data into a basic array, including embedded content.
+ * method to transform any data into a basic array, including included content.
  */
 abstract class TransformerAbstract
 {
@@ -38,12 +38,12 @@ abstract class TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes;
-    
+    protected $defaultIncludes = array();
+
     /**
      * The transformer should know about the current scope, so we can fetch relevant params
      *
-     * @var \League\Fractal\Scope
+     * @var Scope
      */
     protected $currentScope;
 
@@ -76,66 +76,79 @@ abstract class TransformerAbstract
     {
         return $this->currentScope;
     }
+    
+    /**
+     * @internal
+     * @param Scope $scope
+     **/
+    private function figureOutWhichIncludes(Scope $scope)
+    {
+        $includes = $this->defaultIncludes;
+        foreach ($this->availableIncludes as $include) {
+            if ($scope->isRequested($include)) {
+                $includes[] = $include;
+            }
+        }
+        return $includes;
+    }
 
     /**
-     * This method is fired to loop through available embeds,
-     * see if any of them are requested and permitted for this
-     * scope.
+     * This method is fired to loop through available includes, see if any of
+     * them are requested and permitted for this scope.
      *
      * @internal
      * @param Scope $scope
-     * @param $data
+     * @param mixed $data
      * @return array
      **/
     public function processIncludedResources(Scope $scope, $data)
     {
-        $embeddedData = array();
-        $embeddedDataCount = 0;
+        $includedData = array();
 
-        // Nothing to do, bail
-        if (is_array($this->defaultIncludes)) {
-
-            foreach ($this->defaultIncludes as $defaultInclude) {
-
-                if (! ($resource = $this->callIncludeMethod($scope, $defaultInclude, $data))) {
-                    continue;
-                }
-
-                $childScope = $scope->embedChildScope($defaultInclude, $resource);
-
-                $embeddedData[$defaultInclude] = $childScope->toArray();
-                ++$embeddedDataCount;
-            }
+        $includes = $this->figureOutWhichIncludes($scope);
+        
+        foreach ($includes as $include) {
+            $includedData = $this->includeResourceIfAvailable(
+                $scope,
+                $data,
+                $includedData,
+                $include
+            );
         }
 
-        // Nothing more to do? Bail
-        if (is_array($this->availableIncludes)) {
+        return $includedData === array() ? false : $includedData;
+    }
 
-            foreach ($this->availableIncludes as $potentialInclude) {
-                // Check if an available embed is requested
-                if (! $scope->isRequested($potentialInclude)) {
-                    continue;
-                }
+    /**
+     * Include a resource only if it is available on the method
+     *
+     * @internal
+     * @param Scope $scope
+     * @param mixed $data
+     * @param array $includedData
+     * @param string $include
+     * @return array
+     */
+    private function includeResourceIfAvailable(
+        Scope $scope,
+        $data,
+        $includedData,
+        $include
+    ) {
+        if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
+            $childScope = $scope->embedChildScope($include, $resource);
 
-                if (! ($resource = $this->callIncludeMethod($scope, $potentialInclude, $data))) {
-                    continue;
-                }
-
-                $childScope = $scope->embedChildScope($potentialInclude, $resource);
-
-                $embeddedData[$potentialInclude] = $childScope->toArray();
-                ++$embeddedDataCount;
-            }
+            $includedData[$include] = $childScope->toArray();
         }
 
-        return $embeddedDataCount === 0 ? false : $embeddedData;
+        return $includedData;
     }
 
     /**
      * Call Include Method
      *
      * @internal
-     * @param \League\Fractal\Scope $scope
+     * @param Scope $scope
      * @param string $includeName
      * @param mixed $data
      * @throws \Exception
@@ -172,7 +185,7 @@ abstract class TransformerAbstract
      * Setter for availableIncludes
      *
      * @api
-     * @param $availableIncludes
+     * @param array $availableIncludes
      * @return $this
      */
     public function setAvailableIncludes($availableIncludes)
@@ -185,7 +198,7 @@ abstract class TransformerAbstract
      * Setter for defaultIncludes
      *
      * @api
-     * @param $defaultIncludes
+     * @param array $defaultIncludes
      * @return $this
      **/
     public function setDefaultIncludes($defaultIncludes)
@@ -198,7 +211,7 @@ abstract class TransformerAbstract
      * Setter for currentScope
      *
      * @api
-     * @param $currentScope
+     * @param Scope $currentScope
      * @return $this
      **/
     public function setCurrentScope($currentScope)
@@ -211,10 +224,10 @@ abstract class TransformerAbstract
      * Create a new item resource object
      *
      * @api
-     * @param $data
-     * @param $transformer
-     * @param $resourceKey
-     * @return \League\Fractal\Resource\Item
+     * @param mixed $data
+     * @param TransformerAbstract|callable $transformer
+     * @param string $resourceKey
+     * @return Item
      **/
     protected function item($data, $transformer, $resourceKey = null)
     {
@@ -225,10 +238,10 @@ abstract class TransformerAbstract
      * Create a new collection resource object
      *
      * @api
-     * @param $data
-     * @param $transformer
-     * @param $resourceKey
-     * @return \League\Fractal\Resource\Collection
+     * @param mixed $data
+     * @param TransformerAbstract|callable $transformer
+     * @param string $resourceKey
+     * @return Collection
      */
     protected function collection($data, $transformer, $resourceKey = null)
     {

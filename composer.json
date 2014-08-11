@@ -12,8 +12,8 @@
     "authors": [
         {
             "name": "Phil Sturgeon",
-            "email": "email@philsturgeon.co.uk",
-            "homepage": "http://philsturgeon.co.uk/",
+            "email": "me@philsturgeon.uk",
+            "homepage": "http://philsturgeon.uk/",
             "role": "Developer"
         }
     ],
@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.8-dev"
+            "dev-master": "0.9-dev"
         }
     }
 }

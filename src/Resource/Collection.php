@@ -3,7 +3,7 @@
 /*
  * This file is part of the League\Fractal package.
  *
- * (c) Phil Sturgeon <email@philsturgeon.co.uk>
+ * (c) Phil Sturgeon <me@philsturgeon.uk>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,14 +33,14 @@ class Collection extends ResourceAbstract
     /**
      * A collection of data
      *
-     * @var League\Fractal\Pagination\PaginatorInterface
+     * @var PaginatorInterface
      **/
     protected $paginator;
 
     /**
      * Cursor implementation.
      *
-     * @var League\Fractal\Pagination\CursorInterface
+     * @var CursorInterface
      **/
     protected $cursor;
 
@@ -64,7 +64,7 @@ class Collection extends ResourceAbstract
     /**
      * Getter for paginator
      *
-     * @return \League\Fractal\Pagination\PaginatorInterface
+     * @return PaginatorInterface
      **/
     public function getPaginator()
     {
@@ -73,7 +73,7 @@ class Collection extends ResourceAbstract
 
     /**
      * Determine if the resource has a paginator implementation
-     * 
+     *
      * @return bool
      **/
     public function hasPaginator()
@@ -84,7 +84,7 @@ class Collection extends ResourceAbstract
     /**
      * Set the cursor implementation
      *
-     * @return \League\Fractal\Pagination\CursorInterface
+     * @return CursorInterface
      **/
     public function getCursor()
     {
@@ -93,7 +93,7 @@ class Collection extends ResourceAbstract
 
     /**
      * Determine if the resource has a cursor implementation
-     * 
+     *
      * @return bool
      **/
     public function hasCursor()
@@ -114,7 +114,7 @@ class Collection extends ResourceAbstract
     /**
      * Setter for paginator
      *
-     * @param \League\Fractal\Pagination\PaginatorInterface $paginator
+     * @param PaginatorInterface $paginator
      *
      * @return $this
      **/
@@ -127,7 +127,7 @@ class Collection extends ResourceAbstract
     /**
      * Set the cursor implementation.
      *
-     * @param \League\Fractal\Pagination\CursorInterface $cursor
+     * @param CursorInterface $cursor
      * @return $this
      **/
     public function setCursor(CursorInterface $cursor)

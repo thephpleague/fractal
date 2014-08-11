@@ -1,10 +1,10 @@
 <?php
 
-use League\Fractal\Serializer\DataArraySerializer;
+use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Manager;
 use League\Fractal\Scope;
+use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
@@ -40,7 +40,6 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->assertEquals($expected, $scope->toArray());
-
 
         // Same again with metadata
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
@@ -159,7 +158,6 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
-
 
     public function tearDown()
     {
