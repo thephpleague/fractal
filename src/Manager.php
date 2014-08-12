@@ -81,11 +81,6 @@ class Manager
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
 
-        // If we want to display available includes
-        if ($this->displayAvailableIncludes) {
-            $scopeInstance->displayAvailableIncludes(true);
-        }
-
         // Update scope history
         if ($parentScopeInstance !== null) {
 
@@ -239,13 +234,23 @@ class Manager
     }
 
     /**
-     * Display available includes
+     * Set display available includes
      *
      * @param bool $display
      */
-    public function displayAvailableIncludes($display = true)
+    public function setDisplayAvailableIncludes($display)
     {
         $this->displayAvailableIncludes = $display;
+    }
+
+    /**
+     * Return display available value
+     *
+     * @return bool
+     */
+    public function getDisplayAvailableIncludes()
+    {
+        return $this->displayAvailableIncludes;
     }
 
     /**
