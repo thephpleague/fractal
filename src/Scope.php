@@ -52,11 +52,6 @@ class Scope
     protected $parentScopes = array();
 
     /**
-     * @var bool
-     */
-    protected $displayAvailableIncludes = false;
-
-    /**
      * @param Manager $manager
      * @param ResourceInterface $resource
      * @param string $scopeIdentifer
@@ -183,16 +178,6 @@ class Scope
     }
 
     /**
-     * Display available includes
-     *
-     * @param bool $display
-     */
-    public function displayAvailableIncludes($display = true)
-    {
-        $this->displayAvailableIncludes = $display;
-    }
-
-    /**
      * Convert the current data for this scope to an array
      *
      * @api
@@ -229,11 +214,13 @@ class Scope
             }
         }
 
-        if ($this->displayAvailableIncludes === true) {
+        if ($this->manager->getDisplayAvailableIncludes() === true) {
 
-            $includes =  $serializer->serializeDisplayAvailableIncludes($this->resource->getTransformer());
+            //Get available includes from the transformer
+            $includes = $this->resource->getTransformer()->getAvailableIncludes();
 
-            $this->resource->setMetaValue(key($includes), current($includes));
+            //Set available includes into meta
+            $this->resource->setMetaValue('availableIncludes', $includes);
         }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
