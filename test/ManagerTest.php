@@ -136,7 +136,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     public function testCreateDataAndDisplayAvailableIncludes()
     {
         $manager = new Manager();
-        $manager->displayAvailableIncludes(true);
+        $manager->setDisplayAvailableIncludes(true);
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('getAvailableIncludes')->andReturn(array('foo', 'bar'));
