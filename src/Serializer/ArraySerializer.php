@@ -117,15 +117,4 @@ class ArraySerializer extends SerializerAbstract
 
         return array('cursor' => $cursor);
     }
-
-    /**
-     * Serialize available includes
-     *
-     * @param TransformerAbstract $transformer
-     * @return array
-     */
-    public function serializeDisplayAvailableIncludes(TransformerAbstract $transformer)
-    {
-        return array('availableIncludes' => $transformer->getAvailableIncludes());
-    }
 }
