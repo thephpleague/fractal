@@ -216,8 +216,9 @@ class Scope
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
+        $inlineMeta = $serializer->meta($this->resource->getMeta(true), true);
 
-        return array_merge($data, $meta);
+        return array_merge($data, $meta, $inlineMeta);
     }
 
     /**
