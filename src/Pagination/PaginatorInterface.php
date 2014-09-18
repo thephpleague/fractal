@@ -49,5 +49,4 @@ interface PaginatorInterface
      * @return string
      */
     public function getUrl($page);
-    public function getPaginator();
 }
