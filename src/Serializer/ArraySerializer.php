@@ -89,11 +89,13 @@ class ArraySerializer extends SerializerAbstract
         $pagination['links'] = array();
 
         if ($currentPage > 1) {
+            $pagination['links']['first'] = $paginator->getUrl(1);
             $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
         }
 
         if ($currentPage < $lastPage) {
             $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
+            $pagination['links']['last'] = $paginator->getUrl($lastPage);
         }
 
         return array('pagination' => $pagination);
