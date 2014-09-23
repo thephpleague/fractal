@@ -1,0 +1,10 @@
+Getting Started:
+    Introduction: '/'
+    Simple Example: '/simple-example/'
+    Installation: '/installation/'
+    Glossary: '/glossary/'
+Concepts:
+    Resources: '/resources/'
+    Serializers: '/serializers/'
+    Transformers: '/transformers/'
+    Pagination: '/pagination/'

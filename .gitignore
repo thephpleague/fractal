@@ -1,6 +1,1 @@
-.idea
-.sculpin
-build
-output_dev
-output_prod
-vendor
+_site

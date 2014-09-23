@@ -1,5 +1,0 @@
-sculpin:
-    exclude:
-        - sass/
-sculpin_theme:
-    theme: thephpleague/thephpleague.github.com

@@ -1,5 +1,6 @@
 ---
-layout: layout
+layout: default
+permalink: installation/
 title: Installation
 ---
 
@@ -14,7 +15,7 @@ You need **PHP >= 5.3.0** to use `League\Fractal` but the latest stable version 
 
 Fractal is available on [Packagist](https://packagist.org/packages/league/fractal) and can be installed using [Composer](https://getcomposer.org/):
 
-~~~.language-javascript
+~~~ javascript
 {
     "require": {
         "league/fractal": "0.8.*"
@@ -24,7 +25,7 @@ Fractal is available on [Packagist](https://packagist.org/packages/league/fracta
 
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
 
-~~~.language-php
+~~~ php
 <?php
 
 // Include the Composer autoloader
@@ -35,7 +36,7 @@ require 'vendor/autoload.php';
 
 You can also use Fractal without using Composer by registing an autoloader function:
 
-~~~.language-php
+~~~ php
 spl_autoload_register(function ($class) {
     $prefix = 'League\\Fractal\\';
     $base_dir = __DIR__ . '/src/';

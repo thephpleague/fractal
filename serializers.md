@@ -1,5 +1,6 @@
 ---
-layout: layout
+layout: default
+permalink: serializers/
 title: Serializers
 ---
 
@@ -17,7 +18,7 @@ serializers are how data is namespaced.
 
 A very basic usage of Fractal will look like this, as has been seen in other sections:
 
-~~~.language-php
+~~~ php
 use Acme\Model\Book;
 use Acme\Transformer\BookTransformer;
 use League\Fractal\Manager;
@@ -30,7 +31,7 @@ $manager->setSerializer(new DataArraySerializer());
 // Some sort of ORM call
 $book = Book::find(1);
 
-// Make a resource out of the data and 
+// Make a resource out of the data and
 $resource = new Item($book, new BookTransformer(), 'book');
 
 // Run all transformers
@@ -46,14 +47,14 @@ $manager->createData($resource)->toArray();
 // ];
 ~~~
 
-What is new here is the `$manager->setSerializer(new DataArraySerializer());` part. 
+What is new here is the `$manager->setSerializer(new DataArraySerializer());` part.
 `DataArraySerializer` is the name of the default serializer in Fractal, but there are more.
 
 ## DataArraySerializer
 
 This serializer is not to everyones tastes, because it adds a `'data'` namespace to the output:
 
-~~~.language-php
+~~~ php
 // Item
 [
     'data' => [
@@ -71,10 +72,10 @@ This serializer is not to everyones tastes, because it adds a `'data'` namespace
 ];
 ~~~
 
-This is handy because it allows space for meta data (like pagination, or totals) in both Items and 
-Collections. 
+This is handy because it allows space for meta data (like pagination, or totals) in both Items and
+Collections.
 
-~~~.language-php
+~~~ php
 // Item with Meta
 [
     'data' => [
@@ -98,10 +99,10 @@ Collections.
 ];
 ~~~
 
-This fits in nicely for meta and included resources, using the `'data'` namespace. This means meta data 
+This fits in nicely for meta and included resources, using the `'data'` namespace. This means meta data
 can be added for those included resources too.
 
-~~~.language-php
+~~~ php
 // Item with included resource using meta
 [
     'data' => [
@@ -124,12 +125,12 @@ can be added for those included resources too.
 Sometimes people want to remove that `'data'` namespace, and that can be done using the `ArraySerializer`,
 which is mostly the same other than that namespace.
 
-~~~.language-php
+~~~ php
 use League\Fractal\Serializer\ArraySerializer;
 $manager->setSerializer(new ArraySerializer());
 ~~~
 
-~~~.language-php
+~~~ php
 // Item
 [
     'foo' => 'bar'
@@ -145,7 +146,7 @@ $manager->setSerializer(new ArraySerializer());
 
 Meta data is is fine for items, but gets a little confusing for collections:
 
-~~~.language-php
+~~~ php
 // Item with Meta
 [
     'foo' => 'bar'
@@ -177,15 +178,15 @@ This is why ArraySerialzier is not recommended, but if you are not using meta da
 
 ## JsonApiSerializer
 
-This is a work in progress representation of the [JSON-API] standard. It is included as it is partially working, but has some work left. 
+This is a work in progress representation of the [JSON-API] standard. It is included as it is partially working, but has some work left.
 
 There are few differences with the `JsonApiSerializer`. The first is that it uses "side-loading" to include
 other related resources, which is different from the "embedding" approach that is used to include resources
 by the other two serializers.
 
-The second is that it requires a _Resource Key_, which the other two do not. 
+The second is that it requires a _Resource Key_, which the other two do not.
 
-~~~.language-php
+~~~ php
 use League\Fractal\Serializer\JsonApiSerializer;
 $manager->setSerializer(new JsonApiSerializer());
 
@@ -196,7 +197,7 @@ $resource = new Collection($books, new GenericBookTransformer(), 'books');
 
 That resource key is used to give it a named namespace:
 
-~~~.language-php
+~~~ php
 // Item
 [
     'book' => [
@@ -216,7 +217,7 @@ That resource key is used to give it a named namespace:
 
 Just like `DataArraySerializer`, this works nicely for meta data:
 
-~~~.language-php
+~~~ php
 // Item with Meta
 [
     'book' => [
@@ -242,7 +243,7 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 
 Adding a resource to a item response would look like this:
 
-~~~.language-php
+~~~ php
 // Item with Meta
 [
     'book' => [
@@ -260,9 +261,9 @@ Adding a resource to a item response would look like this:
 
 ## Custom Serializers
 
-You can make your own Serializers by implementing [SerializerAbstract]. 
+You can make your own Serializers by implementing [SerializerAbstract].
 
-~~~.language-php
+~~~ php
 use Acme\Serializer\CustomSerializer;
 $manager->setSerializer(new CustomSerializer());
 ~~~

@@ -1,14 +1,15 @@
 ---
-layout: layout
+layout: default
+permalink: transformers/
 title: Transformers
 ---
 
 # Transformers
 
-In the [Resources](/resources/) section the examples show off callbacks for 
+In the [Resources](/resources/) section the examples show off callbacks for
 transformers, but these are of limited use:
 
-~~~.language-php
+~~~ php
 use Acme\Model\Book;
 use League\Fractal;
 
@@ -34,20 +35,20 @@ $resource = new Fractal\Resource\Collection($books, function(Book $book) {
 ~~~
 
 These can be handy in some situations, but most data will need to be transformed multiple
-times and in multiple locations, so creating classes to do this work can save code 
+times and in multiple locations, so creating classes to do this work can save code
 duplication.
 
 ## Classes for Transformers
 
-To reuse transformers (recommended) classes can be defined, instantiated and 
+To reuse transformers (recommended) classes can be defined, instantiated and
 passed in place of the callback.
 
-These classes must extend `League\Fractal\TransformerAbstract` and contain at the very 
-least a method with the name `transform()`. 
+These classes must extend `League\Fractal\TransformerAbstract` and contain at the very
+least a method with the name `transform()`.
 
-The method declaraton can take mixed input, just like the callbacks: 
+The method declaraton can take mixed input, just like the callbacks:
 
-~~~.language-php
+~~~ php
 namespace Acme\Transformer;
 
 use Acme\Model\Book;
@@ -72,10 +73,10 @@ class BookTransformer extends Fractal\TransformerAbstract
 }
 ~~~
 
-Once the Transformer class is defined, it can be passed as an instance in the 
+Once the Transformer class is defined, it can be passed as an instance in the
 resource constructor.
 
-~~~.language-php
+~~~ php
 use Acme\Transformer\BookTransformer;
 use League\Fractal;
 
@@ -95,7 +96,7 @@ they need to, so flexibility is also important.
 Sticking with the book example, the `BookTransformer`, we might want to normalize our database and take
 the two `author_*` fields out and put them in their own table. This include can be optional to reduce the size of the JSON response and is defined like so:
 
-~~~.language-php
+~~~ php
 <?php namespace App\Transformer;
 
 use Acme\Model\Book;
@@ -146,10 +147,10 @@ class BookTransformer extends TransformerAbstract
 }
 ~~~
 
-These includes will be available but can never be requested unless the `Manager::parseIncludes()` method is 
+These includes will be available but can never be requested unless the `Manager::parseIncludes()` method is
 called:
 
-~~~.language-php
+~~~ php
 use League\Fractal;
 
 $fractal = new Fractal\Manager();
@@ -161,22 +162,22 @@ if (isset($_GET['include'])) {
 ~~~
 
 With this set, include can do some great stuff. If a client application were to call the URL `/books?include=author` then they would see author data in the
-response. 
+response.
 
-These includes can be nested with dot notation too, to include resources within other resources. 
+These includes can be nested with dot notation too, to include resources within other resources.
 
 **E.g:** `/books?include=author,publishers.somethingelse`
 
 Note: `publishers` will also be included with `somethingelse` nested under it. This is shorthand for `publishers,publishers.somethingelse`.
 
-This can be done to a limit of 10 levels. To increase or decrease the level of embedding here, use the `Manager::setRecursionLimit(5)` 
+This can be done to a limit of 10 levels. To increase or decrease the level of embedding here, use the `Manager::setRecursionLimit(5)`
 method with any number you like, to strip it to that many levels. Maybe 4 or 5 would be a smart number, depending on the API.
 
 ### Default Includes
 
 Just like with optional includes, default includes are defined in a property on the transformer:
 
-~~~.language-php
+~~~ php
 <?php namespace App\Transformer;
 
 use Acme\Model\Book;
@@ -214,9 +215,9 @@ This will look identical in output as if the user requested `?include=author`.
 ### Eager-Loading vrs Lazy-Loading
 
 This above examples happen to be using the lazy-loading functionality of an ORM for `$book->author`. Lazy-Loading
-can be notoriously slow, as each time one item is transformered, it would have to go off and find other data leading to a 
+can be notoriously slow, as each time one item is transformered, it would have to go off and find other data leading to a
 huge number of SQL requests.
 
-Eager-Loading could easily be used by inspecting the value of `$_GET['include']`, and using that to produce a 
+Eager-Loading could easily be used by inspecting the value of `$_GET['include']`, and using that to produce a
 list of relationships to eager-load with an ORM.
 

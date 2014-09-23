@@ -1,16 +1,17 @@
 ---
-layout: layout
+layout: default
+permalink: simple-example/
 title: Simple example
 ---
 
 Simple Example
 ==============
 
-For the sake of simplicity, this example has been put together as though it was 
-one file. In reality you would spread the manager initiation, data collection 
+For the sake of simplicity, this example has been put together as though it was
+one file. In reality you would spread the manager initiation, data collection
 and JSON conversion into seperate parts of your application.
 
-~~~.language-php
+~~~ php
 <?php
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -68,6 +69,6 @@ echo $fractal->createData($resource)->toJson();
 // Outputs: {"data":[{"id":1,"title":"Hogfather","year":1998,"author":{"name":"Philip K Dick","email":"philip@example.org"}},{"id":2,"title":"Game Of Kill Everyone","year":2014,"author":{"name":"George R. R. Satan","email":"george@example.org"}}]}
 ~~~
 
-It is worth noting that callbacks are a fairly shoddy replacement for using real 
-[Transformers](/transformers). They allow you to reuse transformers and keep your 
+It is worth noting that callbacks are a fairly shoddy replacement for using real
+[Transformers](/transformers). They allow you to reuse transformers and keep your
 controllers lightweight.

@@ -1,11 +1,12 @@
 ---
-layout: layout
+layout: default
+permalink: resources/
 title: Resources
 ---
 
 # Resources
 
-Resources are objects that represent data, and have knowledge of a "Transformer", which is 
+Resources are objects that represent data, and have knowledge of a "Transformer", which is
 an object or callback that will know how to output the data.
 
 Two types of resource exist:
@@ -14,14 +15,14 @@ Two types of resource exist:
 * **League\Fractal\Resource\Collection** - A collection of resources
 
 The `Item` and `Collection` constructors will take any kind of data you wish to send it
-as the first argument, and then a "transformer" as the second argument. 
+as the first argument, and then a "transformer" as the second argument.
 
-These examples use callback transformers instead of creating classes, purely for demonstrative 
+These examples use callback transformers instead of creating classes, purely for demonstrative
 purposes.
 
 ### Item Example
 
-~~~.language-php
+~~~ php
 use Acme\Model\Book;
 use League\Fractal;
 
@@ -44,7 +45,7 @@ $resource = new Fractal\Resource\Item($book, function(Book $book) {
 
 ### Collection Example
 
-~~~.language-php
+~~~ php
 use Acme\Model\Book;
 use League\Fractal;
 
@@ -65,7 +66,7 @@ $resource = new Fractal\Resource\Collection($books, function(Book $book) {
 });
 ~~~
 
-In this example `$books` is an array of `Acme\Model\Book` instances, or a collection class 
+In this example `$books` is an array of `Acme\Model\Book` instances, or a collection class
 that implemented [ArrayIterator].
 
 [ArrayIterator]: http://php.net/ArrayIterator
