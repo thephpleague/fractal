@@ -21,7 +21,9 @@ class DataArraySerializer extends ArraySerializer
      **/
     public function collection($resourceKey, array $data)
     {
-        return array('data' => $data);
+        $resourceKey = $resourceKey ?: 'data';
+        
+        return array(resourceKey => $data);
     }
 
     /**
@@ -32,6 +34,8 @@ class DataArraySerializer extends ArraySerializer
      **/
     public function item($resourceKey, array $data)
     {
-        return array('data' => $data);
+        $resourceKey = $resourceKey ?: 'data';
+        
+        return array($resourceKey => $data);
     }
 }
