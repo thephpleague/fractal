@@ -18,7 +18,7 @@ Fractal is available on [Packagist](https://packagist.org/packages/league/fracta
 ~~~ javascript
 {
     "require": {
-        "league/fractal": "0.8.*"
+        "league/fractal": "0.9.*"
     }
 }
 ~~~
