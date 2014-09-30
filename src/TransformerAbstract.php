@@ -76,7 +76,7 @@ abstract class TransformerAbstract
     {
         return $this->currentScope;
     }
-    
+
     /**
      * @internal
      * @param Scope $scope
@@ -106,7 +106,7 @@ abstract class TransformerAbstract
         $includedData = array();
 
         $includes = $this->figureOutWhichIncludes($scope);
-        
+
         foreach ($includes as $include) {
             $includedData = $this->includeResourceIfAvailable(
                 $scope,
