@@ -55,9 +55,9 @@ The following versions of PHP are supported by this version.
 
 ## Documentation
 
-Fractal has [full documentation](http://fractal.thephpleague.com), powered by [Sculpin](https://sculpin.io).
+Fractal has [full documentation](http://fractal.thephpleague.com), powered by [Jekyll](http://jekyllrb.com/).
 
-Contribute to this documentation in the [sculpin branch](https://github.com/thephpleague/fractal/tree/sculpin/source).
+Contribute to this documentation in the [gh-pages branch](https://github.com/thephpleague/fractal/tree/gh-pages/source).
 
 ## Todo
 
