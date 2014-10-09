@@ -38,7 +38,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
 
     /**
      * Get current page
-     * @return string
+     * @return integer
      */
     public function getCurrentPage()
     {
@@ -47,7 +47,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
 
     /**
      * Get last page
-     * @return string
+     * @return integer
      */
     public function getLastPage()
     {

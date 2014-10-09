@@ -19,12 +19,12 @@ namespace League\Fractal\Pagination;
 interface PaginatorInterface
 {
     /**
-     * @return string
+     * @return integer
      */
     public function getCurrentPage();
 
     /**
-     * @return string
+     * @return integer
      */
     public function getLastPage();
 
