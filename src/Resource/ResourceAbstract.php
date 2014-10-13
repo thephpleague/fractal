@@ -48,10 +48,22 @@ abstract class ResourceAbstract implements ResourceInterface
      * @param  callable|string  $transformer
      * @param  string  $resourceKey
      */
-    public function __construct($data, $transformer, $resourceKey = null)
+    public function __construct($data, $transformer = null, $resourceKey = null)
     {
         $this->data = $data;
+
+        if (! $transformer) {
+            if (is_object($data) && is_callable(array($data, 'getTransformer'))) {
+                $transformer = $data->getTransformer();
+            } else {
+                throw new \InvalidArgumentException('A valid resource transformer is required.');
+            }
+        }
         $this->transformer = $transformer;
+
+        if (is_null($resourceKey) && is_object($data) && is_callable(array($data, 'getResourceKey'))) {
+            $resourceKey = $data->getResourceKey();
+        }
         $this->resourceKey = $resourceKey;
     }
 
