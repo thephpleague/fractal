@@ -2,12 +2,12 @@
 
 Features:
 
-  - Added `ParamBag` to replace the array passsed to includes. It implements array access so keep using it as you were, or play with the new methods.
+  - Added `ParamBag` to replace the array passed to includes. It implements array access so keep using it as you were, or play with the new methods.
 
 Bugs:
 
-  - Removed PaginatorInterface::getPaginator() as it was used anymore. [Issue #101]
-  - Manager::createData() argument 1 now hints against `ResourceInterface` not `ResourceAbstract`.
+  - Removed `PaginatorInterface::getPaginator()` as it was used anymore. [Issue #101]
+  - `Manager::createData()` argument 1 now hints against `ResourceInterface` not `ResourceAbstract`.
 
 [Issue #101]: https://github.com/thephpleague/fractal/issues/101
 
