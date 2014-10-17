@@ -1,6 +1,19 @@
+## 0.10.0 (2014-10-17)
+
+Features:
+
+  - Added `ParamBag` to replace the array passsed to includes. It implements array access so keep using it as you were, or play with the new methods.
+
+Bugs:
+
+  - Removed PaginatorInterface::getPaginator() as it was used anymore. [Issue #101]
+  - Manager::createData() argument 1 now hints against `ResourceInterface` not `ResourceAbstract`.
+
+[Issue #101]: https://github.com/thephpleague/fractal/issues/101
+
 ## 0.9.1 (2014-07-06)
 
-Bug:
+Bugs:
 
   - Using ArraySerializer without a resource key would lead to an empty string as a key in JSON. [Issue #78]
 
@@ -24,7 +37,7 @@ Features:
 
 ## 0.8.2 (2014-06-09)
 
-Bug:
+Bugs:
 
   - A `null` value for `Manager::parseIncludes()` could have weird results
 
@@ -34,7 +47,7 @@ Features:
 
   - Make `ResourceAbstract` implement `ResourceInterface`
 
-Bug:
+Bugs:
 
   - Fixed tests for Laravel 4.2 usage
 
