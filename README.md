@@ -35,12 +35,8 @@ please send a patch via pull request.
 
 Via Composer
 
-``` json
-{
-    "require": {
-        "league/fractal": "0.9.*"
-    }
-}
+``` bash
+$ composer require league/fractal
 ```
 
 ## Requirements
