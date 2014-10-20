@@ -10,6 +10,7 @@ In the [Resources](/resources/) section the examples show off callbacks for
 transformers, but these are of limited use:
 
 ~~~ php
+<?php
 use Acme\Model\Book;
 use League\Fractal;
 
@@ -49,6 +50,7 @@ least a method with the name `transform()`.
 The method declaraton can take mixed input, just like the callbacks:
 
 ~~~ php
+<?php
 namespace Acme\Transformer;
 
 use Acme\Model\Book;
@@ -77,6 +79,7 @@ Once the Transformer class is defined, it can be passed as an instance in the
 resource constructor.
 
 ~~~ php
+<?php
 use Acme\Transformer\BookTransformer;
 use League\Fractal;
 
@@ -151,6 +154,7 @@ These includes will be available but can never be requested unless the `Manager:
 called:
 
 ~~~ php
+<?php
 use League\Fractal;
 
 $fractal = new Fractal\Manager();
@@ -240,7 +244,7 @@ use League\Fractal\ParamBag;
         list($limit, $offset) = $params->get('limit');
         list($orderCol, $orderBy) = $params->get('order');
 
-        $author = $book->author
+        $author = $book->comments
             ->take($limit)
             ->skip($offset)
             ->orderBy($orderCol, $orderBy)
@@ -248,6 +252,7 @@ use League\Fractal\ParamBag;
 
         return $this->item($author, new AuthorTransformer);
     }
+~~~
 
 Parameters have a name, then multiple values which are always returned as an array, even if there is only one.
 They are accessed by the `get()` method, but array access is also an option, so `$params->get('limit')` and 
