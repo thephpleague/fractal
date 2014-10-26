@@ -4,7 +4,7 @@ use League\Fractal\TransformerAbstract;
 
 class GenericAuthorTransformer extends TransformerAbstract
 {
-    public function transform(array $author)
+    public function transform($author)
     {
         return $author;
     }

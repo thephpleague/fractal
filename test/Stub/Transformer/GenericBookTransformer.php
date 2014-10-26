@@ -8,7 +8,7 @@ class GenericBookTransformer extends TransformerAbstract
         'author'
     );
 
-    public function transform(array $book)
+    public function transform($book)
     {
         return array(
             'title' => $book['title'],

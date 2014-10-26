@@ -77,6 +77,8 @@ abstract class TransformerAbstract
         return $this->currentScope;
     }
 
+    public abstract function transform($data);
+
     /**
      * @internal
      * @param Scope $scope
