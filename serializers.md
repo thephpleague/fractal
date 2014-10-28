@@ -138,7 +138,7 @@ $manager->setSerializer(new ArraySerializer());
 
 // Collection
 [
-    [
+    'data' => [
         'foo' => 'bar'
     ]
 ];
