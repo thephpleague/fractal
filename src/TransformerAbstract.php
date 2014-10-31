@@ -21,8 +21,8 @@ use League\Fractal\Scope;
  *
  * All Transformer classes should extend this to utilize the convenience methods
  * collectionResource(), itemResource() and paginatorResource(), and make
- * the self::$availableIncludes property available. Extends it and add a `transform()`
- * method to transform any data into a basic array, including included content.
+ * the self::$availableIncludes property available. Extend it and add a `transform()`
+ * method to transform any default or included data into a basic array.
  */
 abstract class TransformerAbstract
 {
