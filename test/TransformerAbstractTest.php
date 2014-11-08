@@ -52,7 +52,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testSetCurrentScope()
     {
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
-        $manager = new Manager;
+        $manager = new Manager();
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
         $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setCurrentScope($scope));
     }
@@ -63,7 +63,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetCurrentScope()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $manager = new Manager;
+        $manager = new Manager();
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
         $transformer->setCurrentScope($scope);
         $this->assertEquals($transformer->getCurrentScope(), $scope);
@@ -73,7 +73,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('foo');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
@@ -84,7 +84,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('foo');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
@@ -100,7 +100,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
@@ -119,7 +119,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $manager = new Manager;
+        $manager = new Manager();
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
 
@@ -133,7 +133,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessIncludedAvailableResources()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book');
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
@@ -154,7 +154,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessIncludedAvailableResourcesEmptyEmbed()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes(array('book'));
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
@@ -174,11 +174,11 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallEmbedMethodReturnsCrap()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book');
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
-        $transformer->shouldReceive('includeBook')->once()->andReturn(new \stdClass);
+        $transformer->shouldReceive('includeBook')->once()->andReturn(new \stdClass());
 
         $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
@@ -191,7 +191,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessEmbeddedDefaultResources()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
@@ -211,7 +211,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncludedItem()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book');
 
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
@@ -228,7 +228,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
     public function testParamBagIsProvidedForIncludes()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book:foo(bar)');
 
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
@@ -248,7 +248,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncludedCollection()
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $manager->parseIncludes('book');
 
         $collectionData = array(
@@ -278,7 +278,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->shouldReceive('includeBook')->once()->andReturn(null);
 
         $transformer->setDefaultIncludes(array('book'));
-        $scope = new Scope(new Manager, new Item(array(), $transformer));
+        $scope = new Scope(new Manager(), new Item(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
 
         $this->assertFalse($included);

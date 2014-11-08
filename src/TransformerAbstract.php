@@ -14,7 +14,6 @@ namespace League\Fractal;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceAbstract;
-use League\Fractal\Scope;
 
 /**
  * Transformer Abstract
@@ -89,6 +88,7 @@ abstract class TransformerAbstract
                 $includes[] = $include;
             }
         }
+
         return $includes;
     }
 
@@ -97,8 +97,8 @@ abstract class TransformerAbstract
      * them are requested and permitted for this scope.
      *
      * @internal
-     * @param Scope $scope
-     * @param mixed $data
+     * @param  Scope $scope
+     * @param  mixed $data
      * @return array
      **/
     public function processIncludedResources(Scope $scope, $data)
@@ -123,10 +123,10 @@ abstract class TransformerAbstract
      * Include a resource only if it is available on the method
      *
      * @internal
-     * @param Scope $scope
-     * @param mixed $data
-     * @param array $includedData
-     * @param string $include
+     * @param  Scope  $scope
+     * @param  mixed  $data
+     * @param  array  $includedData
+     * @param  string $include
      * @return array
      */
     private function includeResourceIfAvailable(
@@ -148,9 +148,9 @@ abstract class TransformerAbstract
      * Call Include Method
      *
      * @internal
-     * @param Scope $scope
-     * @param string $includeName
-     * @param mixed $data
+     * @param  Scope                                      $scope
+     * @param  string                                     $includeName
+     * @param  mixed                                      $data
      * @throws \Exception
      * @return \League\Fractal\Resource\ResourceInterface
      */
@@ -185,12 +185,13 @@ abstract class TransformerAbstract
      * Setter for availableIncludes
      *
      * @api
-     * @param array $availableIncludes
+     * @param  array $availableIncludes
      * @return $this
      */
     public function setAvailableIncludes($availableIncludes)
     {
         $this->availableIncludes = $availableIncludes;
+
         return $this;
     }
 
@@ -198,12 +199,13 @@ abstract class TransformerAbstract
      * Setter for defaultIncludes
      *
      * @api
-     * @param array $defaultIncludes
+     * @param  array $defaultIncludes
      * @return $this
      **/
     public function setDefaultIncludes($defaultIncludes)
     {
         $this->defaultIncludes = $defaultIncludes;
+
         return $this;
     }
 
@@ -211,12 +213,13 @@ abstract class TransformerAbstract
      * Setter for currentScope
      *
      * @api
-     * @param Scope $currentScope
+     * @param  Scope $currentScope
      * @return $this
      **/
     public function setCurrentScope($currentScope)
     {
         $this->currentScope = $currentScope;
+
         return $this;
     }
 
@@ -224,9 +227,9 @@ abstract class TransformerAbstract
      * Create a new item resource object
      *
      * @api
-     * @param mixed $data
-     * @param TransformerAbstract|callable $transformer
-     * @param string $resourceKey
+     * @param  mixed                        $data
+     * @param  TransformerAbstract|callable $transformer
+     * @param  string                       $resourceKey
      * @return Item
      **/
     protected function item($data, $transformer, $resourceKey = null)
@@ -238,9 +241,9 @@ abstract class TransformerAbstract
      * Create a new collection resource object
      *
      * @api
-     * @param mixed $data
-     * @param TransformerAbstract|callable $transformer
-     * @param string $resourceKey
+     * @param  mixed                        $data
+     * @param  TransformerAbstract|callable $transformer
+     * @param  string                       $resourceKey
      * @return Collection
      */
     protected function collection($data, $transformer, $resourceKey = null)

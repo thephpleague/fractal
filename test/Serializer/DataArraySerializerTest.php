@@ -7,8 +7,8 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
-class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
-
+class DataArraySerializerTest extends PHPUnit_Framework_TestCase
+{
     public function testSerializingItemResource()
     {
         $manager = new Manager();
@@ -163,5 +163,4 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
     {
         Mockery::close();
     }
-
 }

@@ -16,7 +16,7 @@ class DataArraySerializer extends ArraySerializer
     /**
      * Serialize a collection
      *
-     * @param  array  $data
+     * @param  array $data
      * @return array
      **/
     public function collection($resourceKey, array $data)
@@ -27,7 +27,7 @@ class DataArraySerializer extends ArraySerializer
     /**
      * Serialize an item
      *
-     * @param  array  $data
+     * @param  array $data
      * @return array
      **/
     public function item($resourceKey, array $data)

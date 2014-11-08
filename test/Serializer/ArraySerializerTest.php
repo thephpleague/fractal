@@ -7,8 +7,8 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
-class ArraySerializerTest extends PHPUnit_Framework_TestCase {
-
+class ArraySerializerTest extends PHPUnit_Framework_TestCase
+{
     private $bookItemInput = array(
         'title' => 'Foo',
         'year' => '1991',

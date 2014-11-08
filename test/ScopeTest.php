@@ -134,7 +134,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', array(
             array('bar' => 'baz'),
-            function() {}
+            function () {},
         ))->makePartial();
 
         $scope = new Scope($manager, $resource);
@@ -302,7 +302,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     'foo' => 'bar',
                     'baz' => 'ban',
                 ),
-            )
+            ),
         );
 
         $this->assertEquals($expectedOutput, $rootScope->toArray());
@@ -316,7 +316,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             array(
                 'foo' => 'bar',
                 'baz' => 'ban',
-            )
+            ),
         );
 
         $collection = new Collection($inputData, function (array $data) {

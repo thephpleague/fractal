@@ -26,7 +26,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Get parameter values out of the bag
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      **/
     public function get($key)
@@ -37,7 +37,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Get parameter values out of the bag via the property access magic method
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      **/
     public function __get($key)
@@ -48,7 +48,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Check if a param exists in the bag via an isset() check on the property
      *
-     * @param string $key
+     * @param  string $key
      * @return bool
      **/
     public function __isset($key)
@@ -59,7 +59,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Disallow changing the value of params in the data bag via property access
      *
-     * @param string $key
+     * @param  string          $key
      * @throws \LogicException
      **/
     public function __set($key, $value)
@@ -70,7 +70,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Disallow unsetting params in the data bag via property access
      *
-     * @param string $key
+     * @param  string          $key
      * @throws \LogicException
      **/
     public function __unset($key)
@@ -81,7 +81,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Check if a param exists in the bag via an isset() and array access
      *
-     * @param string $key
+     * @param  string $key
      * @return bool
      **/
     public function offsetExists($key)
@@ -92,7 +92,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Get parameter values out of the bag via array access
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      **/
     public function offsetGet($key)
@@ -103,7 +103,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Disallow changing the value of params in the data bag via array access
      *
-     * @param string $key
+     * @param  string          $key
      * @throws \LogicException
      **/
     public function offsetSet($key, $value)
@@ -114,7 +114,7 @@ class ParamBag implements \ArrayAccess
     /**
      * Disallow unsetting params in the data bag via array access
      *
-     * @param string $key
+     * @param  string          $key
      * @throws \LogicException
      **/
     public function offsetUnset($key)

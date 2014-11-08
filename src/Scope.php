@@ -52,9 +52,9 @@ class Scope
     protected $parentScopes = array();
 
     /**
-     * @param Manager $manager
+     * @param Manager           $manager
      * @param ResourceInterface $resource
-     * @param string $scopeIdentifer
+     * @param string            $scopeIdentifer
      */
     public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifer = null)
     {
@@ -67,8 +67,8 @@ class Scope
      * Embed a scope as a child of the currenct scope
      *
      * @internal
-     * @param string $scopeIdentifier
-     * @param ResourceInterface $resource
+     * @param  string                $scopeIdentifier
+     * @param  ResourceInterface     $resource
      * @return \League\Fractal\Scope
      **/
     public function embedChildScope($scopeIdentifier, $resource)
@@ -89,12 +89,13 @@ class Scope
     /**
      * Get the unique identifier for this scope
      *
-     * @param string $appendIdentifier
+     * @param  string $appendIdentifier
      * @return string
      **/
     public function getIdentifier($appendIdentifier = null)
     {
         $identifierParts = array_merge($this->parentScopes, array($this->scopeIdentifer, $appendIdentifier));
+
         return implode('.', array_filter($identifierParts));
     }
 
@@ -167,7 +168,7 @@ class Scope
      * Set parent scopes
      *
      * @internal
-     * @param string[] $parentScopes Value to set
+     * @param  string[] $parentScopes Value to set
      * @return $this
      **/
     public function setParentScopes($parentScopes)
@@ -194,17 +195,14 @@ class Scope
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
-
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
             $data = array_merge($data, $includedData);
         }
 
         if ($this->resource instanceof Collection) {
-
             if ($this->resource->hasCursor()) {
                 $pagination = $serializer->cursor($this->resource->getCursor());
-
             } elseif ($this->resource->hasPaginator()) {
                 $pagination = $serializer->paginator($this->resource->getPaginator());
             }
@@ -246,7 +244,6 @@ class Scope
 
         if ($this->resource instanceof Item) {
             list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
-
         } elseif ($this->resource instanceof Collection) {
             foreach ($data as $value) {
                 list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
@@ -254,7 +251,7 @@ class Scope
         } else {
             throw new InvalidArgumentException(
                 'Argument $resource should be an instance of League\Fractal\Resource\Item'
-                . ' or League\Fractal\Resource\Collection'
+                .' or League\Fractal\Resource\Collection'
             );
         }
 
@@ -265,8 +262,8 @@ class Scope
      * Serialize a resource
      *
      * @internal
-     * @param  SerializerAbstract  $serializer
-     * @param  mixed  $data
+     * @param  SerializerAbstract $serializer
+     * @param  mixed              $data
      * @return array
      */
     protected function serializeResource(SerializerAbstract $serializer, $data)
@@ -284,8 +281,8 @@ class Scope
      * Fire the main transformer.
      *
      * @internal
-     * @param  TransformerAbstract|callable  $transformer
-     * @param  mixed  $data
+     * @param  TransformerAbstract|callable $transformer
+     * @param  mixed                        $data
      * @return array
      */
     protected function fireTransformer($transformer, $data)
@@ -315,8 +312,8 @@ class Scope
      * Fire the included transformers.
      *
      * @internal
-     * @param  \League\Fractal\TransformerAbstract  $transformer
-     * @param  mixed  $data
+     * @param  \League\Fractal\TransformerAbstract $transformer
+     * @param  mixed                               $data
      * @return array
      **/
     protected function fireIncludedTransformers($transformer, $data)
@@ -330,7 +327,7 @@ class Scope
      * Determine if a transformer has any available includes.
      *
      * @internal
-     * @param  TransformerAbstract|callable  $transformer
+     * @param  TransformerAbstract|callable $transformer
      * @return bool
      **/
     protected function transformerHasIncludes($transformer)
@@ -341,6 +338,7 @@ class Scope
 
         $defaultIncludes = $transformer->getDefaultIncludes();
         $availableIncludes = $transformer->getAvailableIncludes();
+
         return ! empty($defaultIncludes) || ! empty($availableIncludes);
     }
 }

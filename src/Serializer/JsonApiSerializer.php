@@ -17,7 +17,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize an item resource
      *
      * @param string $resourceKey
-     * @param array $data
+     * @param array  $data
      *
      * @return array
      */
@@ -30,7 +30,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize an item resource
      *
      * @param string $resourceKey
-     * @param array $data
+     * @param array  $data
      *
      * @return array
      */
@@ -42,8 +42,8 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Serialize the included data.
      *
-     * @param  string  $resourceKey
-     * @param  array  $data
+     * @param string $resourceKey
+     * @param array  $data
      *
      * @return array
      */

@@ -50,7 +50,7 @@ class Cursor implements CursorInterface
     /**
      * Create a new Cursor instance.
      *
-     * @param integer   $current
+     * @param integer $current
      * @param mixed   $next
      * @param integer $count
      */
@@ -81,6 +81,7 @@ class Cursor implements CursorInterface
     public function setCurrent($current)
     {
         $this->current = $current;
+
         return $this;
     }
 
@@ -103,6 +104,7 @@ class Cursor implements CursorInterface
     public function setPrev($prev)
     {
         $this->prev = $prev;
+
         return $this;
     }
 
@@ -125,6 +127,7 @@ class Cursor implements CursorInterface
     public function setNext($next)
     {
         $this->next = $next;
+
         return $this;
     }
 
@@ -141,12 +144,13 @@ class Cursor implements CursorInterface
     /**
      * Set the total items in the current cursor.
      *
-     * @param integer $count
+     * @param  integer $count
      * @return Cursor
      */
     public function setCount($count)
     {
         $this->count = $count;
+
         return $this;
     }
 }

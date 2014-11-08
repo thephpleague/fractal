@@ -51,7 +51,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getLastPage()
     {
-         return $this->paginator->getLastPage();
+        return $this->paginator->getLastPage();
     }
 
     /**
@@ -60,7 +60,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getTotal()
     {
-         return $this->paginator->getTotal();
+        return $this->paginator->getTotal();
     }
 
     /**

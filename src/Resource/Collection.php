@@ -121,18 +121,20 @@ class Collection extends ResourceAbstract
     public function setPaginator(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
+
         return $this;
     }
 
     /**
      * Set the cursor implementation.
      *
-     * @param CursorInterface $cursor
+     * @param  CursorInterface $cursor
      * @return $this
      **/
     public function setCursor(CursorInterface $cursor)
     {
         $this->cursor = $cursor;
+
         return $this;
     }
 }

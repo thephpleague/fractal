@@ -12,7 +12,6 @@
 namespace League\Fractal;
 
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -66,9 +65,9 @@ class Manager
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @api
-     * @param ResourceInterface $resource
-     * @param string $scopeIdentifier
-     * @param Scope $parentScopeInstance
+     * @param  ResourceInterface $resource
+     * @param  string            $scopeIdentifier
+     * @param  Scope             $parentScopeInstance
      * @return Scope
      **/
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
@@ -77,7 +76,6 @@ class Manager
 
         // Update scope history
         if ($parentScopeInstance !== null) {
-
             // This will be the new children list of parents (parents parents, plus the parent)
             $scopeArray = $parentScopeInstance->getParentScopes();
             $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
@@ -92,7 +90,7 @@ class Manager
      * Get Include Params
      *
      * @api
-     * @param string $include
+     * @param  string                        $include
      * @return \League\Fractal\ParamBag|null
      **/
     public function getIncludeParams($include)
@@ -126,7 +124,7 @@ class Manager
     public function getSerializer()
     {
         if (! $this->serializer) {
-            $this->setSerializer(new DataArraySerializer);
+            $this->setSerializer(new DataArraySerializer());
         }
 
         return $this->serializer;
@@ -136,7 +134,7 @@ class Manager
      * Parse Include String
      *
      * @api
-     * @param array|string $includes Array or csv string of resources to include
+     * @param  array|string $includes Array or csv string of resources to include
      * @return $this
      **/
     public function parseIncludes($includes)
@@ -155,7 +153,6 @@ class Manager
         }
 
         foreach ($includes as $include) {
-
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
 
             // Trim it down to a cool level of recursion
@@ -181,7 +178,6 @@ class Manager
             $modifierArr = array();
 
             for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
-
                 // [1] is the modifier
                 $modifierName = $allModifiersArr[1][$modifierIt];
 
@@ -205,12 +201,13 @@ class Manager
      * Set Recursion Limit
      *
      * @api
-     * @param int $recursionLimit
+     * @param  int   $recursionLimit
      * @return $this
      **/
     public function setRecursionLimit($recursionLimit)
     {
         $this->recursionLimit = $recursionLimit;
+
         return $this;
     }
 
@@ -218,12 +215,13 @@ class Manager
      * Set Serializer
      *
      * @api
-     * @param SerializerAbstract $serializer
+     * @param  SerializerAbstract $serializer
      * @return $this
      **/
     public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
+
         return $this;
     }
 

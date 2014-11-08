@@ -5,7 +5,7 @@ use League\Fractal\TransformerAbstract;
 class DefaultIncludeBookTransformer extends TransformerAbstract
 {
     protected $defaultIncludes = array(
-        'author'
+        'author',
     );
 
     public function transform()
@@ -15,6 +15,6 @@ class DefaultIncludeBookTransformer extends TransformerAbstract
 
     public function includeAuthor()
     {
-        return $this->item(array('c' => 'd'), new GenericAuthorTransformer);
+        return $this->item(array('c' => 'd'), new GenericAuthorTransformer());
     }
 }

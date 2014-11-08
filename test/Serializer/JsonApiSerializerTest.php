@@ -7,8 +7,8 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
-class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
-
+class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
+{
     private $manager;
 
     public function setUp()
@@ -38,14 +38,14 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
-                )
+                ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
-                        'name' => 'Dave'
-                    )
-                )
+                        'name' => 'Dave',
+                    ),
+                ),
             ),
         );
 
@@ -76,14 +76,14 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
-                )
+                ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
-                        'name' => 'Dave'
-                    )
-                )
+                        'name' => 'Dave',
+                    ),
+                ),
             ),
         );
 
@@ -164,14 +164,14 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
-                )
+                ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
-                        'name' => 'Dave'
-                    )
-                )
+                        'name' => 'Dave',
+                    ),
+                ),
             ),
             'meta' => array(
                 'foo' => 'bar',
@@ -266,5 +266,4 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase {
     {
         Mockery::close();
     }
-
 }
