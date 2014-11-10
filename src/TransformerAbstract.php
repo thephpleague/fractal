@@ -196,8 +196,6 @@ abstract class TransformerAbstract
     /**
      * Setter for availableIncludes.
      *
-     * @api
-     *
      * @param array $availableIncludes
      *
      * @return $this
@@ -211,8 +209,6 @@ abstract class TransformerAbstract
 
     /**
      * Setter for defaultIncludes.
-     *
-     * @api
      *
      * @param array $defaultIncludes
      *
@@ -228,8 +224,6 @@ abstract class TransformerAbstract
     /**
      * Setter for currentScope.
      *
-     * @api
-     *
      * @param Scope $currentScope
      *
      * @return $this
@@ -244,8 +238,6 @@ abstract class TransformerAbstract
     /**
      * Create a new item resource object.
      *
-     * @api
-     *
      * @param mixed                        $data
      * @param TransformerAbstract|callable $transformer
      * @param string                       $resourceKey
@@ -259,8 +251,6 @@ abstract class TransformerAbstract
 
     /**
      * Create a new collection resource object.
-     *
-     * @api
      *
      * @param mixed                        $data
      * @param TransformerAbstract|callable $transformer
