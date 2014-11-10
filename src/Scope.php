@@ -214,6 +214,15 @@ class Scope
             }
         }
 
+        if ($this->manager->getDisplayAvailableIncludes() === true) {
+
+            //Get available includes from the transformer
+            $includes = $this->resource->getTransformer()->getAvailableIncludes();
+
+            //Set available includes into meta
+            $this->resource->setMetaValue('availableIncludes', $includes);
+        }
+
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
 

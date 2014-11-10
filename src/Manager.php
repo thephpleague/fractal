@@ -54,11 +54,17 @@ class Manager
     protected $recursionLimit = 10;
 
     /**
-     * Serializer
-     *
      * @var SerializerAbstract
      **/
     protected $serializer;
+
+    /**
+     * Display available includes
+     * By default, this feature is disabled
+     *
+     * @var bool
+     */
+    protected $displayAvailableIncludes = false;
 
     /**
      * Create Data
@@ -225,6 +231,26 @@ class Manager
     {
         $this->serializer = $serializer;
         return $this;
+    }
+
+    /**
+     * Set display available includes
+     *
+     * @param bool $display
+     */
+    public function setDisplayAvailableIncludes($display)
+    {
+        $this->displayAvailableIncludes = $display;
+    }
+
+    /**
+     * Return display available value
+     *
+     * @return bool
+     */
+    public function getDisplayAvailableIncludes()
+    {
+        return $this->displayAvailableIncludes;
     }
 
     /**

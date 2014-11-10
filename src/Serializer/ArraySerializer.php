@@ -13,6 +13,7 @@ namespace League\Fractal\Serializer;
 
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
+use League\Fractal\TransformerAbstract;
 
 class ArraySerializer extends SerializerAbstract
 {
