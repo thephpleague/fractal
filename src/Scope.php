@@ -190,8 +190,6 @@ class Scope
     /**
      * Convert the current data for this scope to an array.
      *
-     * @api
-     *
      * @return array
      */
     public function toArray()
@@ -230,8 +228,6 @@ class Scope
 
     /**
      * Convert the current data for this scope to JSON.
-     *
-     * @api
      *
      * @return string
      */

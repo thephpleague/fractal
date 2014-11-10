@@ -64,8 +64,6 @@ class Manager
      *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
-     * @api
-     *
      * @param ResourceInterface $resource
      * @param string            $scopeIdentifier
      * @param Scope             $parentScopeInstance
@@ -91,8 +89,6 @@ class Manager
     /**
      * Get Include Params.
      *
-     * @api
-     *
      * @param string $include
      *
      * @return \League\Fractal\ParamBag|null
@@ -111,8 +107,6 @@ class Manager
     /**
      * Get Requested Includes.
      *
-     * @api
-     *
      * @return array
      */
     public function getRequestedIncludes()
@@ -122,8 +116,6 @@ class Manager
 
     /**
      * Get Serializer.
-     *
-     * @api
      *
      * @return SerializerAbstract
      */
@@ -138,8 +130,6 @@ class Manager
 
     /**
      * Parse Include String.
-     *
-     * @api
      *
      * @param array|string $includes Array or csv string of resources to include
      *
@@ -208,8 +198,6 @@ class Manager
     /**
      * Set Recursion Limit.
      *
-     * @api
-     *
      * @param int $recursionLimit
      *
      * @return $this
@@ -223,8 +211,6 @@ class Manager
 
     /**
      * Set Serializer
-     *
-     * @api
      *
      * @param SerializerAbstract $serializer
      *
