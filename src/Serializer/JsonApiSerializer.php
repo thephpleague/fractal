@@ -14,7 +14,7 @@ namespace League\Fractal\Serializer;
 class JsonApiSerializer extends ArraySerializer
 {
     /**
-     * Serialize an item resource
+     * Serialize a collection.
      *
      * @param string $resourceKey
      * @param array  $data
@@ -27,7 +27,7 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * Serialize an item resource
+     * Serialize an item.
      *
      * @param string $resourceKey
      * @param array  $data

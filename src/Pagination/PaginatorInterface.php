@@ -19,32 +19,44 @@ namespace League\Fractal\Pagination;
 interface PaginatorInterface
 {
     /**
-     * @return integer
+     * Get the current page.
+     *
+     * @return int
      */
     public function getCurrentPage();
 
     /**
-     * @return integer
+     * Get the last page.
+     *
+     * @return int
      */
     public function getLastPage();
 
     /**
-     * @return integer
+     * Get the total.
+     *
+     * @return int
      */
     public function getTotal();
 
     /**
-     * @return integer
+     * Get the count.
+     *
+     * @return int
      */
     public function getCount();
 
     /**
-     * @return integer
+     * Get the number per page.
+     *
+     * @return int
      */
     public function getPerPage();
 
     /**
-     * @param integer $page
+     * Get the url for the given page.
+     *
+     * @param int $page
      *
      * @return string
      */

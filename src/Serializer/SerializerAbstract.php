@@ -16,19 +16,65 @@ use League\Fractal\Pagination\PaginatorInterface;
 
 abstract class SerializerAbstract
 {
-    abstract public function item($resourceKey, array $data);
+    /**
+     * Serialize a collection.
+     *
+     * @param string $resourceKey
+     * @param array  $data
+     *
+     * @return array
+     */
     abstract public function collection($resourceKey, array $data);
 
     /**
-     * @param \League\Fractal\Resource\ResourceInterface $resourceKey
+     * Serialize an item.
+     *
+     * @param string $resourceKey
+     * @param array  $data
+     *
+     * @return array
+     */
+    abstract public function item($resourceKey, array $data);
+
+    /**
+     * Serialize the included data.
+     *
+     * @param string $resourceKey
+     * @param array  $data
+     *
+     * @return array
      */
     abstract public function includedData($resourceKey, array $data);
-    abstract public function paginator(PaginatorInterface $paginator);
-    abstract public function cursor(CursorInterface $cursor);
+
+    /**
+     * Serialize the meta.
+     *
+     * @param array $meta
+     *
+     * @return array
+     */
     abstract public function meta(array $meta);
 
     /**
-     * Indicates if includes should be side-loaded
+     * Serialize the paginator.
+     *
+     * @param PaginatorInterface $paginator
+     *
+     * @return array
+     */
+    abstract public function paginator(PaginatorInterface $paginator);
+
+    /**
+     * Serialize the cursor.
+     *
+     * @param CursorInterface $cursor
+     *
+     * @return array
+     */
+    abstract public function cursor(CursorInterface $cursor);
+
+    /**
+     * Indicates if includes should be side-loaded.
      *
      * @return bool
      */

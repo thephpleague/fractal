@@ -25,51 +25,53 @@ use League\Fractal\Serializer\SerializerAbstract;
 class Manager
 {
     /**
-     * Array of scope identifiers for resources to include
+     * Array of scope identifiers for resources to include.
      *
      * @var array
-     **/
+     */
     protected $requestedIncludes = array();
 
     /**
-     * Array containing modifiers as keys and an array value of params
+     * Array containing modifiers as keys and an array value of params.
      *
      * @var array
-     **/
+     */
     protected $includeParams = array();
 
     /**
-     * The character used to separate modifier parameters
+     * The character used to separate modifier parameters.
      *
      * @var string
-     **/
+     */
     protected $paramDelimiter = '|';
 
     /**
-     * Upper limit to how many levels of included data are allowed
+     * Upper limit to how many levels of included data are allowed.
      *
-     * @var integer
-     **/
+     * @var int
+     */
     protected $recursionLimit = 10;
 
     /**
-     * Serializer
+     * Serializer.
      *
      * @var SerializerAbstract
-     **/
+     */
     protected $serializer;
 
     /**
-     * Create Data
+     * Create Data.
      *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @api
-     * @param  ResourceInterface $resource
-     * @param  string            $scopeIdentifier
-     * @param  Scope             $parentScopeInstance
+     *
+     * @param ResourceInterface $resource
+     * @param string            $scopeIdentifier
+     * @param Scope             $parentScopeInstance
+     *
      * @return Scope
-     **/
+     */
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
         $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
@@ -87,12 +89,14 @@ class Manager
     }
 
     /**
-     * Get Include Params
+     * Get Include Params.
      *
      * @api
-     * @param  string                        $include
+     *
+     * @param string $include
+     *
      * @return \League\Fractal\ParamBag|null
-     **/
+     */
     public function getIncludeParams($include)
     {
         if (! isset($this->includeParams[$include])) {
@@ -105,22 +109,24 @@ class Manager
     }
 
     /**
-     * Get Requested Includes
+     * Get Requested Includes.
      *
      * @api
+     *
      * @return array
-     **/
+     */
     public function getRequestedIncludes()
     {
         return $this->requestedIncludes;
     }
 
     /**
-     * Get Serializer
+     * Get Serializer.
      *
      * @api
+     *
      * @return SerializerAbstract
-     **/
+     */
     public function getSerializer()
     {
         if (! $this->serializer) {
@@ -131,12 +137,14 @@ class Manager
     }
 
     /**
-     * Parse Include String
+     * Parse Include String.
      *
      * @api
-     * @param  array|string $includes Array or csv string of resources to include
+     *
+     * @param array|string $includes Array or csv string of resources to include
+     *
      * @return $this
-     **/
+     */
     public function parseIncludes($includes)
     {
         // Wipe these before we go again
@@ -198,12 +206,14 @@ class Manager
     }
 
     /**
-     * Set Recursion Limit
+     * Set Recursion Limit.
      *
      * @api
-     * @param  int   $recursionLimit
+     *
+     * @param int $recursionLimit
+     *
      * @return $this
-     **/
+     */
     public function setRecursionLimit($recursionLimit)
     {
         $this->recursionLimit = $recursionLimit;
@@ -215,9 +225,11 @@ class Manager
      * Set Serializer
      *
      * @api
-     * @param  SerializerAbstract $serializer
+     *
+     * @param SerializerAbstract $serializer
+     *
      * @return $this
-     **/
+     */
     public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
@@ -232,7 +244,9 @@ class Manager
      * are not explicitly requested. E.g: [foo, bar.baz] becomes [foo, bar, bar.baz]
      *
      * @internal
-     **/
+     *
+     * @return void
+     */
     protected function autoIncludeParents()
     {
         $parsed = array();
@@ -259,8 +273,11 @@ class Manager
      * by trains or whatever the hell that movie was about.
      *
      * @internal
+     *
      * @param string $includeName
-     **/
+     *
+     * @return string
+     */
     protected function trimToAcceptableRecursionLevel($includeName)
     {
         return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
