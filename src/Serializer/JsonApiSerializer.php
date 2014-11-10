@@ -14,10 +14,10 @@ namespace League\Fractal\Serializer;
 class JsonApiSerializer extends ArraySerializer
 {
     /**
-     * Serialize an item resource
+     * Serialize a collection.
      *
      * @param string $resourceKey
-     * @param array $data
+     * @param array  $data
      *
      * @return array
      */
@@ -27,10 +27,10 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * Serialize an item resource
+     * Serialize an item.
      *
      * @param string $resourceKey
-     * @param array $data
+     * @param array  $data
      *
      * @return array
      */
@@ -42,8 +42,8 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Serialize the included data.
      *
-     * @param  string  $resourceKey
-     * @param  array  $data
+     * @param string $resourceKey
+     * @param array  $data
      *
      * @return array
      */

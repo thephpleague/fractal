@@ -3,13 +3,13 @@
 use League\Fractal\Resource\Item;
 use Mockery;
 
-class ItemResourceTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends \PHPUnit_Framework_TestCase
 {
     protected $simpleItem = array('foo' => 'bar');
 
     public function testGetData()
     {
-        $resource = new Item($this->simpleItem, function() {});
+        $resource = new Item($this->simpleItem, function () {});
         $this->assertEquals($resource->getData(), $this->simpleItem);
     }
 

@@ -13,10 +13,17 @@ namespace League\Fractal\Resource;
 
 interface ResourceInterface
 {
+    /**
+     * Get the data.
+     *
+     * @return array|ArrayIterator
+     */
     public function getData();
 
     /**
-     * @return callable
+     * Get the transformer.
+     *
+     * @return callable|string
      */
     public function getTransformer();
 }

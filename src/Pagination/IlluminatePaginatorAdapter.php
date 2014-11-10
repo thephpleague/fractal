@@ -14,22 +14,23 @@ namespace League\Fractal\Pagination;
 use Illuminate\Pagination\Paginator;
 
 /**
- * A paginator adapter for illuminate/pagination
+ * A paginator adapter for illuminate/pagination.
  *
  * @author Marc Addeo <marcaddeo@gmail.com>
  */
 class IlluminatePaginatorAdapter implements PaginatorInterface
 {
     /**
-     * The paginator
-     * @var object
+     * The paginator instance.
+     *
+     * @var \Illuminate\Pagination\Paginator
      */
     protected $paginator;
 
     /**
-     * Setup our adapter
+     * Setup our adapter.
      *
-     * @param Paginator $paginator
+     * @param \Illuminate\Pagination\Paginator $paginator
      */
     public function __construct(Paginator $paginator)
     {
@@ -37,8 +38,9 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get current page
-     * @return integer
+     * Get the current page.
+     *
+     * @return int
      */
     public function getCurrentPage()
     {
@@ -46,26 +48,29 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get last page
-     * @return integer
+     * Get the last page.
+     *
+     * @return int
      */
     public function getLastPage()
     {
-         return $this->paginator->getLastPage();
+        return $this->paginator->getLastPage();
     }
 
     /**
-     * Get total
-     * @return integer
+     * Get the total.
+     *
+     * @return int
      */
     public function getTotal()
     {
-         return $this->paginator->getTotal();
+        return $this->paginator->getTotal();
     }
 
     /**
-     * Get count
-     * @return integer
+     * Get the count.
+     *
+     * @return int
      */
     public function getCount()
     {
@@ -73,8 +78,9 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get per page
-     * @return integer
+     * Get the number per page.
+     *
+     * @return int
      */
     public function getPerPage()
     {
@@ -82,8 +88,10 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get url for the given page
-     * @param  integer $page
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
      * @return string
      */
     public function getUrl($page)
@@ -92,8 +100,9 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the paginator
-     * @return object
+     * Get the paginator instance.
+     *
+     * @return \Illuminate\Paginator\Paginator
      */
     public function getPaginator()
     {

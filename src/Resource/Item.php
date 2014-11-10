@@ -20,5 +20,5 @@ namespace League\Fractal\Resource;
  */
 class Item extends ResourceAbstract
 {
-
+    //
 }

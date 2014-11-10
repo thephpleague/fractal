@@ -45,7 +45,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCursor()
     {
-        $cursor = new Cursor;
+        $cursor = new Cursor();
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setCursor($cursor);
         $this->assertInstanceOf('League\Fractal\Pagination\Cursor', $collection->getCursor());

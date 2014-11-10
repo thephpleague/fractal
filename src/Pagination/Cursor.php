@@ -27,7 +27,7 @@ class Cursor implements CursorInterface
     protected $current;
 
     /**
-     * Prev cursor value
+     * Previous cursor value.
      *
      * @var mixed
      */
@@ -43,16 +43,18 @@ class Cursor implements CursorInterface
     /**
      * Items being holded for the current cursor position.
      *
-     * @var integer
+     * @var int
      */
     protected $count;
 
     /**
      * Create a new Cursor instance.
      *
-     * @param integer   $current
-     * @param mixed   $next
-     * @param integer $count
+     * @param int   $current
+     * @param mixed $next
+     * @param int   $count
+     *
+     * @return void
      */
     public function __construct($current = null, $prev = null, $next = null, $count = null)
     {
@@ -75,12 +77,14 @@ class Cursor implements CursorInterface
     /**
      * Set the current cursor value.
      *
-     * @param  integer $current
+     * @param int $current
+     *
      * @return Cursor
      */
     public function setCurrent($current)
     {
         $this->current = $current;
+
         return $this;
     }
 
@@ -97,12 +101,14 @@ class Cursor implements CursorInterface
     /**
      * Set the prev cursor value.
      *
-     * @param  integer $prev
+     * @param int $prev
+     *
      * @return Cursor
      */
     public function setPrev($prev)
     {
         $this->prev = $prev;
+
         return $this;
     }
 
@@ -119,19 +125,21 @@ class Cursor implements CursorInterface
     /**
      * Set the next cursor value.
      *
-     * @param  integer $next
+     * @param int $next
+     *
      * @return Cursor
      */
     public function setNext($next)
     {
         $this->next = $next;
+
         return $this;
     }
 
     /**
      * Returns the total items in the current cursor.
      *
-     * @return integer
+     * @return int
      */
     public function getCount()
     {
@@ -141,12 +149,14 @@ class Cursor implements CursorInterface
     /**
      * Set the total items in the current cursor.
      *
-     * @param integer $count
+     * @param int $count
+     *
      * @return Cursor
      */
     public function setCount($count)
     {
         $this->count = $count;
+
         return $this;
     }
 }

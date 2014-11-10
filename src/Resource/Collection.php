@@ -24,115 +24,118 @@ use League\Fractal\Pagination\PaginatorInterface;
 class Collection extends ResourceAbstract
 {
     /**
-     * A collection of data
+     * A collection of data.
      *
      * @var array|ArrayIterator
-     **/
+     */
     protected $data;
 
     /**
-     * A collection of data
+     * A the paginator instance.
      *
      * @var PaginatorInterface
-     **/
+     */
     protected $paginator;
 
     /**
-     * Cursor implementation.
+     * The cursor instance.
      *
      * @var CursorInterface
-     **/
+     */
     protected $cursor;
 
     /**
-     * A callable to process the data attached to this resource
+     * A callable to process the data attached to this resource.
      *
      * @var callable|string
-     **/
+     */
     protected $transformer;
 
     /**
-     * Getter for data
+     * Get the data.
      *
      * @return array|ArrayIterator
-     **/
+     */
     public function getData()
     {
         return $this->data;
     }
 
     /**
-     * Getter for paginator
+     * Get the paginator instance.
      *
      * @return PaginatorInterface
-     **/
+     */
     public function getPaginator()
     {
         return $this->paginator;
     }
 
     /**
-     * Determine if the resource has a paginator implementation
+     * Determine if the resource has a paginator implementation.
      *
      * @return bool
-     **/
+     */
     public function hasPaginator()
     {
         return $this->paginator instanceof PaginatorInterface;
     }
 
     /**
-     * Set the cursor implementation
+     * Get the cursor instance.
      *
      * @return CursorInterface
-     **/
+     */
     public function getCursor()
     {
         return $this->cursor;
     }
 
     /**
-     * Determine if the resource has a cursor implementation
+     * Determine if the resource has a cursor implementation.
      *
      * @return bool
-     **/
+     */
     public function hasCursor()
     {
         return $this->cursor instanceof CursorInterface;
     }
 
     /**
-     * Getter for transformer
+     * Get the transformer.
      *
      * @return callable|string
-     **/
+     */
     public function getTransformer()
     {
         return $this->transformer;
     }
 
     /**
-     * Setter for paginator
+     * Set the paginator instance.
      *
      * @param PaginatorInterface $paginator
      *
      * @return $this
-     **/
+     */
     public function setPaginator(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
+
         return $this;
     }
 
     /**
-     * Set the cursor implementation.
+     * Set the cursor instance.
      *
      * @param CursorInterface $cursor
+     *
      * @return $this
-     **/
+     */
     public function setCursor(CursorInterface $cursor)
     {
         $this->cursor = $cursor;
+
         return $this;
     }
 }

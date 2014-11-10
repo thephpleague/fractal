@@ -6,7 +6,6 @@ use League\Fractal\Pagination\Cursor;
 
 class CursorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testCursor()
     {
         $cursor = new Cursor(100, 90, 110, 10);
@@ -26,5 +25,4 @@ class CursorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($cursor->getNext(), 114);
         $this->assertEquals($cursor->getCount(), 4);
     }
-
 }
