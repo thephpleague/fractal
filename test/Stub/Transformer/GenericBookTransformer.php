@@ -10,10 +10,10 @@ class GenericBookTransformer extends TransformerAbstract
 
     public function transform(array $book)
     {
-        return array(
-            'title' => $book['title'],
-            'year' => (int) $book['year'],
-        );
+        $book['year'] = (int) $book['year'];
+        unset($book['_author']);
+
+        return $book;
     }
 
     public function includeAuthor(array $book)
