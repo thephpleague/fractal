@@ -291,6 +291,93 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingCollectionResourceDifferentParentsWithDuplicatedIncludeData()
+    {
+        $this->manager->parseIncludes('author,reviews,reviews.author');
+
+        $booksData = array(
+            array(
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => array(
+                    'id' => 1,
+                    'name' => 'Dave',
+                ),
+                '_reviews' => array(
+                    array(
+                        'id' => 1,
+                        'comment' => 'Foo review',
+                        '_author' => array(
+                            'id' => 2,
+                            'name' => 'Bob',
+                        ),
+                    ),
+                ),
+            ),
+            array(
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'id' => 1,
+                    'name' => 'Dave',
+                ),
+                '_reviews' => array(
+                    array(
+                        'id' => 2,
+                        'comment' => 'Bar review',
+                        '_author' => array(
+                            'id' => 2,
+                            'name' => 'Bob',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'book' => array(
+                array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+                array(
+                    'title' => 'Bar',
+                    'year' => 1997,
+                ),
+            ),
+            'linked' => array(
+                'author' => array(
+                    array(
+                        'id' => 1,
+                        'name' => 'Dave',
+                    ),
+                    array(
+                        'id' => 2,
+                        'name' => 'Bob',
+                    ),
+                ),
+                'reviews' => array(
+                    array(
+                        'id' => 1,
+                        'comment' => 'Foo review',
+                    ),
+                    array(
+                        'id' => 2,
+                        'comment' => 'Bar review',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"id":1,"name":"Dave"},{"id":2,"name":"Bob"}],"reviews":[{"id":1,"comment":"Foo review"},{"id":2,"comment":"Bar review"}]}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
     public function testResourceKeyMissing()
     {
         $this->manager->setSerializer(new JsonApiSerializer());
