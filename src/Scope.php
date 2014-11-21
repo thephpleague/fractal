@@ -205,7 +205,7 @@ class Scope
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
-            $data = array_merge($data, $includedData);
+            $data = array_merge_recursive($data, $includedData);
         }
 
         if ($this->resource instanceof Collection) {
