@@ -9,7 +9,7 @@ Simple Example
 
 For the sake of simplicity, this example has been put together as though it was
 one file. In reality you would spread the manager initiation, data collection
-and JSON conversion into seperate parts of your application.
+and JSON conversion into separate parts of your application.
 
 ~~~ php
 <?php

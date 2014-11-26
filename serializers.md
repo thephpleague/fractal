@@ -52,7 +52,7 @@ What is new here is the `$manager->setSerializer(new DataArraySerializer());` pa
 
 ## DataArraySerializer
 
-This serializer is not to everyones tastes, because it adds a `'data'` namespace to the output:
+This serializer is not to everyone's tastes, because it adds a `'data'` namespace to the output:
 
 ~~~ php
 // Item

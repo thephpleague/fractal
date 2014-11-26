@@ -49,7 +49,7 @@ $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ## Using Cursors
 
 When we have large sets of data and running a `SELECT COUNT(*) FROM whatever` isn't really an option, we need a proper
-way of fetching results. One of the approches is to use cursors that will indicate to your backend where to start
+way of fetching results. One of the approaches is to use cursors that will indicate to your backend where to start
 fetching results. You can set a new cursor on your collections using the
 `League\Fractal\Resource\Collection::setCursor()` method.
 
