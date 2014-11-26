@@ -34,7 +34,7 @@ require 'vendor/autoload.php';
 
 ## Going Solo
 
-You can also use Fractal without using Composer by registing an autoloader function:
+You can also use Fractal without using Composer by registering an autoloader function:
 
 ~~~ php
 spl_autoload_register(function ($class) {

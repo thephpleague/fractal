@@ -47,7 +47,7 @@ passed in place of the callback.
 These classes must extend `League\Fractal\TransformerAbstract` and contain at the very
 least a method with the name `transform()`.
 
-The method declaraton can take mixed input, just like the callbacks:
+The method declaration can take mixed input, just like the callbacks:
 
 ~~~ php
 <?php
