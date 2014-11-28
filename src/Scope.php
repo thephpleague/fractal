@@ -281,9 +281,9 @@ class Scope
         $resourceKey = $this->resource->getResourceKey();
 
         if ($this->resource instanceof Collection) {
-            return $serializer->collection($resourceKey, $data);
+            return $serializer->collection($resourceKey, $data, $this->scopeIdentifer);
         } else {
-            return $serializer->item($resourceKey, $data);
+            return $serializer->item($resourceKey, $data, $this->scopeIdentifer);
         }
     }
 
