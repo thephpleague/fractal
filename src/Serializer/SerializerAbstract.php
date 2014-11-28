@@ -11,6 +11,7 @@
 
 namespace League\Fractal\Serializer;
 
+use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 
@@ -39,12 +40,12 @@ abstract class SerializerAbstract
     /**
      * Serialize the included data.
      *
-     * @param string $resourceKey
-     * @param array  $data
+     * @param ResourceInterface $resource
+     * @param array             $data
      *
      * @return array
      */
-    abstract public function includedData($resourceKey, array $data);
+    abstract public function includedData(ResourceInterface $resource, array $data);
 
     /**
      * Serialize the meta.

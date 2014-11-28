@@ -11,6 +11,8 @@
 
 namespace League\Fractal\Serializer;
 
+use League\Fractal\Resource\ResourceInterface;
+
 class JsonApiSerializer extends ArraySerializer
 {
     /**
@@ -42,12 +44,12 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Serialize the included data.
      *
-     * @param string $resourceKey
-     * @param array  $data
+     * @param ResourceInterface $resource
+     * @param array             $data
      *
      * @return array
      */
-    public function includedData($resourceKey, array $data)
+    public function includedData(ResourceInterface $resource, array $data)
     {
         $serializedData = array();
         $linkedIds = array();
