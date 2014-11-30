@@ -11,6 +11,7 @@
 
 namespace League\Fractal\Serializer;
 
+use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 
@@ -45,12 +46,12 @@ class ArraySerializer extends SerializerAbstract
     /**
      * Serialize the included data.
      *
-     * @param string $resourceKey
-     * @param array  $data
+     * @param ResourceInterface $resource
+     * @param array             $data
      *
      * @return array
      */
-    public function includedData($resourceKey, array $data)
+    public function includedData(ResourceInterface $resource, array $data)
     {
         return $data;
     }
