@@ -1,11 +1,12 @@
 <?php
 
-use League\Fractal\Manager;
+use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Manager;
 use League\Fractal\Scope;
-use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
+use League\Fractal\Test\Stub\Transformer\GenericBookWithDefaultResourceKeyTransformer;
 
 class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
 
@@ -28,11 +29,11 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            'data' => array(
+            'book' => array(
                 'title' => 'Foo',
                 'year' => 1991,
                 'author' => array(
-                    'data' => array(
+                    'author' => array(
                         'name' => 'Dave',
                     ),
                 ),
@@ -40,6 +41,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->assertEquals($expected, $scope->toArray());
+
 
         // Same again with metadata
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
@@ -51,11 +53,11 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
             'meta' => array(
                 'foo' => 'bar',
             ),
-            'data' => array(
+            'book' => array(
                 'title' => 'Foo',
                 'year' => 1991,
                 'author' => array(
-                    'data' => array(
+                    'author' => array(
                         'name' => 'Dave',
                     ),
                 ),
@@ -94,12 +96,12 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            'data' => array(
+            'book' => array(
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
                     'author' => array(
-                        'data' => array(
+                        'author' => array(
                             'name' => 'Dave',
                         ),
                     ),
@@ -108,7 +110,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
                     'title' => 'Bar',
                     'year' => 1997,
                     'author' => array(
-                        'data' => array(
+                        'author' => array(
                             'name' => 'Bob',
                         ),
                     ),
@@ -118,7 +120,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}]}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"author":{"author":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"author":{"name":"Bob"}}}]}';
         $this->assertEquals($expectedJson, $scope->toJson());
 
         // Same again with meta
@@ -131,12 +133,12 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
             'meta' => array(
                 'foo' => 'bar',
             ),
-            'data' => array(
+            'book' => array(
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
                     'author' => array(
-                        'data' => array(
+                        'author' => array(
                             'name' => 'Dave',
                         ),
                     ),
@@ -145,7 +147,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
                     'title' => 'Bar',
                     'year' => 1997,
                     'author' => array(
-                        'data' => array(
+                        'author' => array(
                             'name' => 'Bob',
                         ),
                     ),
@@ -155,9 +157,67 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}],"meta":{"foo":"bar"}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"author":{"author":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"author":{"name":"Bob"}}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
+
+	public function testSerializingItemResourceWithDefaultKey() {
+
+		$manager = new Manager();
+		$manager->parseIncludes('author');
+		$manager->setSerializer(new DataArraySerializer());
+
+		$bookData = array(
+			'title' => 'Foo',
+			'year' => '1991',
+			'_author' => array(
+				'name' => 'Dave',
+			),
+		);
+
+		// Try without metadata
+		$resource = new Item($bookData, new GenericBookWithDefaultResourceKeyTransformer());
+		$scope = new Scope($manager, $resource);
+
+		$expected = array(
+			'data' => array(
+				'title' => 'Foo',
+				'year' => 1991,
+				'author' => array(
+					'data' => array(
+						'name' => 'Dave',
+					),
+				),
+			),
+		);
+
+		$this->assertEquals($expected, $scope->toArray());
+
+
+		// Same again with metadata
+		$resource = new Item($bookData, new GenericBookWithDefaultResourceKeyTransformer());
+		$resource->setMetaValue('foo', 'bar');
+
+		$scope = new Scope($manager, $resource);
+
+		$expected = array(
+			'meta' => array(
+				'foo' => 'bar',
+			),
+			'data' => array(
+				'title' => 'Foo',
+				'year' => 1991,
+				'author' => array(
+					'data' => array(
+						'name' => 'Dave',
+					),
+				),
+			),
+		);
+
+		$this->assertEquals($expected, $scope->toArray());
+	}
+
 
     public function tearDown()
     {
