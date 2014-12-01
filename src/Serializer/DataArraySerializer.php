@@ -23,7 +23,7 @@ class DataArraySerializer extends ArraySerializer
     {
         $resourceKey = $resourceKey ?: 'data';
         
-        return array(resourceKey => $data);
+        return array($resourceKey => $data);
     }
 
     /**
