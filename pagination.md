@@ -46,6 +46,22 @@ $resource = new Collection($books, new BookTransformer);
 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ~~~
 
+#### Including existing query string values in pagination links
+
+In the example above, previous and next pages will be provided simply with `?page=#` ignoring all other 
+existing query strings. To include all query string values automatically in these links we can replace 
+the last line above with:
+
+~~~ php
+$paginatorAdapter = new IlluminatePaginatorAdapter($paginator);
+
+foreach ( array_diff_key($_GET, array_flip(['page']) ) as $key => $value) {
+	$paginatorAdapter->addQuery($key, $value);
+}
+
+$resource->setPaginator($paginatorAdapter);
+~~~
+
 ## Using Cursors
 
 When we have large sets of data and running a `SELECT COUNT(*) FROM whatever` isn't really an option, we need a proper
