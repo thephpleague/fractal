@@ -55,7 +55,7 @@ the last line above with:
 ~~~ php
 $paginatorAdapter = new IlluminatePaginatorAdapter($paginator);
 
-foreach (Input::except('page') as $key => $value) {
+foreach ( array_diff_key($_GET, array_flip(['page']) ) as $key => $value) {
 	$paginatorAdapter->addQuery($key, $value);
 }
 
