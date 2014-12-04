@@ -14,27 +14,33 @@ namespace League\Fractal\Pagination;
 use Zend\Paginator\Paginator;
 
 /**
- * A paginator adapter for zendframework/zend-paginator
+ * A paginator adapter for zendframework/zend-paginator.
  *
  * @author Abdul Malik Ikhsan <samsonasik@gmail.com>
  */
 class ZendFrameworkPaginatorAdapter implements PaginatorInterface
 {
     /**
+     * The paginator instance.
+     *
      * @var \Zend\Paginator\Paginator
      */
     protected $paginator;
 
     /**
-     * Generate urls
+     * The route generator.
      *
      * @var callable
      */
     protected $routeGenerator;
 
     /**
+     * Create a new zendframework pagination adapter.
+     *
      * @param \Zend\Paginator\Paginator $paginator
-     * @param callable $routeGenerator
+     * @param callable                  $routeGenerator
+     *
+     * @return void
      */
     public function __construct(Paginator $paginator, $routeGenerator)
     {
@@ -43,7 +49,9 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the current page.
+     *
+     * @return int
      */
     public function getCurrentPage()
     {
@@ -51,7 +59,9 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the last page.
+     *
+     * @return int
      */
     public function getLastPage()
     {
@@ -59,7 +69,9 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total.
+     *
+     * @return int
      */
     public function getTotal()
     {
@@ -67,7 +79,9 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the count.
+     *
+     * @return int
      */
     public function getCount()
     {
@@ -75,7 +89,9 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the number per page.
+     *
+     * @return int
      */
     public function getPerPage()
     {
@@ -83,10 +99,34 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
     public function getUrl($page)
     {
         return call_user_func($this->routeGenerator, $page);
+    }
+
+    /**
+     * Get the paginator instance.
+     *
+     * @return \Zend\Paginator\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * Get the the route generator.
+     *
+     * @return callable
+     */
+    public function getRouteGenerator()
+    {
+        return $this->routeGenerator;
     }
 }
