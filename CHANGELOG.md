@@ -3,8 +3,10 @@
 ### Added
 
 - Added `League\Fractal\Pagination\PagerfantaPaginatorAdapter` to support [Pagerfanta]
+- Added `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter` to support [Zend Framework Paginator]
 
 [Pagerfanta]: https://packagist.org/packages/pagerfanta/pagerfanta
+[Zend Framework Paginator]: https://packagist.org/packages/zendframework/zend-paginator
 
 ## 0.10.0 - 2014-10-17
 
