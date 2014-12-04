@@ -14,75 +14,96 @@ namespace League\Fractal\Pagination;
 use Pagerfanta\Pagerfanta;
 
 /**
- * A paginator adapter for pagerfanta/pagerfanta
+ * A paginator adapter for pagerfanta/pagerfanta.
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
 class PagerfantaPaginatorAdapter implements PaginatorInterface
 {
     /**
-     * @var Pagerfanta
+     * The paginator instance.
+     *
+     * @var \Pagerfanta\Pagerfanta
      */
-    protected $pagerfanta;
+    protected $paginator;
 
     /**
-     * Generate urls
+     * The route generator.
      *
      * @var callable
      */
     protected $routeGenerator;
 
     /**
-     * @param Pagerfanta $pagerfanta
+     * Create a new pagerfanta pagination adapter.
+     *
+     * @param \Pagerfanta\Pagerfanta $paginator
+     * @param callable               $routeGenerator
+     *
+     * @return void
      */
-    public function __construct(Pagerfanta $pagerfanta, $routeGenerator)
+    public function __construct(Pagerfanta $paginator, $routeGenerator)
     {
-        $this->pagerfanta = $pagerfanta;
+        $this->paginator = $paginator;
         $this->routeGenerator = $routeGenerator;
     }
 
     /**
-     * {@inheritdoc}
+     * Get the current page.
+     *
+     * @return int
      */
     public function getCurrentPage()
     {
-        return $this->pagerfanta->getCurrentPage();
+        return $this->paginator->getCurrentPage();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the last page.
+     *
+     * @return int
      */
     public function getLastPage()
     {
-         return $this->pagerfanta->getNbPages();
+         return $this->paginator->getNbPages();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total.
+     *
+     * @return int
      */
     public function getTotal()
     {
-         return count($this->pagerfanta);
+         return count($this->paginator);
     }
 
     /**
-     * {@inheritdoc}
+     * Get the count.
+     *
+     * @return int
      */
     public function getCount()
     {
-        return count($this->pagerfanta->getCurrentPageResults());
+        return count($this->paginator->getCurrentPageResults());
     }
 
     /**
-     * {@inheritdoc}
+     * Get the number per page.
+     *
+     * @return int
      */
     public function getPerPage()
     {
-        return $this->pagerfanta->getMaxPerPage();
+        return $this->paginator->getMaxPerPage();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the url for the given page.
+     *
+     * @param int $page
+     *
+     * @return string
      */
     public function getUrl($page)
     {
@@ -90,17 +111,17 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the pagerfanta
+     * Get the paginator instance.
      *
-     * @return Pagerfanta
+     * @return \Pagerfanta\Pagerfanta
      */
-    public function getPagerfanta()
+    public function getPaginator()
     {
-        return $this->pagerfanta;
+        return $this->paginator;
     }
 
     /**
-     * Returns the route generator
+     * Get the the route generator.
      *
      * @return callable
      */
