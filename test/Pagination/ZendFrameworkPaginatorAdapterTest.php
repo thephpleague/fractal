@@ -18,11 +18,11 @@ class ZendFrameworkPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
 
         $adapter = Mockery::mock('Zend\Paginator\Adapter\ArrayAdapter', array($items))->makePartial();
 
-        $total       = 50;
-        $count       = 10;
-        $perPage     = 10;
+        $total = 50;
+        $count = 10;
+        $perPage = 10;
         $currentPage = 2;
-        $lastPage    = 5;
+        $lastPage = 5;
 
         $paginator = Mockery::mock('Zend\Paginator\Paginator', array($adapter))->makePartial();
 
@@ -34,24 +34,15 @@ class ZendFrameworkPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
             return 'http://example.com/foo?page='.$page;
         });
 
-        $this->assertInstanceOf(
-            'League\Fractal\Pagination\PaginatorInterface',
-            $adapter
-        );
+        $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);
 
         $this->assertEquals($currentPage, $adapter->getCurrentPage());
         $this->assertEquals($lastPage, $adapter->getLastPage());
         $this->assertEquals($count, $adapter->getCount());
         $this->assertEquals($total, $adapter->getTotal());
         $this->assertEquals($perPage, $adapter->getPerPage());
-        $this->assertEquals(
-            'http://example.com/foo?page=1',
-            $adapter->getUrl(1)
-        );
-        $this->assertEquals(
-            'http://example.com/foo?page=3',
-            $adapter->getUrl(3)
-        );
+        $this->assertEquals('http://example.com/foo?page=1', $adapter->getUrl(1));
+        $this->assertEquals('http://example.com/foo?page=3', $adapter->getUrl(3));
     }
 
     public function tearDown()
