@@ -36,7 +36,7 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
      * @param \Zend\Paginator\Paginator $paginator
      * @param callable $routeGenerator
      */
-    public function __construct(Paginator $paginator, callable $routeGenerator)
+    public function __construct(Paginator $paginator, $routeGenerator)
     {
         $this->paginator = $paginator;
         $this->routeGenerator = $routeGenerator;
