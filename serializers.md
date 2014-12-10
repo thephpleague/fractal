@@ -241,7 +241,7 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 ];
 ~~~
 
-Adding a resource to a item response would look like this:
+Adding a resource to an item response would look like this:
 
 ~~~ php
 // Item with Meta
