@@ -28,9 +28,11 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     protected $paginator;
 
     /**
-     * Setup our adapter.
+     * Create a new illuminate pagination adapter.
      *
      * @param \Illuminate\Pagination\Paginator $paginator
+     *
+     * @return void
      */
     public function __construct(Paginator $paginator)
     {
