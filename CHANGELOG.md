@@ -1,12 +1,17 @@
-## Unreleased
+## 0.11.0 - 2014-12-10
 
 ### Added
 
 - Added `League\Fractal\Pagination\PagerfantaPaginatorAdapter` to support [Pagerfanta]
 - Added `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter` to support [Zend Framework Paginator]
 
+### Fixed
+
+- Now JSON-API linked items will be unique based on their ID [Issue #126]
+
 [Pagerfanta]: https://packagist.org/packages/pagerfanta/pagerfanta
 [Zend Framework Paginator]: https://packagist.org/packages/zendframework/zend-paginator
+[Issue #126]: https://github.com/thephpleague/fractal/issues/126
 
 ## 0.10.0 - 2014-10-17
 
