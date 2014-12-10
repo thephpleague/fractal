@@ -96,7 +96,7 @@ class Manager
     public function getIncludeParams($include)
     {
         if (! isset($this->includeParams[$include])) {
-            return null;
+            return;
         }
 
         $params = $this->includeParams[$include];

@@ -30,7 +30,7 @@ class PagerfantaPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('getLastPage')->andReturn($lastPage);
         $paginator->shouldReceive('getMaxPerPage')->andReturn($perPage);
 
-        $adapter = new PagerfantaPaginatorAdapter($paginator, function($page) {
+        $adapter = new PagerfantaPaginatorAdapter($paginator, function ($page) {
             return 'http://example.com/foo?page='.$page;
         });
 

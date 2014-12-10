@@ -238,7 +238,8 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    public function testSerializingCollectionResourceWithDuplicatedIncludeData() {
+    public function testSerializingCollectionResourceWithDuplicatedIncludeData()
+    {
         $this->manager->parseIncludes('author');
 
         $booksData = array(
