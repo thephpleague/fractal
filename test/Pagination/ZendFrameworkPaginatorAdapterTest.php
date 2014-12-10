@@ -30,7 +30,7 @@ class ZendFrameworkPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('count')->andReturn($lastPage);
         $paginator->shouldReceive('getItemCountPerPage')->andReturn($perPage);
 
-        $adapter = new ZendFrameworkPaginatorAdapter($paginator, function($page) {
+        $adapter = new ZendFrameworkPaginatorAdapter($paginator, function ($page) {
             return 'http://example.com/foo?page='.$page;
         });
 

@@ -11,9 +11,9 @@
 
 namespace League\Fractal\Serializer;
 
-use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
+use League\Fractal\Resource\ResourceInterface;
 
 class ArraySerializer extends SerializerAbstract
 {

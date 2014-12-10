@@ -65,7 +65,7 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
      */
     public function getLastPage()
     {
-         return $this->paginator->getNbPages();
+        return $this->paginator->getNbPages();
     }
 
     /**
@@ -75,7 +75,7 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
      */
     public function getTotal()
     {
-         return count($this->paginator);
+        return count($this->paginator);
     }
 
     /**

@@ -19,7 +19,7 @@ class GenericBookTransformer extends TransformerAbstract
     public function includeAuthor(array $book)
     {
         if (! isset($book['_author'])) {
-            return null;
+            return;
         }
 
         return $this->item($book['_author'], new GenericAuthorTransformer(), 'author');
