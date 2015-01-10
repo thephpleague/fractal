@@ -122,7 +122,7 @@ can be added for those included resources too.
 
 ## ArraySerializer
 
-Sometimes people want to remove that `'data'` namespace for tems, and that can be done using the `ArraySerializer`. This is mostly the same, other than that namespace for items. Collections keep the 
+Sometimes people want to remove that `'data'` namespace for items, and that can be done using the `ArraySerializer`. This is mostly the same, other than that namespace for items. Collections keep the 
 `'data'` namespace to avoid confusing JSON when meta data is added.
 
 ~~~ php
