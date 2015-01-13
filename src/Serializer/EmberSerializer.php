@@ -54,34 +54,37 @@ class EmberSerializer extends ArraySerializer
         $serializedData = array();
         $linkedIds = array();
 
-        // var_dump($data);
-
-
         foreach ($data as $value) {
-            foreach ($value as $includeValue) {
+            foreach ($value as $includeCollection) {
 
-                // Prevent empty collection error
-                if (empty(array_values($includeValue)[0][0])) {
+                // Get resource key
+                $includeKey = array_keys($includeCollection)[0];
+
+                // If the collection is empty, move along
+                if (empty($includeCollection[$includeKey])) {
                     continue;
                 }
 
-                $includeKey = array_keys($includeValue)[0];
-                $itemValue = array_values($includeValue)[0][0];
+                // Get includes
+                $includes = $includeCollection[$includeKey];
 
-                // ???
-                if (!array_key_exists('id', $itemValue)) {
-                    $serializedData[$includeKey][] = $itemValue;
-                    continue;
+                foreach ($includes as $include) {
+
+                    // ???
+                    if (!array_key_exists('id', $include)) {
+                        $serializedData[$includeKey][] = $include;
+                        continue;
+                    }
+
+                    // ???
+                    $itemId = $include['id'];
+                    if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
+                        continue;
+                    }
+
+                    $serializedData[$includeKey][] = $include;
+                    $linkedIds[$includeKey][] = $itemId;
                 }
-
-                // ???
-                $itemId = $itemValue['id'];
-                if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
-                    continue;
-                }
-
-                $serializedData[$includeKey][] = $itemValue;
-                $linkedIds[$includeKey][] = $itemId;
             }
         }
 
