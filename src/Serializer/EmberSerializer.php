@@ -53,22 +53,35 @@ class EmberSerializer extends ArraySerializer
     {
         $serializedData = array();
         $linkedIds = array();
+
+        // var_dump($data);
+
+
         foreach ($data as $value) {
-            foreach ($value as $includeKey => $includeValue) {
-                foreach ($includeValue[$includeKey] as $itemValue) {
-                    if (!array_key_exists('id', $itemValue)) {
-                        $serializedData[$includeKey][] = $itemValue;
-                        continue;
-                    }
+            foreach ($value as $includeValue) {
 
-                    $itemId = $itemValue['id'];
-                    if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
-                        continue;
-                    }
-
-                    $serializedData[$includeKey][] = $itemValue;
-                    $linkedIds[$includeKey][] = $itemId;
+                // Prevent empty collection error
+                if (empty(array_values($includeValue)[0][0])) {
+                    continue;
                 }
+
+                $includeKey = array_keys($includeValue)[0];
+                $itemValue = array_values($includeValue)[0][0];
+
+                // ???
+                if (!array_key_exists('id', $itemValue)) {
+                    $serializedData[$includeKey][] = $itemValue;
+                    continue;
+                }
+
+                // ???
+                $itemId = $itemValue['id'];
+                if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
+                    continue;
+                }
+
+                $serializedData[$includeKey][] = $itemValue;
+                $linkedIds[$includeKey][] = $itemId;
             }
         }
 
