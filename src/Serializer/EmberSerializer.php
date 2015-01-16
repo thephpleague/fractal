@@ -68,21 +68,21 @@ class EmberSerializer extends ArraySerializer
                 // Get includes
                 $includes = $includeCollection[$includeKey];
 
-                foreach ($includes as $include) {
+                foreach ($includes as $item) {
 
                     // ???
-                    if (!array_key_exists('id', $include)) {
-                        $serializedData[$includeKey][] = $include;
+                    if (!array_key_exists('id', $item)) {
+                        $serializedData[$includeKey][] = $item;
                         continue;
                     }
 
                     // ???
-                    $itemId = $include['id'];
+                    $itemId = $item['id'];
                     if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
                         continue;
                     }
 
-                    $serializedData[$includeKey][] = $include;
+                    $serializedData[$includeKey][] = $item;
                     $linkedIds[$includeKey][] = $itemId;
                 }
             }
