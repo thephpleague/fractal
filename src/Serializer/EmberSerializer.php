@@ -54,36 +54,37 @@ class EmberSerializer extends ArraySerializer
         $serializedData = array();
         $linkedIds = array();
 
+        // Don't ask
         foreach ($data as $value) {
-            foreach ($value as $includeCollection) {
+            foreach ($value as $collections) {
 
-                // Get resource key
-                $includeKey = array_keys($includeCollection)[0];
+                // Serialize each collection
+                foreach ($collections as $collectionKey => $collection) {
 
-                // If the collection is empty, move along
-                if (empty($includeCollection[$includeKey])) {
-                    continue;
-                }
-
-                // Get includes
-                $includes = $includeCollection[$includeKey];
-
-                foreach ($includes as $item) {
-
-                    // ???
-                    if (!array_key_exists('id', $item)) {
-                        $serializedData[$includeKey][] = $item;
+                    // If the collection is empty, move along
+                    if (empty($collection)) {
                         continue;
                     }
 
-                    // ???
-                    $itemId = $item['id'];
-                    if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
-                        continue;
-                    }
+                    // Add every item in the collection to serializedData
+                    foreach ($collection as $item) {
 
-                    $serializedData[$includeKey][] = $item;
-                    $linkedIds[$includeKey][] = $itemId;
+                        // Add item without id
+                        if (!array_key_exists('id', $item)) {
+                            $serializedData[$collectionKey][] = $item;
+                            continue;
+                        }
+
+                        // Don't add item if it's already in the collection
+                        $itemId = $item['id'];
+                        if (!empty($linkedIds[$collectionKey]) && in_array($itemId, $linkedIds[$collectionKey], true)) {
+                            continue;
+                        }
+
+                        // Add new item
+                        $serializedData[$collectionKey][] = $item;
+                        $linkedIds[$collectionKey][] = $itemId;
+                    }
                 }
             }
         }
