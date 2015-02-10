@@ -220,7 +220,7 @@ This will look identical in output as if the user requested `?include=author`.
 ### Include Parameters
 
 When including other resources, syntax can be used to provide extra parameters to the include 
-methods. These parameters are constructed in the URL, `?include=comments:limit(5|1):order(created_at,desc)`.
+methods. These parameters are constructed in the URL, `?include=comments:limit(5|1):order(created_at|desc)`.
 
 This syntax will be parsed and made available through a `League\Fractal\ParamBag` object, passed into the 
 include method as the second argument.
