@@ -11,11 +11,12 @@
 
 namespace League\Fractal\Pagination;
 
-use Illuminate\Pagination\Paginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * A paginator adapter for illuminate/pagination.
  *
+ * @author Maxime Beaudoin <firalabs@gmail.com>
  * @author Marc Addeo <marcaddeo@gmail.com>
  */
 class IlluminatePaginatorAdapter implements PaginatorInterface
@@ -23,18 +24,18 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     /**
      * The paginator instance.
      *
-     * @var \Illuminate\Pagination\Paginator
+     * @var \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     protected $paginator;
 
     /**
      * Create a new illuminate pagination adapter.
      *
-     * @param \Illuminate\Pagination\Paginator $paginator
+     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator
      *
      * @return void
      */
-    public function __construct(Paginator $paginator)
+    public function __construct(LengthAwarePaginator $paginator)
     {
         $this->paginator = $paginator;
     }
@@ -46,7 +47,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getCurrentPage()
     {
-        return $this->paginator->getCurrentPage();
+        return $this->paginator->currentPage();
     }
 
     /**
@@ -56,7 +57,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getLastPage()
     {
-        return $this->paginator->getLastPage();
+        return $this->paginator->lastPage();
     }
 
     /**
@@ -66,7 +67,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getTotal()
     {
-        return $this->paginator->getTotal();
+        return $this->paginator->total();
     }
 
     /**
@@ -86,7 +87,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getPerPage()
     {
-        return $this->paginator->getPerPage();
+        return $this->paginator->perPage();
     }
 
     /**
@@ -98,13 +99,13 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        return $this->paginator->getUrl($page);
+        return $this->paginator->url($page);
     }
 
     /**
      * Get the paginator instance.
      *
-     * @return \Illuminate\Paginator\Paginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getPaginator()
     {
