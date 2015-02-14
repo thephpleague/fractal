@@ -57,7 +57,7 @@ $paginatorAdapter = new IlluminatePaginatorAdapter($paginator);
 
 $queryParams = array_diff_key($_GET, array_flip(['page']));
 foreach ($queryParams as $key => $value) {
-	$paginatorAdapter->addQuery($key, $value);
+	$paginator->addQuery($key, $value);
 }
 
 $resource->setPaginator($paginatorAdapter);
