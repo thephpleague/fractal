@@ -53,13 +53,17 @@ existing query strings. To include all query string values automatically in thes
 the last line above with:
 
 ~~~ php
-$paginatorAdapter = new IlluminatePaginatorAdapter($paginator);
+use Acme\Model\Book;
+
+$year = Input::get('year');
+$paginator = Book::where('year', '=', $year)->paginate(20);
 
 $queryParams = array_diff_key($_GET, array_flip(['page']));
 foreach ($queryParams as $key => $value) {
-	$paginatorAdapter->addQuery($key, $value);
+	$paginator->addQuery($key, $value);
 }
 
+$paginatorAdapter = new IlluminatePaginatorAdapter($paginator);
 $resource->setPaginator($paginatorAdapter);
 ~~~
 
