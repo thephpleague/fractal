@@ -52,16 +52,6 @@ class Collection extends ResourceAbstract
     protected $transformer;
 
     /**
-     * Get the data.
-     *
-     * @return array|ArrayIterator
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
      * Get the paginator instance.
      *
      * @return PaginatorInterface
@@ -99,16 +89,6 @@ class Collection extends ResourceAbstract
     public function hasCursor()
     {
         return $this->cursor instanceof CursorInterface;
-    }
-
-    /**
-     * Get the transformer.
-     *
-     * @return callable|string
-     */
-    public function getTransformer()
-    {
-        return $this->transformer;
     }
 
     /**
