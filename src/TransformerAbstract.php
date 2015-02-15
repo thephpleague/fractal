@@ -87,8 +87,8 @@ abstract class TransformerAbstract
      */
     private function figureOutWhichIncludes(Scope $scope)
     {
-        $includes = $this->defaultIncludes;
-        foreach ($this->availableIncludes as $include) {
+        $includes = $this->getDefaultIncludes();
+        foreach ($this->getAvailableIncludes() as $include) {
             if ($scope->isRequested($include)) {
                 $includes[] = $include;
             }
