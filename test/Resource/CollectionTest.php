@@ -20,6 +20,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resource->getData(), $this->simpleCollection);
     }
 
+    /**
+     * @covers League\Fractal\Resource\Collection::setData
+     */
+    public function testSetData()
+    {
+        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
+        $collection->setData('foo');
+        $this->assertEquals('foo', $collection->getData());
+    }
+
     public function testGetTransformer()
     {
         $resource = new Collection($this->simpleCollection, function () {
@@ -28,6 +38,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $resource = new Collection($this->simpleCollection, 'SomeClass');
         $this->assertEquals($resource->getTransformer(), 'SomeClass');
+    }
+
+    /**
+     * @covers League\Fractal\Resource\Collection::setTransformer
+     */
+    public function testSetTransformer()
+    {
+        $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
+        $collection->setTransformer('foo');
+        $this->assertEquals('foo', $collection->getTransformer());
     }
 
     /**

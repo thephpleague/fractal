@@ -68,6 +68,19 @@ abstract class ResourceAbstract implements ResourceInterface
     }
 
     /**
+     * Set the data.
+     *
+     * @param mixed $data
+     * @return \League\Fractal\Resource\ResourceAbstract
+     */
+    public function setData($data)
+    {
+         $this->data = $data;
+
+         return $this;
+    }
+
+    /**
      * Get the meta data.
      *
      * @return array
@@ -107,6 +120,19 @@ abstract class ResourceAbstract implements ResourceInterface
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+    /**
+     * Set the transformer.
+     *
+     * @param callable|string $transformer
+     * @return \League\Fractal\Resource\ResourceAbstract
+     */
+    public function setTransformer($transformer)
+    {
+        $this->transformer = $transformer;
+        
+        return $this;
     }
 
     /**
