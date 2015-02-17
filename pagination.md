@@ -25,8 +25,13 @@ consider using Cursors instead.
 Paginator objects are created, and must implement `League\Fractal\Pagination\PaginatorInterface`
 and it's specified methods. The instantiated object must then be passed to the `League\Fractal\Resource\Collection::setPaginator()` method.
 
-Fractal currently only ships with an adapter for Laravel's `illuminate/pagination` package as
-`League\Fractal\Pagination\IlluminatePaginatorAdapter`, but more may be added at some point.
+Fractal currently ships with the following adapters:
+
+* Laravel's `illuminate/pagination` package as `League\Fractal\Pagination\IlluminatePaginatorAdapter`
+* The `pagerfanta/pagerfanta` package as `League\Fractal\Pagination\PagerfantaPaginatorAdapter`
+* Zend Framework's `zendframework/zend-paginator` package as `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter`
+
+More may be added at some point.
 
 [Laravel Pagination]: http://laravel.com/docs/pagination
 
