@@ -23,7 +23,7 @@ For some data sets this might not be an issue, but for some it certainly will. I
 consider using Cursors instead.
 
 Paginator objects are created, and must implement `League\Fractal\Pagination\PaginatorInterface`
-and it's specified methods. The instantiated object must then be passed to the `League\Fractal\Resource\Collection::setPaginator()` method.
+and its specified methods. The instantiated object must then be passed to the `League\Fractal\Resource\Collection::setPaginator()` method.
 
 Fractal currently ships with the following adapters:
 
@@ -33,7 +33,7 @@ Fractal currently ships with the following adapters:
 
 ### Laravel Pagination
 
-As an example, you can use Laravel's Eloquent or Query Builder method `paginate()`, to achieve the following:
+As an example, you can use Laravel's Eloquent or Query Builder method `paginate()` to achieve the following:
 
 ~~~ php
 use League\Fractal\Resource\Collection;
@@ -76,7 +76,7 @@ way of fetching results. One of the approaches is to use cursors that will indic
 fetching results. You can set a new cursor on your collections using the
 `League\Fractal\Resource\Collection::setCursor()` method.
 
-The cursor must implement `League\Fractal\Pagination\CursorInterface` and it's specified methods.
+The cursor must implement `League\Fractal\Pagination\CursorInterface` and its specified methods.
 
 Fractal currently ships with a very basic adapter: `League\Fractal\Pagination\Cursor`. It's really easy to use:
 
@@ -100,6 +100,7 @@ $resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
 ~~~
 
-These examples are for Laravel's Illuminate\Database package, but you can do it however you like. The cursor
+These examples are for Laravel's `illuminate\database` package, but you can do it however you like. The cursor
 also happens to be constructed from the `id` field, but it could just as easily be an offset number. Whatever
-is picked to represent a cursor, maybe consider using `base64_encode()` and `base64_decode()` on the values to make sure API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.
+is picked to represent a cursor, maybe consider using `base64_encode()` and `base64_decode()` on the values to make sure
+API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.
