@@ -31,12 +31,9 @@ Fractal currently ships with the following adapters:
 * The `pagerfanta/pagerfanta` package as `League\Fractal\Pagination\PagerfantaPaginatorAdapter`
 * Zend Framework's `zendframework/zend-paginator` package as `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter`
 
-More may be added at some point.
+### Laravel Pagination
 
-[Laravel Pagination]: http://laravel.com/docs/pagination
-
-Inside of Laravel 4, using the Eloquent or Query Builder method `paginate()`, the following syntax is
-possible:
+As an example, you can use Laravel's Eloquent or Query Builder method `paginate()`, to achieve the following:
 
 ~~~ php
 use League\Fractal\Resource\Collection;
