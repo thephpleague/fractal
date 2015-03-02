@@ -20,7 +20,7 @@ Learn more about the general concepts of Fractal.
     <dt id="term-embed">Include</dt>
     <dd>Data usually has relationships to other data. Users have posts, posts have
     comments, comments belong to posts, etc. When represented in RESTful APIs this data is usually
-    data is "included" (a.k.a embedded or nested) into the resource.
+    "included" (a.k.a embedded or nested) into the resource.
     A transformer will contain <code>includePosts()</code> methods, which will expect a resource to be
     returned, so it can be placed inside the parent resource.</dd>
 
@@ -43,18 +43,15 @@ Learn more about the general concepts of Fractal.
     <dd>A <em>resource</em> is an object which acts as a wrapper for generic data. A <em>resource</em> will
     have a <em>transformer</em> attached, for when it is eventually transformed ready to be serialized and output.</dd>
 
+    
     <dt id="term-scope">Serializer</dt>
-    <dd>A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. There are many output structures for APIs, two popular ones being [HAL] and [JSON-API]. Twitter and Facebook output data differently to each other, and Google does it differently too. <em>Serializers</em> let you switch between various output formats
+    <dd>A <em>Serializer</em> structures your <em>Transformed</em> data in certain ways. There are many output structures for APIs, two popular ones being <a href="http://stateless.co/hal_specification.html">HAL</a> and <a href="http://jsonapi.org/">JSON-API</a>. Twitter and Facebook output data differently to each other, and Google does it differently too. <em>Serializers</em> let you switch between various output formats
     with minimal effect on your <em>Transformers</em>.</dd>
 
     <dt id="term-transformer">Transformer</dt>
     <dd><em>Transformers</em> are classes, or anonymous functions, which are responsible for taking
     one instance of the resource data and converting it to a basic array. This process is done to obfuscate
-    your data store, avoiding [Object-relational impedance mismatch] and allowing you to even glue various
+    your data store, avoiding <a href="https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch">Object-relational impedance mismatch</a> and allowing you to even glue various
     elements together from different data stores if you wish. The data is taken from these complex data store(s) and made into a format that is more manageable, and ready to be <em>Serialized</em>.</dd>
 
 </dl>
-
-[HAL]: http://stateless.co/hal_specification.html
-[JSON-API]: http://jsonapi.org/
-[Object-relational impedance mismatch]: https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch
