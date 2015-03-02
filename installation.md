@@ -9,7 +9,7 @@ Installation
 
 ## System Requirements
 
-You need **PHP >= 5.3.0** to use `league\fractal` but the latest stable version of PHP is recommended.
+You need **PHP >= 5.4.0** to use `league/fractal` but the latest stable version of PHP is recommended.
 
 ## Composer
 
