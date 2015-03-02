@@ -91,7 +91,7 @@ $resource = new Fractal\Resource\Collection($books, new BookTransformer);
 ## Including Data
 
 Your transformer at this point is mainly just giving you a method to handle array conversion from
-you data source (or whatever your model is returning) to a simple array. Including data in an
+your data source (or whatever your model is returning) to a simple array. Including data in an
 intelligent way can be tricky as data can have all sorts of relationships. Many developers try to
 find a perfect balance between not making too many HTTP requests and not downloading more data than
 they need to, so flexibility is also important.
