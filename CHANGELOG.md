@@ -1,3 +1,6 @@
+### Development
+- update github url in CONTRIBUTING.md
+
 ## 0.11.0 - 2014-12-10
 
 ### Added
