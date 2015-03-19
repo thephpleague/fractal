@@ -1,6 +1,6 @@
 {
     "name": "league/fractal",
-    "description": "Handle the output of complex data structures ready for JSON output.",
+    "description": "Handle the output of complex data structures ready for API output.",
     "keywords": [
         "league",
         "api",
@@ -45,7 +45,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.12-dev"
+            "dev-master": "0.13-dev"
         }
     }
 }

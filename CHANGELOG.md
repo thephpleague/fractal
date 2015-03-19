@@ -1,5 +1,25 @@
 ### Development
-- update github url in CONTRIBUTING.md
+
+## 0.12.0 - 2015-03-19
+
+### Added
+
+- Added PHP 7.0-dev support.
+- Add the support for Laravel 5 paginator. [Issue #153]
+
+### Changed
+
+- Now accessing the default and available includes in Transformers via getters [Issue #158]
+
+### Removed
+
+- Dropped PHP 5.3 support. Use [v0.11] if you're still stuck on PHP 5.3.
+- Removed `getData()` and `getTransformer()` from `League\Fractal\Resource\Collection` as they were already
+  defined in `ResourceAbstract`.
+
+[Issue #153]: https://github.com/thephpleague/fractal/pull/153
+[Issue #158]: https://github.com/thephpleague/fractal/pull/158
+[v0.11]: https://github.com/thephpleague/fractal/releases/tag/0.11.0
 
 ## 0.11.0 - 2014-12-10
 
