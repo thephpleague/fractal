@@ -50,7 +50,7 @@ abstract class ResourceAbstract implements ResourceInterface
      *
      * @return void
      */
-    public function __construct($data, $transformer = null, $resourceKey = null)
+    public function __construct($data = null, $transformer = null, $resourceKey = null)
     {
         $this->data = $data;
         $this->transformer = $transformer;
