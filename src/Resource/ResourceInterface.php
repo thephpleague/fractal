@@ -26,4 +26,20 @@ interface ResourceInterface
      * @return callable|string
      */
     public function getTransformer();
+
+    /**
+     * Set the data.
+     *
+     * @param mixed $data
+     * @return \League\Fractal\Resource\ResourceAbstract
+     */
+    public function setData($data);
+
+    /**
+     * Set the transformer.
+     *
+     * @param callable|string $transformer
+     * @return \League\Fractal\Resource\ResourceAbstract
+     */
+    public function setTransformer($transformer);
 }
