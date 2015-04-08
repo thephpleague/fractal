@@ -74,6 +74,17 @@ abstract class SerializerAbstract
      */
     abstract public function cursor(CursorInterface $cursor);
 
+    public function mergeIncludes($transformedData, $includedData)
+    {
+        // If the serializer does not want the includes to be side-loaded then
+        // the included data must be merged with the transformed data.
+        if (! $this->sideloadIncludes()) {
+            return array_merge($transformedData, $includedData);
+        }
+
+        return $transformedData;
+    }
+
     /**
      * Indicates if includes should be side-loaded.
      *
