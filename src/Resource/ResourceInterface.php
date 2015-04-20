@@ -16,7 +16,7 @@ interface ResourceInterface
     /**
      * Get the data.
      *
-     * @return array|ArrayIterator
+     * @return mixed
      */
     public function getData();
 
