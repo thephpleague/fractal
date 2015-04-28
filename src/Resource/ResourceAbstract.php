@@ -131,12 +131,12 @@ abstract class ResourceAbstract implements ResourceInterface
     public function setTransformer($transformer)
     {
         $this->transformer = $transformer;
-        
+
         return $this;
     }
 
     /**
-     * Set the meta data
+     * Set the meta data.
      *
      * @param string $metaKey
      * @param mixed  $metaValue
