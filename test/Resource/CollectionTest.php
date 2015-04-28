@@ -93,6 +93,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setMetaValue('foo', 'bar'));
         $this->assertEquals(array('foo' => 'bar'), $collection->getMeta());
         $this->assertEquals('bar', $collection->getMetaValue('foo'));
+        $collection->setMeta(array('baz' => 'bat'));
+        $this->assertEquals(array('baz' => 'bat'), $collection->getMeta());
     }
 
     /**

@@ -138,6 +138,20 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Set the meta data.
      *
+     * @param array $meta
+     *
+     * @return $this
+     */
+    public function setMeta(array $meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Set the meta data.
+     *
      * @param string $metaKey
      * @param mixed  $metaValue
      *
