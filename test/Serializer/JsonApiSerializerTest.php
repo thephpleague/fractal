@@ -24,7 +24,11 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $bookData = array(
             'title' => 'Foo',
             'year' => '1991',
+            'links' => array(
+                'author' => 1,
+            ),
             '_author' => array(
+                'id' => 1,
                 'name' => 'Dave',
             ),
         );
@@ -38,11 +42,15 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
+                        'id' => 1,
                         'name' => 'Dave',
                     ),
                 ),
@@ -51,7 +59,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}}],"linked":{"author":[{"id":1,"name":"Dave"}]}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -62,7 +70,11 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $bookData = array(
             'title' => 'Foo',
             'year' => '1991',
+            'links' => array(
+                'author' => 1,
+            ),
             '_author' => array(
+                'id' => 1,
                 'name' => 'Dave',
             ),
         );
@@ -76,11 +88,15 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
+                        'id' => 1,
                         'name' => 'Dave',
                     ),
                 ),
@@ -89,7 +105,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}}],"linked":{"author":[{"id":1,"name":"Dave"}]}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -101,14 +117,22 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Foo',
                 'year' => '1991',
+                'links' => array(
+                    'author' => 1,
+                ),
                 '_author' => array(
+                    'id' => 1,
                     'name' => 'Dave',
                 ),
             ),
             array(
                 'title' => 'Bar',
                 'year' => '1997',
+                'links' => array(
+                    'author' => 2,
+                ),
                 '_author' => array(
+                    'id' => 2,
                     'name' => 'Bob',
                 ),
             ),
@@ -122,23 +146,35 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
                 array(
                     'title' => 'Bar',
                     'year' => 1997,
+                    'links' => array(
+                        'author' => 2,
+                    ),
                 ),
             ),
             'linked' => array(
                 'author' => array(
-                    array('name' => 'Dave'),
-                    array('name' => 'Bob'),
+                    array(
+                        'id' => 1,
+                        'name' => 'Dave',
+                    ),
+                    array(
+                        'id' => 2,
+                        'name' => 'Bob',
+                    ),
                 ),
             ),
         );
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"name":"Dave"},{"name":"Bob"}]}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}},{"title":"Bar","year":1997,"links":{"author":2}}],"linked":{"author":[{"id":1,"name":"Dave"},{"id":2,"name":"Bob"}]}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -149,7 +185,11 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $bookData = array(
             'title' => 'Foo',
             'year' => '1991',
+            'links' => array(
+                'author' => 1,
+            ),
             '_author' => array(
+                'id' => 1,
                 'name' => 'Dave',
             ),
         );
@@ -164,11 +204,15 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
             ),
             'linked' => array(
                 'author' => array(
                     array(
+                        'id' => 1,
                         'name' => 'Dave',
                     ),
                 ),
@@ -180,7 +224,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]},"meta":{"foo":"bar"}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}}],"linked":{"author":[{"id":1,"name":"Dave"}]},"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -192,14 +236,22 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Foo',
                 'year' => '1991',
+                'links' => array(
+                    'author' => 1,
+                ),
                 '_author' => array(
+                    'id' => 1,
                     'name' => 'Dave',
                 ),
             ),
             array(
                 'title' => 'Bar',
                 'year' => '1997',
+                'links' => array(
+                    'author' => 2,
+                ),
                 '_author' => array(
+                    'id' => 2,
                     'name' => 'Bob',
                 ),
             ),
@@ -215,16 +267,28 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
                 array(
                     'title' => 'Bar',
                     'year' => 1997,
+                    'links' => array(
+                        'author' => 2,
+                    ),
                 ),
             ),
             'linked' => array(
                 'author' => array(
-                    array('name' => 'Dave'),
-                    array('name' => 'Bob'),
+                    array(
+                        'id' => 1,
+                        'name' => 'Dave',
+                    ),
+                    array(
+                        'id' => 2,
+                        'name' => 'Bob',
+                    ),
                 ),
             ),
             'meta' => array(
@@ -234,7 +298,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"name":"Dave"},{"name":"Bob"}]},"meta":{"foo":"bar"}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}},{"title":"Bar","year":1997,"links":{"author":2}}],"linked":{"author":[{"id":1,"name":"Dave"},{"id":2,"name":"Bob"}]},"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -246,6 +310,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Foo',
                 'year' => '1991',
+                'links' => array(
+                    'author' => 1,
+                ),
                 '_author' => array(
                     'id' => 1,
                     'name' => 'Dave',
@@ -254,6 +321,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Bar',
                 'year' => '1997',
+                'links' => array(
+                    'author' => 1,
+                ),
                 '_author' => array(
                     'id' => 1,
                     'name' => 'Dave',
@@ -269,10 +339,16 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
                 array(
                     'title' => 'Bar',
                     'year' => 1997,
+                    'links' => array(
+                        'author' => 1,
+                    ),
                 ),
             ),
             'linked' => array(
@@ -287,7 +363,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"id":1,"name":"Dave"}]}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1}},{"title":"Bar","year":1997,"links":{"author":1}}],"linked":{"author":[{"id":1,"name":"Dave"}]}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -299,6 +375,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Foo',
                 'year' => '1991',
+                'links' => array(
+                    'author' => 1,
+                    'reviews' => array(1),
+                ),
                 '_author' => array(
                     'id' => 1,
                     'name' => 'Dave',
@@ -307,6 +387,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                     array(
                         'id' => 1,
                         'comment' => 'Foo review',
+                        'links' => array(
+                            'author' => 2,
+                        ),
                         '_author' => array(
                             'id' => 2,
                             'name' => 'Bob',
@@ -317,6 +400,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             array(
                 'title' => 'Bar',
                 'year' => '1997',
+                'links' => array(
+                    'author' => 1,
+                    'reviews' => array(2),
+                ),
                 '_author' => array(
                     'id' => 1,
                     'name' => 'Dave',
@@ -325,6 +412,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                     array(
                         'id' => 2,
                         'comment' => 'Bar review',
+                        'links' => array(
+                            'author' => 2,
+                        ),
                         '_author' => array(
                             'id' => 2,
                             'name' => 'Bob',
@@ -342,10 +432,18 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 array(
                     'title' => 'Foo',
                     'year' => 1991,
+                    'links' => array(
+                        'author' => 1,
+                        'reviews' => array(1),
+                    ),
                 ),
                 array(
                     'title' => 'Bar',
                     'year' => 1997,
+                    'links' => array(
+                        'author' => 1,
+                        'reviews' => array(2),
+                    ),
                 ),
             ),
             'linked' => array(
@@ -363,10 +461,16 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                     array(
                         'id' => 1,
                         'comment' => 'Foo review',
+                        'links' => array(
+                            'author' => 2,
+                        ),
                     ),
                     array(
                         'id' => 2,
                         'comment' => 'Bar review',
+                        'links' => array(
+                            'author' => 2,
+                        ),
                     ),
                 ),
             ),
@@ -374,7 +478,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"id":1,"name":"Dave"},{"id":2,"name":"Bob"}],"reviews":[{"id":1,"comment":"Foo review"},{"id":2,"comment":"Bar review"}]}}';
+        $expectedJson = '{"book":[{"title":"Foo","year":1991,"links":{"author":1,"reviews":[1]}},{"title":"Bar","year":1997,"links":{"author":1,"reviews":[2]}}],"linked":{"author":[{"id":1,"name":"Dave"},{"id":2,"name":"Bob"}],"reviews":[{"id":1,"comment":"Foo review","links":{"author":2}},{"id":2,"comment":"Bar review","links":{"author":2}}]}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
