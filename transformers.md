@@ -244,13 +244,13 @@ use League\Fractal\ParamBag;
         list($limit, $offset) = $params->get('limit');
         list($orderCol, $orderBy) = $params->get('order');
 
-        $author = $book->comments
+        $comments = $book->comments
             ->take($limit)
             ->skip($offset)
             ->orderBy($orderCol, $orderBy)
             ->get();
 
-        return $this->item($author, new AuthorTransformer);
+        return $this->collection($comments, new CommentTransformer);
     }
 ~~~
 
