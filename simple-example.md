@@ -54,7 +54,7 @@ $resource = new Collection($books, function(array $book) {
         'links'   => [
             [
                 'rel' => 'self',
-                'uri' => '/books/'.$book->id,
+                'uri' => '/books/'.$book['id'],
             ]
         ]
     ];
