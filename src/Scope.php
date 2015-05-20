@@ -118,6 +118,16 @@ class Scope
     }
 
     /**
+     * Getter for resource.
+     *
+     * @return ResourceInterface
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
      * Getter for manager.
      *
      * @return \League\Fractal\Manager
