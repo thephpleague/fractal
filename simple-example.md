@@ -24,16 +24,16 @@ $fractal = new Manager();
 // for performance reasons. We will fix this later, but this array represents that.
 $books = [
 	[
-		'id' => "1",
-		'title' => "Hogfather",
-		'yr' => "1998",
+		'id' => '1',
+		'title' => 'Hogfather',
+		'yr' => '1998',
 		'author_name' => 'Philip K Dick',
 		'author_email' => 'philip@example.org',
 	],
 	[
-		'id' => "2",
-		'title' => "Game Of Kill Everyone",
-		'yr' => "2014",
+		'id' => '2',
+		'title' => 'Game Of Kill Everyone',
+		'yr' => '2014',
 		'author_name' => 'George R. R. Satan',
 		'author_email' => 'george@example.org',
 	]
