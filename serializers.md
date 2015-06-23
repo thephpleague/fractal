@@ -15,6 +15,8 @@ serializers are how data is namespaced.
 
 [HAL]: http://stateless.co/hal_specification.html
 [JSON-API]: http://jsonapi.org/
+[Ember Data's RESTAdapter]: http://emberjs.com/api/data/classes/DS.RESTAdapter.html
+[adapter for Ember.js]: http://emberjs.com/guides/models/the-rest-adapter/
 
 A very basic usage of Fractal will look like this, as has been seen in other sections:
 
@@ -244,7 +246,7 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 Adding a resource to an item response would look like this:
 
 ~~~ php
-// Item with Meta
+// Item with included resource
 [
     'book' => [
         'foo' => 'bar'
@@ -258,6 +260,90 @@ Adding a resource to an item response would look like this:
     ]
 ];
 ~~~
+
+
+## EmberSerializer
+This serializer presents data the way [Ember Data's RESTAdapter] consumes it. This is the default [adapter for Ember.js].
+
+At first glance, the `EmberSerializer` might seem identical to the `JsonApiSerializer`. The difference is in the way it presents "side-loaded" resources.
+
+Other than with `ArraySerializer` or `DataArraySerializer`, we need to set the _Resource Key_.
+
+~~~ php
+use League\Fractal\Serializer\EmberSerializer;
+$manager->setSerializer(new EmberSerializer());
+
+// As with JsonApiSerializer, set the Resource Key in the third parameter:
+$resource = new Item($book, new GenericBookTransformer(), 'book');
+$resource = new Collection($books, new GenericBookTransformer(), 'books');
+~~~
+
+This key is used for namespacing:
+
+~~~ php
+// Item
+[
+    'book' => [
+        'foo' => 'bar'
+    ],
+];
+
+// Collection
+[
+    'books' => [
+        [
+            'foo' => 'bar'
+        ]
+    ],
+];
+~~~
+
+We can add [metadata](http://emberjs.com/guides/models/handling-metadata/):
+
+~~~ php
+// Item with Meta
+[
+    'book' => [
+        'foo' => 'bar'
+    ],
+    'meta' => [
+        ...
+    ]
+];
+
+// Collection with Meta
+[
+    'books' => [
+        [
+            'foo' => 'bar'
+        ]
+    ],
+    'meta' => [
+        ...
+    ]
+];
+~~~
+
+And now for the difference with the `JsonApiSerializer`: The `EmberSerializer` doesn't wrap the results in a "linked" array. Instead, it pulls all included resources to the top level. Note that for Ember to understand this, you will need to place relationship keys in your `Transformers`.
+
+~~~ php
+// Item with included resource
+[
+    'book' => [
+        'foo' => 'bar',
+        'author' => 24
+    ],
+    'author' => [
+        [
+            'id' => 24,
+            'name' => 'Dave'
+        ]
+    ]
+];
+~~~
+
+
+
 
 ## Custom Serializers
 
