@@ -25,7 +25,13 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function collection($resourceKey, array $data)
     {
-        return array($resourceKey ?: 'data' => $data);
+        $resources = [];
+
+        foreach ($data as $resource) {
+            $resources[] = $this->item($resourceKey, $resource)['data'];
+        }
+
+        return array('data' => $resources);
     }
 
     /**
@@ -38,7 +44,24 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function item($resourceKey, array $data)
     {
-        return array($resourceKey ?: 'data' => array($data));
+        $id = $this->getIdFromData($data);
+
+        $resource = array(
+            'data' => array(
+                'type' => $resourceKey,
+                'id' => "$id",
+                'attributes' => $data,
+            ),
+        );
+
+        if ($id === null) {
+            unset($resource['data']['id']);
+        }
+        else {
+            unset($resource['data']['attributes']['id']);
+        }
+
+        return $resource;
     }
 
     /**
@@ -54,25 +77,17 @@ class JsonApiSerializer extends ArraySerializer
         $serializedData = array();
         $linkedIds = array();
         foreach ($data as $value) {
-            foreach ($value as $includeKey => $includeValue) {
-                foreach ($includeValue[$includeKey] as $itemValue) {
-                    if (!array_key_exists('id', $itemValue)) {
-                        $serializedData[$includeKey][] = $itemValue;
-                        continue;
-                    }
-
-                    $itemId = $itemValue['id'];
-                    if (!empty($linkedIds[$includeKey]) && in_array($itemId, $linkedIds[$includeKey], true)) {
-                        continue;
-                    }
-
-                    $serializedData[$includeKey][] = $itemValue;
-                    $linkedIds[$includeKey][] = $itemId;
+            foreach ($value as $includeKey => $includeObject) {
+                $includeType = $includeObject['data']['type'];
+                $includeId = $includeObject['data']['id'];
+                if (!array_key_exists("$includeType:$includeId", $linkedIds)) {
+                    $serializedData[] = $includeObject['data'];
+                    $linkedIds["$includeType:$includeId"] = $includeObject;
                 }
             }
         }
 
-        return empty($serializedData) ? array() : array('linked' => $serializedData);
+        return empty($serializedData) ? array() : array('included' => $serializedData);
     }
 
     /**
@@ -83,5 +98,71 @@ class JsonApiSerializer extends ArraySerializer
     public function sideloadIncludes()
     {
         return true;
+    }
+
+    public function injectData($data, $includedData)
+    {
+        $relationships = $this->parseRelationships($includedData);
+
+        if (!empty($relationships)) {
+            $data = $this->fillRelationships($data, $relationships);
+        }
+
+        return $data;
+    }
+
+    private function isCollection($data)
+    {
+        return array_key_exists('data', $data) &&
+               array_key_exists(0, $data['data']);
+    }
+
+    private function fillRelationships($data, $relationships)
+    {
+        if ($this->isCollection($data)) {
+            foreach ($relationships as $key => $relationship) {
+                foreach ($relationship as $index => $relationshipData) {
+                    $data['data'][$index]['relationships'][$key] = $relationshipData;
+                }
+            }
+        }
+        else { // Single resource
+            foreach ($relationships as $key => $relationship) {
+                $data['data']['relationships'][$key] = $relationship[0];
+            }
+        }
+
+        return $data;
+    }
+
+    private function parseRelationships($includedData)
+    {
+        $relationships = array();
+
+        foreach ($includedData as $inclusion) {
+            foreach ($inclusion as $includeKey => $includeObject)
+            {
+                if (!array_key_exists($includeKey, $relationships)) {
+                    $relationships[$includeKey] = array();
+                }
+
+                $relationships[$includeKey][] = array(
+                    'data' => array(
+                        'type' => $includeObject['data']['type'],
+                        'id' => $includeObject['data']['id'],
+                    ),
+                );
+            }
+        }
+
+        return $relationships;
+    }
+
+    private function getIdFromData(array $data)
+    {
+        if (!array_key_exists('id', $data)) {
+            return null;
+        }
+        return $data['id'];
     }
 }

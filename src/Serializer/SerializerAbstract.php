@@ -94,4 +94,17 @@ abstract class SerializerAbstract
     {
         return false;
     }
+
+    /**
+     * Hook for the serializer to inject custom data based on the relationships
+     * of the resource.
+     *
+     * @param  array $data
+     * @param  array $rawIncludedData
+     * @return array
+     */
+    public function injectData($data, $rawIncludedData)
+    {
+        return $data;
+    }
 }

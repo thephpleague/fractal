@@ -205,6 +205,10 @@ class Scope
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
+            // If the serializer wants to inject additional information
+            // about the included resources, it can do so now.
+            $data = $serializer->injectData($data, $rawIncludedData);
+
             $data = array_merge($data, $includedData);
         }
 
