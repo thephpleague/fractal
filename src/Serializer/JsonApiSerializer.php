@@ -16,6 +16,13 @@ use League\Fractal\Resource\ResourceAbstract;
 
 class JsonApiSerializer extends ArraySerializer
 {
+    protected $baseUrl;
+
+    public function __construct($baseUrl = null)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
     /**
      * Serialize a collection.
      *
@@ -54,6 +61,12 @@ class JsonApiSerializer extends ArraySerializer
                 'attributes' => $data,
             ),
         );
+
+        if ($this->shouldIncludeLinks()) {
+            $resource['data']['links'] = array(
+                'self' => "{$this->baseUrl}/$resourceKey/$id",
+            );
+        }
 
         if ($id === null) {
             unset($resource['data']['id']);
@@ -191,6 +204,15 @@ class JsonApiSerializer extends ArraySerializer
         else { // Single resource
             foreach ($relationships as $key => $relationship) {
                 $data['data']['relationships'][$key] = $relationship[0];
+
+                if ($this->shouldIncludeLinks()) {
+                    $data['data']['relationships'][$key] = array_merge(array(
+                        'links' => array(
+                            'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
+                            'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
+                        ),
+                    ), $data['data']['relationships'][$key]);
+                }
             }
         }
 
@@ -262,5 +284,16 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         return $includedData;
+    }
+
+    /**
+     * Whether or not the serializer should include `links` for resource
+     * objects.
+     *
+     * @return boolean
+     */
+    private function shouldIncludeLinks()
+    {
+        return $this->baseUrl !== null;
     }
 }
