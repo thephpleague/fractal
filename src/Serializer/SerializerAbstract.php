@@ -107,4 +107,16 @@ abstract class SerializerAbstract
     {
         return $data;
     }
+
+    /**
+     * Hook for the serializer to modify the final list of includes.
+     *
+     * @param  array $includedData
+     * @param  ResourceInterface $resource
+     * @return array
+     */
+    public function filterIncludes($includedData, ResourceInterface $resource)
+    {
+        return $includedData;
+    }
 }

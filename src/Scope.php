@@ -209,6 +209,15 @@ class Scope
             // about the included resources, it can do so now.
             $data = $serializer->injectData($data, $rawIncludedData);
 
+            if ($this->isRootScope()) {
+                // If the serializer wants to have a final word about all
+                // the objects that are sideloaded, it can do so now.
+                $includedData = $serializer->filterIncludes(
+                    $includedData,
+                    $this->resource
+                );
+            }
+
             $data = array_merge($data, $includedData);
         }
 
@@ -355,5 +364,15 @@ class Scope
         $availableIncludes = $transformer->getAvailableIncludes();
 
         return ! empty($defaultIncludes) || ! empty($availableIncludes);
+    }
+
+    /**
+     * Check, if this is the root scope.
+     *
+     * @return boolean
+     */
+    protected function isRootScope()
+    {
+        return empty($this->parentScopes);
     }
 }

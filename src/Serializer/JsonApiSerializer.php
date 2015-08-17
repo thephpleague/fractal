@@ -12,6 +12,7 @@
 namespace League\Fractal\Serializer;
 
 use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Resource\ResourceAbstract;
 
 class JsonApiSerializer extends ArraySerializer
 {
@@ -74,7 +75,8 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function includedData(ResourceInterface $resource, array $data)
     {
-        $serializedData = array();
+        $serializedData = $this->pullOutNestedIncludedData($resource, $data);
+
         $linkedIds = array();
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
@@ -119,6 +121,56 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         return $data;
+    }
+
+    /**
+     * The JSON API specification does not allow the root object to be included
+     * into the sideloaded `included`-array. We have to make sure it is
+     * filtered out, in case some object links to the root object in a
+     * relationship.
+     *
+     * @param  array $includedData
+     * @param  ResourceInterface $resource
+     * @return array
+     */
+    public function filterIncludes($includedData, ResourceInterface $resource)
+    {
+        if (!isset($includedData['included'])) {
+            return $includedData;
+        }
+
+        if (!$resource instanceof ResourceAbstract) {
+            // In order to construct the root object, we need to know its type.
+            // We can't retrieve the type if $resource won't provide it to us.
+            return $includedData;
+        }
+
+        $resourceData = $resource->getData();
+        if (!isset($resourceData['id'])) {
+            // In order to construct the root object, we need to know its id.
+            // We don't need to filter, if the root object doesn't have an id.
+            return $includedData;
+        }
+
+        $rootObject = array(
+            'type' => $resource->getResourceKey(),
+            'id' => "{$resourceData['id']}",
+        );
+
+        // Filter out the root object
+        $filteredIncludes = array_filter($includedData['included'],
+            function($inclusion) use ($rootObject) {
+                return !(
+                    $inclusion['type'] === $rootObject['type'] &&
+                    $inclusion['id'] === $rootObject['id']
+                );
+            }
+        );
+
+        // Reset array indizes
+        $includedData['included'] = array_merge(array(), $filteredIncludes);
+
+        return $includedData;
     }
 
     private function isCollection($data)
@@ -188,5 +240,27 @@ class JsonApiSerializer extends ArraySerializer
             return null;
         }
         return $data['id'];
+    }
+
+    /**
+     * Keep all sideloaded inclusion data on the top level.
+     *
+     * @param  ResourceInterface $resource
+     * @param  array             $data
+     * @return array
+     */
+    private function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
+    {
+        $includedData = array();
+
+        foreach ($data as $value) {
+            foreach ($value as $includeKey => $includeObject) {
+                if (isset($includeObject['included'])) {
+                    $includedData = $includeObject['included'];
+                }
+            }
+        }
+
+        return $includedData;
     }
 }
