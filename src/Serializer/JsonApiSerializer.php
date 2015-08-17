@@ -137,13 +137,16 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
+     * Hook to manipulate the final sideloaded includes.
+     *
      * The JSON API specification does not allow the root object to be included
      * into the sideloaded `included`-array. We have to make sure it is
      * filtered out, in case some object links to the root object in a
      * relationship.
      *
-     * @param  array $includedData
-     * @param  ResourceInterface $resource
+     * @param array             $includedData
+     * @param ResourceInterface $resource
+     *
      * @return array
      */
     public function filterIncludes($includedData, ResourceInterface $resource)
@@ -267,8 +270,9 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Keep all sideloaded inclusion data on the top level.
      *
-     * @param  ResourceInterface $resource
-     * @param  array             $data
+     * @param ResourceInterface $resource
+     * @param array             $data
+     *
      * @return array
      */
     private function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
@@ -287,10 +291,9 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * Whether or not the serializer should include `links` for resource
-     * objects.
+     * Whether or not the serializer should include `links` for resource objects.
      *
-     * @return boolean
+     * @return bool
      */
     private function shouldIncludeLinks()
     {

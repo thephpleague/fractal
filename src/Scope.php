@@ -369,7 +369,7 @@ class Scope
     /**
      * Check, if this is the root scope.
      *
-     * @return boolean
+     * @return bool
      */
     protected function isRootScope()
     {
