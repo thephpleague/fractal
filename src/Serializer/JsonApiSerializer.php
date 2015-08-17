@@ -78,11 +78,21 @@ class JsonApiSerializer extends ArraySerializer
         $linkedIds = array();
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
-                $includeType = $includeObject['data']['type'];
-                $includeId = $includeObject['data']['id'];
-                if (!array_key_exists("$includeType:$includeId", $linkedIds)) {
-                    $serializedData[] = $includeObject['data'];
-                    $linkedIds["$includeType:$includeId"] = $includeObject;
+                if ($this->isCollection($includeObject)) {
+                    $includeObjects = $includeObject['data'];
+                }
+                else {
+                    $includeObjects = array($includeObject['data']);
+                }
+
+                foreach ($includeObjects as $object) {
+                    $includeType = $object['type'];
+                    $includeId = $object['id'];
+                    $cacheKey = "$includeType:$includeId";
+                    if (!array_key_exists($cacheKey, $linkedIds)) {
+                        $serializedData[] = $object;
+                        $linkedIds[$cacheKey] = $object;
+                    }
                 }
             }
         }
@@ -146,12 +156,26 @@ class JsonApiSerializer extends ArraySerializer
                     $relationships[$includeKey] = array();
                 }
 
-                $relationships[$includeKey][] = array(
-                    'data' => array(
-                        'type' => $includeObject['data']['type'],
-                        'id' => $includeObject['data']['id'],
-                    ),
-                );
+                if ($this->isCollection($includeObject)) {
+                    $relationship = array('data' => array());
+
+                    foreach ($includeObject['data'] as $object) {
+                        $relationship['data'][] = array(
+                            'type' => $object['type'],
+                            'id' => $object['id'],
+                        );
+                    }
+                }
+                else {
+                    $relationship = array(
+                        'data' => array(
+                            'type' => $includeObject['data']['type'],
+                            'id' => $includeObject['data']['id'],
+                        ),
+                    );
+                }
+
+                $relationships[$includeKey][] = $relationship;
             }
         }
 

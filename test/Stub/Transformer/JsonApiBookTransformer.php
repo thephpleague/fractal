@@ -22,6 +22,6 @@ class JsonApiBookTransformer extends TransformerAbstract
             return;
         }
 
-        return $this->item($book['_author'], new GenericAuthorTransformer(), 'people');
+        return $this->item($book['_author'], new JsonApiAuthorTransformer(), 'people');
     }
 }
