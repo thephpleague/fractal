@@ -1,6 +1,6 @@
 <?php namespace League\Fractal\Resource;
 
-class Null extends ResourceAbstract
+class NullResource extends ResourceAbstract
 {
     /**
      * Get the data.

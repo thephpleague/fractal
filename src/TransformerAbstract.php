@@ -13,7 +13,7 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Null;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceAbstract;
 
 /**
@@ -267,10 +267,10 @@ abstract class TransformerAbstract
     /**
      * Create a new null resource object.
      *
-     * @return Null
+     * @return NullResource
      */
     protected function null()
     {
-        return new Null();
+        return new NullResource();
     }
 }
