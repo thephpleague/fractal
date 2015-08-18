@@ -95,9 +95,11 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function includedData(ResourceInterface $resource, array $data)
     {
-        $serializedData = $this->pullOutNestedIncludedData($resource, $data);
+        list($serializedData, $linkedIds) = $this->pullOutNestedIncludedData(
+            $resource,
+            $data
+        );
 
-        $linkedIds = array();
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
                 if ($this->isNull($includeObject) || $this->isEmpty($includeObject)) {
@@ -317,16 +319,26 @@ class JsonApiSerializer extends ArraySerializer
     private function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
     {
         $includedData = array();
+        $linkedIds = array();
 
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
                 if (isset($includeObject['included'])) {
-                    $includedData = $includeObject['included'];
+                    foreach ($includeObject['included'] as $object) {
+                        $includeType = $object['type'];
+                        $includeId = $object['id'];
+                        $cacheKey = "$includeType:$includeId";
+
+                        if (!array_key_exists($cacheKey, $linkedIds)) {
+                            $includedData[] = $object;
+                            $linkedIds[$cacheKey] = $object;
+                        }
+                    }
                 }
             }
         }
 
-        return $includedData;
+        return array($includedData, $linkedIds);
     }
 
     /**
