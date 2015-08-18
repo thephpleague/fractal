@@ -78,6 +78,13 @@ class JsonApiSerializer extends ArraySerializer
         return $resource;
     }
 
+    public function null()
+    {
+        return array(
+            'data' => null,
+        );
+    }
+
     /**
      * Serialize the included data.
      *
@@ -93,6 +100,9 @@ class JsonApiSerializer extends ArraySerializer
         $linkedIds = array();
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
+                if ($this->isNull($includeObject) || $this->isEmpty($includeObject)) {
+                    continue;
+                }
                 if ($this->isCollection($includeObject)) {
                     $includeObjects = $includeObject['data'];
                 }
@@ -191,12 +201,33 @@ class JsonApiSerializer extends ArraySerializer
 
     private function isCollection($data)
     {
+        if ($this->isNull($data)) {
+            return false;
+        }
+
+        if ($this->isEmpty($data)) {
+            return false;
+        }
+
         return array_key_exists('data', $data) &&
                array_key_exists(0, $data['data']);
     }
 
+    private function isNull($data)
+    {
+        return array_key_exists('data', $data) && $data['data'] === null;
+    }
+
+    private function isEmpty($data) {
+        return array_key_exists('data', $data) && $data['data'] === array();
+    }
+
     private function fillRelationships($data, $relationships)
     {
+        if ($this->isNull($data) || $this->isEmpty($data)) {
+            return $data;
+        }
+
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
                 foreach ($relationship as $index => $relationshipData) {
@@ -233,7 +264,15 @@ class JsonApiSerializer extends ArraySerializer
                     $relationships[$includeKey] = array();
                 }
 
-                if ($this->isCollection($includeObject)) {
+                if ($this->isNull($includeObject)) {
+                    $relationship = $this->null();
+                }
+                elseif ($this->isEmpty($includeObject)) {
+                    $relationship = array(
+                        'data' => array(),
+                    );
+                }
+                elseif ($this->isCollection($includeObject)) {
                     $relationship = array('data' => array());
 
                     foreach ($includeObject['data'] as $object) {

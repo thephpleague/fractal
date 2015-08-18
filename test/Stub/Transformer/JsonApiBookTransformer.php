@@ -18,8 +18,12 @@ class JsonApiBookTransformer extends TransformerAbstract
 
     public function includeAuthor(array $book)
     {
-        if (! isset($book['_author'])) {
+        if (!array_key_exists('_author', $book)) {
             return;
+        }
+
+        if ($book['_author'] === null) {
+            return $this->null();
         }
 
         return $this->item($book['_author'], new JsonApiAuthorTransformer(), 'people');
