@@ -53,7 +53,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         // Same again with meta
         $resource->setMetaValue('foo', 'bar');
@@ -71,7 +71,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
     }
 
     public function testSerializingCollectionResource()
@@ -104,11 +104,11 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         // JSON array of JSON objects
         $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
 
         // Same again with metadata
         $resource->setMetaValue('foo', 'bar');
@@ -137,10 +137,10 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithoutName()
@@ -156,7 +156,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
 
         // JSON array of JSON objects
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
 
         // Same again with metadata
         $resource->setMetaValue('foo', 'bar');
@@ -164,7 +164,7 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
         $scope = new Scope($manager, $resource);
 
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function tearDown()

@@ -8,15 +8,15 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     {
         $params = new ParamBag(array('one' => 'potato', 'two' => 'potato2'));
 
-        $this->assertEquals('potato', $params->get('one'));
-        $this->assertEquals('potato2', $params->get('two'));
+        $this->assertSame('potato', $params->get('one'));
+        $this->assertSame('potato2', $params->get('two'));
     }
 
     public function testGettingValuesTheOldFashionedWayArray()
     {
         $params = new ParamBag(array('one' => array('potato', 'tomato')));
 
-        $this->assertEquals(array('potato', 'tomato'), $params->get('one'));
+        $this->assertSame(array('potato', 'tomato'), $params->get('one'));
     }
 
     public function testArrayAccess()
@@ -26,8 +26,8 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ArrayAccess', $params);
         $this->assertArrayHasKey('foo', $params);
         $this->assertTrue(isset($params['foo']));
-        $this->assertEquals('bar', $params['foo']);
-        $this->assertEquals('ban', $params['baz']);
+        $this->assertSame('bar', $params['foo']);
+        $this->assertSame('ban', $params['baz']);
         $this->assertNull($params['totallymadeup']);
     }
 
@@ -57,8 +57,8 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     {
         $params = new ParamBag(array('foo' => 'bar', 'baz' => 'ban'));
 
-        $this->assertEquals('bar', $params->foo);
-        $this->assertEquals('ban', $params->baz);
+        $this->assertSame('bar', $params->foo);
+        $this->assertSame('ban', $params->baz);
         $this->assertNull($params->totallymadeup);
         $this->assertTrue(isset($params->foo));
     }

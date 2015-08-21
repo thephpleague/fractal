@@ -17,7 +17,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             return $data;
         });
 
-        $this->assertEquals($resource->getData(), $this->simpleCollection);
+        $this->assertSame($resource->getData(), $this->simpleCollection);
     }
 
     /**
@@ -27,7 +27,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setData('foo');
-        $this->assertEquals('foo', $collection->getData());
+        $this->assertSame('foo', $collection->getData());
     }
 
     public function testGetTransformer()
@@ -37,7 +37,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_callable($resource->getTransformer()));
 
         $resource = new Collection($this->simpleCollection, 'SomeClass');
-        $this->assertEquals($resource->getTransformer(), 'SomeClass');
+        $this->assertSame($resource->getTransformer(), 'SomeClass');
     }
 
     /**
@@ -47,7 +47,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setTransformer('foo');
-        $this->assertEquals('foo', $collection->getTransformer());
+        $this->assertSame('foo', $collection->getTransformer());
     }
 
     /**
@@ -91,10 +91,10 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setMetaValue('foo', 'bar'));
-        $this->assertEquals(array('foo' => 'bar'), $collection->getMeta());
-        $this->assertEquals('bar', $collection->getMetaValue('foo'));
+        $this->assertSame(array('foo' => 'bar'), $collection->getMeta());
+        $this->assertSame('bar', $collection->getMetaValue('foo'));
         $collection->setMeta(array('baz' => 'bat'));
-        $this->assertEquals(array('baz' => 'bat'), $collection->getMeta());
+        $this->assertSame(array('baz' => 'bat'), $collection->getMeta());
     }
 
     /**
@@ -113,7 +113,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setResourceKey('foo');
-        $this->assertEquals('foo', $collection->getResourceKey());
+        $this->assertSame('foo', $collection->getResourceKey());
     }
 
     public function tearDown()

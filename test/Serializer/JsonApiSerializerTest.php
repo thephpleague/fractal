@@ -64,10 +64,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithEmptyHasOneInclude()
@@ -101,10 +101,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":null}}}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithHasManyInclude()
@@ -177,7 +177,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithEmptyHasManyInclude()
@@ -209,10 +209,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[]}}}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithoutIncludes()
@@ -242,10 +242,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithMeta()
@@ -279,10 +279,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithoutIncludes()
@@ -332,10 +332,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithHasOneInclude()
@@ -419,10 +419,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"2"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}},{"type":"people","id":"2","attributes":{"name":"Bob"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithEmptyHasOneInclude()
@@ -493,10 +493,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":null}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"2"}}}}],"included":[{"type":"people","id":"2","attributes":{"name":"Bob"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithHasManyInclude()
@@ -625,7 +625,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"people","id":"2","attributes":{"name":"Bob"},"relationships":{"published":{"data":[{"type":"books","id":"3"},{"type":"books","id":"4"}]}}}],"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}},{"type":"books","id":"3","attributes":{"title":"Baz","year":1995}},{"type":"books","id":"4","attributes":{"title":"Quux","year":2000}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithEmptyHasManyInclude()
@@ -701,7 +701,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[]}}},{"type":"people","id":"2","attributes":{"name":"Bob"},"relationships":{"published":{"data":[{"type":"books","id":"3"}]}}}],"included":[{"type":"books","id":"3","attributes":{"title":"Baz","year":1995}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithMeta()
@@ -754,10 +754,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997}}],"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithDuplicatedIncludeData()
@@ -834,10 +834,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"1"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithNestedIncludes()
@@ -920,10 +920,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}},{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithSelfLink()
@@ -959,10 +959,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionResourceWithSelfLink()
@@ -1021,10 +1021,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithLinksForHasOneRelationship()
@@ -1088,7 +1088,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithLinksForHasManyRelationship()
@@ -1176,7 +1176,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     /**
@@ -1269,10 +1269,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"relationships":{"author":{"data":{"type":"people","id":"1"}}}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function testSerializingCollectionWithReferenceToRootObjects()
@@ -1381,10 +1381,10 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"relationships":{"author":{"data":{"type":"people","id":"1"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function tearDown()

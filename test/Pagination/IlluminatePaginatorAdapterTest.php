@@ -29,12 +29,12 @@ class IlluminatePaginatorAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);
         $this->assertInstanceOf('Illuminate\Contracts\Pagination\LengthAwarePaginator', $adapter->getPaginator());
 
-        $this->assertEquals($currentPage, $adapter->getCurrentPage());
-        $this->assertEquals($lastPage, $adapter->getLastPage());
-        $this->assertEquals($count, $adapter->getCount());
-        $this->assertEquals($total, $adapter->getTotal());
-        $this->assertEquals($perPage, $adapter->getPerPage());
-        $this->assertEquals('http://example.com/foo?page=1', $adapter->getUrl(1));
+        $this->assertSame($currentPage, $adapter->getCurrentPage());
+        $this->assertSame($lastPage, $adapter->getLastPage());
+        $this->assertSame($count, $adapter->getCount());
+        $this->assertSame($total, $adapter->getTotal());
+        $this->assertSame($perPage, $adapter->getPerPage());
+        $this->assertSame('http://example.com/foo?page=1', $adapter->getUrl(1));
     }
 
     public function tearDown()

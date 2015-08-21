@@ -22,7 +22,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals($scope->getScopeIdentifier(), 'book');
+        $this->assertSame($scope->getScopeIdentifier(), 'book');
         $childScope = $scope->embedChildScope('author', $resource);
 
         $this->assertInstanceOf('League\Fractal\Scope', $childScope);
@@ -62,7 +62,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(array('data' => array('foo' => 'bar')), $scope->toArray());
+        $this->assertSame(array('data' => array('foo' => 'bar')), $scope->toArray());
     }
 
     public function testToJson()
@@ -94,13 +94,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals('book', $scope->getScopeIdentifier());
+        $this->assertSame('book', $scope->getScopeIdentifier());
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals('author', $childScope->getScopeIdentifier());
+        $this->assertSame('author', $childScope->getScopeIdentifier());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals('profile', $grandChildScope->getScopeIdentifier());
+        $this->assertSame('profile', $grandChildScope->getScopeIdentifier());
     }
 
     public function testGetIdentifier()
@@ -111,13 +111,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         });
 
         $scope = new Scope($manager, $resource, 'book');
-        $this->assertEquals('book', $scope->getIdentifier());
+        $this->assertSame('book', $scope->getIdentifier());
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals('book.author', $childScope->getIdentifier());
+        $this->assertSame('book.author', $childScope->getIdentifier());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals('book.author.profile', $grandChildScope->getIdentifier());
+        $this->assertSame('book.author.profile', $grandChildScope->getIdentifier());
     }
 
     public function testGetParentScopes()
@@ -130,10 +130,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $scope = new Scope($manager, $resource, 'book');
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertEquals(array('book'), $childScope->getParentScopes());
+        $this->assertSame(array('book'), $childScope->getParentScopes());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertEquals(array('book', 'author'), $grandChildScope->getParentScopes());
+        $this->assertSame(array('book', 'author'), $grandChildScope->getParentScopes());
     }
 
     public function testIsRequested()
@@ -189,7 +189,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang'))), $scope->toArray());
+        $this->assertSame(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang'))), $scope->toArray());
     }
 
     public function testToArrayWithSideloadedIncludes()
@@ -223,7 +223,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             'sideloaded' => array('book' => array('yin' => 'yang')),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
     }
 
     public function testPushParentScope()
@@ -235,11 +235,11 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertEquals(1, $scope->pushParentScope('book'));
-        $this->assertEquals(2, $scope->pushParentScope('author'));
-        $this->assertEquals(3, $scope->pushParentScope('profile'));
+        $this->assertSame(1, $scope->pushParentScope('book'));
+        $this->assertSame(2, $scope->pushParentScope('author'));
+        $this->assertSame(3, $scope->pushParentScope('profile'));
 
-        $this->assertEquals(array('book', 'author', 'profile'), $scope->getParentScopes());
+        $this->assertSame(array('book', 'author', 'profile'), $scope->getParentScopes());
     }
 
     public function testRunAppropriateTransformerWithItem()
@@ -253,7 +253,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertEquals(array('data' => $this->simpleItem), $scope->toArray());
+        $this->assertSame(array('data' => $this->simpleItem), $scope->toArray());
     }
 
     public function testRunAppropriateTransformerWithCollection()
@@ -268,7 +268,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $resource = new Collection(array(array('foo' => 'bar')), $transformer);
         $scope = $manager->createData($resource);
 
-        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
+        $this->assertSame(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
     }
 
     /**
@@ -316,6 +316,12 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $rootScope = $manager->createData($collection);
 
         $expectedOutput = array(
+            'data' => array(
+                array(
+                    'foo' => 'bar',
+                    'baz' => 'ban',
+                ),
+            ),
             'meta' => array(
                 'pagination' => array(
                     'total' => $total,
@@ -329,15 +335,9 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     ),
                 ),
             ),
-            'data' => array(
-                array(
-                    'foo' => 'bar',
-                    'baz' => 'ban',
-                ),
-            ),
         );
 
-        $this->assertEquals($expectedOutput, $rootScope->toArray());
+        $this->assertSame($expectedOutput, $rootScope->toArray());
     }
 
     public function testCursorOutput()
@@ -362,6 +362,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $rootScope = $manager->createData($collection);
 
         $expectedOutput = array(
+            'data' => $inputData,
             'meta' => array(
                 'cursor' => array(
                     'current' => 0,
@@ -370,10 +371,9 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     'count' => 2,
                 ),
             ),
-            'data' => $inputData,
         );
 
-        $this->assertEquals($expectedOutput, $rootScope->toArray());
+        $this->assertSame($expectedOutput, $rootScope->toArray());
     }
 
     public function testDefaultIncludeSuccess()
@@ -394,7 +394,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
     }
 
     public function tearDown()
