@@ -54,6 +54,27 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('data' => array('foo' => 'bar')), $scope->toArray());
     }
 
+    public function testToJson()
+    {
+        $data = [
+            'foo' => 'bar',
+        ];
+
+        $manager = new Manager();
+
+        $resource = new Item($data, function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = json_encode([
+            'data' => $data,
+        ]);
+
+        $this->assertSame($expected, $scope->toJson());
+    }
+
     public function testGetCurrentScope()
     {
         $manager = new Manager();
