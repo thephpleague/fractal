@@ -11,6 +11,7 @@
 
 namespace League\Fractal\Serializer;
 
+use InvalidArgumentException;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Resource\ResourceAbstract;
 
@@ -62,17 +63,12 @@ class JsonApiSerializer extends ArraySerializer
             ),
         );
 
+        unset($resource['data']['attributes']['id']);
+
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = array(
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
             );
-        }
-
-        if ($id === null) {
-            unset($resource['data']['id']);
-        }
-        else {
-            unset($resource['data']['attributes']['id']);
         }
 
         return $resource;
@@ -167,12 +163,6 @@ class JsonApiSerializer extends ArraySerializer
             return $includedData;
         }
 
-        if (!$resource instanceof ResourceAbstract) {
-            // In order to construct the root object, we need to know its type.
-            // We can't retrieve the type if $resource won't provide it to us.
-            return $includedData;
-        }
-
         $resourceData = $resource->getData();
         if (!isset($resourceData['id'])) {
             // In order to construct the root object, we need to know its id.
@@ -203,14 +193,6 @@ class JsonApiSerializer extends ArraySerializer
 
     private function isCollection($data)
     {
-        if ($this->isNull($data)) {
-            return false;
-        }
-
-        if ($this->isEmpty($data)) {
-            return false;
-        }
-
         return array_key_exists('data', $data) &&
                array_key_exists(0, $data['data']);
     }
@@ -226,10 +208,6 @@ class JsonApiSerializer extends ArraySerializer
 
     private function fillRelationships($data, $relationships)
     {
-        if ($this->isNull($data) || $this->isEmpty($data)) {
-            return $data;
-        }
-
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
                 foreach ($relationship as $index => $relationshipData) {
@@ -303,7 +281,9 @@ class JsonApiSerializer extends ArraySerializer
     private function getIdFromData(array $data)
     {
         if (!array_key_exists('id', $data)) {
-            return null;
+            throw new InvalidArgumentException(
+                'JSON API resource objects MUST have a valid id'
+            );
         }
         return $data['id'];
     }

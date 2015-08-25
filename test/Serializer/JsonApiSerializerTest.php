@@ -1179,6 +1179,23 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage JSON API resource objects MUST have a valid id
+     */
+    public function testExceptionThrownIfResourceHasNoId()
+    {
+        $bookData = array(
+            'title' => 'Foo',
+            'year' => '1991',
+        );
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+        $scope->toArray();
+    }
+
     public function tearDown()
     {
         Mockery::close();
