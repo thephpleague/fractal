@@ -41,7 +41,7 @@ class Cursor implements CursorInterface
     protected $next;
 
     /**
-     * Items being holded for the current cursor position.
+     * Items being held for the current cursor position.
      *
      * @var int
      */

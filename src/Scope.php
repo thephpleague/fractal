@@ -34,7 +34,7 @@ class Scope
     /**
      * @var string
      */
-    protected $scopeIdentifer;
+    protected $scopeIdentifier;
 
     /**
      * @var \League\Fractal\Manager
@@ -56,19 +56,19 @@ class Scope
      *
      * @param Manager           $manager
      * @param ResourceInterface $resource
-     * @param string            $scopeIdentifer
+     * @param string            $scopeIdentifier
      *
      * @return void
      */
-    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifer = null)
+    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null)
     {
         $this->manager = $manager;
         $this->resource = $resource;
-        $this->scopeIdentifer = $scopeIdentifer;
+        $this->scopeIdentifier = $scopeIdentifier;
     }
 
     /**
-     * Embed a scope as a child of the currenct scope.
+     * Embed a scope as a child of the current scope.
      *
      * @internal
      *
@@ -89,7 +89,7 @@ class Scope
      */
     public function getScopeIdentifier()
     {
-        return $this->scopeIdentifer;
+        return $this->scopeIdentifier;
     }
 
     /**
@@ -101,7 +101,7 @@ class Scope
      */
     public function getIdentifier($appendIdentifier = null)
     {
-        $identifierParts = array_merge($this->parentScopes, array($this->scopeIdentifer, $appendIdentifier));
+        $identifierParts = array_merge($this->parentScopes, array($this->scopeIdentifier, $appendIdentifier));
 
         return implode('.', array_filter($identifierParts));
     }
@@ -143,7 +143,7 @@ class Scope
     {
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);
-            array_push($scopeArray, $this->scopeIdentifer, $checkScopeSegment);
+            array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
             $scopeArray = array($checkScopeSegment);
         }

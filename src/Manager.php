@@ -167,7 +167,7 @@ class Manager
             }
 
             // Matches multiple instances of 'something(foo|bar|baz)' in the string
-            // I guess it ignores : so you could use anything, but probably dont do that
+            // I guess it ignores : so you could use anything, but probably don't do that
             preg_match_all('/([\w]+)\(([^\)]+)\)/', $allModifiersStr, $allModifiersArr);
 
             // [0] is full matched strings...
