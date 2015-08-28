@@ -38,7 +38,7 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function item($resourceKey, array $data)
     {
-        return array($resourceKey ?: 'data' => array($data));
+        return array($resourceKey ?: 'data' => $data);
     }
 
     /**
