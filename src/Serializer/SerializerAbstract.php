@@ -22,20 +22,22 @@ abstract class SerializerAbstract
      *
      * @param string $resourceKey
      * @param array  $data
+     * @param string $scopeIdentifier
      *
      * @return array
      */
-    abstract public function collection($resourceKey, array $data);
+    abstract public function collection($resourceKey, array $data, $scopeIdentifier);
 
     /**
      * Serialize an item.
      *
      * @param string $resourceKey
      * @param array  $data
+     * @param string $scopeIdentifier
      *
      * @return array
      */
-    abstract public function item($resourceKey, array $data);
+    abstract public function item($resourceKey, array $data, $scopeIdentifier);
 
     /**
      * Serialize the included data.

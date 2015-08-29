@@ -20,10 +20,11 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param string $resourceKey
      * @param array  $data
+     * @param string $scopeIdentifier
      *
      * @return array
      */
-    public function collection($resourceKey, array $data)
+    public function collection($resourceKey, array $data, $scopeIdentifier)
     {
         return array($resourceKey ?: 'data' => $data);
     }
@@ -33,10 +34,11 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param string $resourceKey
      * @param array  $data
+     * @param string $scopeIdentifier
      *
      * @return array
      */
-    public function item($resourceKey, array $data)
+    public function item($resourceKey, array $data, $scopeIdentifier)
     {
         return array($resourceKey ?: 'data' => array($data));
     }
