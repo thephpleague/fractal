@@ -14,6 +14,7 @@ namespace League\Fractal;
 use InvalidArgumentException;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -205,6 +206,19 @@ class Scope
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
+            // If the serializer wants to inject additional information
+            // about the included resources, it can do so now.
+            $data = $serializer->injectData($data, $rawIncludedData);
+
+            if ($this->isRootScope()) {
+                // If the serializer wants to have a final word about all
+                // the objects that are sideloaded, it can do so now.
+                $includedData = $serializer->filterIncludes(
+                    $includedData,
+                    $this->resource
+                );
+            }
+
             $data = array_merge($data, $includedData);
         }
 
@@ -256,6 +270,9 @@ class Scope
             foreach ($data as $value) {
                 list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
             }
+        } elseif ($this->resource instanceof NullResource) {
+            $transformedData = null;
+            $includedData = [];
         } else {
             throw new InvalidArgumentException(
                 'Argument $resource should be an instance of League\Fractal\Resource\Item'
@@ -282,8 +299,10 @@ class Scope
 
         if ($this->resource instanceof Collection) {
             return $serializer->collection($resourceKey, $data);
-        } else {
+        } elseif ($this->resource instanceof Item) {
             return $serializer->item($resourceKey, $data);
+        } else {
+            return $serializer->null();
         }
     }
 
@@ -351,5 +370,15 @@ class Scope
         $availableIncludes = $transformer->getAvailableIncludes();
 
         return ! empty($defaultIncludes) || ! empty($availableIncludes);
+    }
+
+    /**
+     * Check, if this is the root scope.
+     *
+     * @return bool
+     */
+    protected function isRootScope()
+    {
+        return empty($this->parentScopes);
     }
 }

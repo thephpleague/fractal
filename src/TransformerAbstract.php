@@ -13,6 +13,7 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceAbstract;
 
 /**
@@ -261,5 +262,15 @@ abstract class TransformerAbstract
     protected function collection($data, $transformer, $resourceKey = null)
     {
         return new Collection($data, $transformer, $resourceKey);
+    }
+
+    /**
+     * Create a new null resource object.
+     *
+     * @return NullResource
+     */
+    protected function null()
+    {
+        return new NullResource();
     }
 }

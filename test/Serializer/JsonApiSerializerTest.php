@@ -5,7 +5,8 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
-use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 
 class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 {
@@ -17,32 +18,46 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->manager->setSerializer(new JsonApiSerializer());
     }
 
-    public function testSerializingEmptyIncludes()
+    public function testSerializingItemResourceWithHasOneInclude()
     {
         $this->manager->parseIncludes('author');
 
         $bookData = array(
+            'id' => 1,
             'title' => 'Foo',
             'year' => '1991',
             '_author' => array(
+                'id' => 1,
                 'name' => 'Dave',
             ),
         );
 
-        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
 
         $scope = new Scope($this->manager, $resource);
 
         $expected = array(
-            'book' => array(
-                array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
                     'title' => 'Foo',
                     'year' => 1991,
                 ),
+                'relationships' => array(
+                    'author' => array(
+                        'data' => array(
+                            'type' => 'people',
+                            'id' => '1',
+                        ),
+                    ),
+                ),
             ),
-            'linked' => array(
-                'author' => array(
-                    array(
+            'included' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
                         'name' => 'Dave',
                     ),
                 ),
@@ -51,37 +66,36 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]}}';
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    public function testSerializingItemResource()
+    public function testSerializingItemResourceWithEmptyHasOneInclude()
     {
         $this->manager->parseIncludes('author');
 
         $bookData = array(
+            'id' => 1,
             'title' => 'Foo',
             'year' => '1991',
-            '_author' => array(
-                'name' => 'Dave',
-            ),
+            '_author' => null,
         );
 
-        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
 
         $scope = new Scope($this->manager, $resource);
 
         $expected = array(
-            'book' => array(
-                array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
                     'title' => 'Foo',
                     'year' => 1991,
                 ),
-            ),
-            'linked' => array(
-                'author' => array(
-                    array(
-                        'name' => 'Dave',
+                'relationships' => array(
+                    'author' => array(
+                        'data' => null,
                     ),
                 ),
             ),
@@ -89,87 +103,649 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]}}';
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":null}}}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    public function testSerializingCollectionResource()
+    public function testSerializingItemResourceWithHasManyInclude()
     {
-        $this->manager->parseIncludes('author');
+        $this->manager->parseIncludes('published');
 
-        $booksData = array(
-            array(
-                'title' => 'Foo',
-                'year' => '1991',
-                '_author' => array(
+        $authorData = array(
+            'id' => 1,
+            'name' => 'Dave',
+            '_published' => array(
+                array(
+                    'id' => 1,
+                    'title' => 'Foo',
+                    'year' => '1991',
+                ),
+                array(
+                    'id' => 2,
+                    'title' => 'Bar',
+                    'year' => '2015',
+                ),
+            ),
+        );
+
+        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'people',
+                'id' => '1',
+                'attributes' => array(
                     'name' => 'Dave',
                 ),
-            ),
-            array(
-                'title' => 'Bar',
-                'year' => '1997',
-                '_author' => array(
-                    'name' => 'Bob',
+                'relationships' => array(
+                    'published' => array(
+                        'data' => array(
+                            array(
+                                'type' => 'books',
+                                'id' => 1,
+                            ),
+                            array(
+                                'type' => 'books',
+                                'id' => 2,
+                            ),
+                        ),
+                    ),
                 ),
             ),
-        );
-
-        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
-        $scope = new Scope($this->manager, $resource);
-
-        $expected = array(
-            'book' => array(
+            'included' => array(
                 array(
-                    'title' => 'Foo',
-                    'year' => 1991,
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
                 ),
                 array(
-                    'title' => 'Bar',
-                    'year' => 1997,
-                ),
-            ),
-            'linked' => array(
-                'author' => array(
-                    array('name' => 'Dave'),
-                    array('name' => 'Bob'),
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ),
                 ),
             ),
         );
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"name":"Dave"},{"name":"Bob"}]}}';
+        $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithEmptyHasManyInclude()
+    {
+        $this->manager->parseIncludes('published');
+
+        $authorData = array(
+            'id' => 1,
+            'name' => 'Dave',
+            '_published' => array(),
+        );
+
+        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'people',
+                'id' => '1',
+                'attributes' => array(
+                    'name' => 'Dave',
+                ),
+                'relationships' => array(
+                    'published' => array(
+                        'data' => array(),
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[]}}}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithoutIncludes()
+    {
+        $bookData = array(
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => array(
+                'id' => 1,
+                'name' => 'Dave',
+            ),
+        );
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
     public function testSerializingItemResourceWithMeta()
     {
-        $this->manager->parseIncludes('author');
-
         $bookData = array(
+            'id' => 1,
             'title' => 'Foo',
             'year' => '1991',
             '_author' => array(
+                'id' => 1,
                 'name' => 'Dave',
             ),
         );
 
-        $resource = new Item($bookData, new GenericBookTransformer(), 'book');
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
         $resource->setMetaValue('foo', 'bar');
 
         $scope = new Scope($this->manager, $resource);
 
         $expected = array(
-            'book' => array(
-                array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
                     'title' => 'Foo',
                     'year' => 1991,
                 ),
             ),
-            'linked' => array(
-                'author' => array(
-                    array(
+            'meta' => array(
+                'foo' => 'bar',
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},"meta":{"foo":"bar"}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithoutIncludes()
+    {
+        $booksData = array(
+            array(
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => array(
+                    'id' => 1,
+                    'name' => 'Dave',
+                ),
+            ),
+            array(
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'id' => 2,
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithHasOneInclude()
+    {
+        $this->manager->parseIncludes('author');
+
+        $booksData = array(
+            array(
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => array(
+                    'id' => 1,
+                    'name' => 'Dave',
+                ),
+            ),
+            array(
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'id' => 2,
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => array(
+                                'type' => 'people',
+                                'id' => '1',
+                            ),
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => array(
+                                'type' => 'people',
+                                'id' => '2',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
                         'name' => 'Dave',
+                    ),
+                ),
+                array(
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => array(
+                        'name' => 'Bob',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"2"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}},{"type":"people","id":"2","attributes":{"name":"Bob"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithEmptyHasOneInclude()
+    {
+        $this->manager->parseIncludes('author');
+
+        $booksData = array(
+            array(
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => null,
+            ),
+            array(
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'id' => 2,
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => null,
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => array(
+                                'type' => 'people',
+                                'id' => '2',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => array(
+                        'name' => 'Bob',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":null}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"2"}}}}],"included":[{"type":"people","id":"2","attributes":{"name":"Bob"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithHasManyInclude()
+    {
+        $this->manager->parseIncludes('published');
+
+        $authorsData = array(
+            array(
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => array(
+                    array(
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ),
+                    array(
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ),
+                ),
+            ),
+            array(
+                'id' => 2,
+                'name' => 'Bob',
+                '_published' => array(
+                    array(
+                        'id' => 3,
+                        'title' => 'Baz',
+                        'year' => '1995',
+                    ),
+                    array(
+                        'id' => 4,
+                        'title' => 'Quux',
+                        'year' => '2000',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Collection($authorsData, new JsonApiAuthorTransformer(), 'people');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
+                        'name' => 'Dave',
+                    ),
+                    'relationships' => array(
+                        'published' => array(
+                            'data' => array(
+                                array(
+                                    'type' => 'books',
+                                    'id' => 1,
+                                ),
+                                array(
+                                    'type' => 'books',
+                                    'id' => 2,
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => array(
+                        'name' => 'Bob',
+                    ),
+                    'relationships' => array(
+                        'published' => array(
+                            'data' => array(
+                                array(
+                                    'type' => 'books',
+                                    'id' => 3,
+                                ),
+                                array(
+                                    'type' => 'books',
+                                    'id' => 4,
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '3',
+                    'attributes' => array(
+                        'title' => 'Baz',
+                        'year' => 1995,
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '4',
+                    'attributes' => array(
+                        'title' => 'Quux',
+                        'year' => 2000,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"people","id":"2","attributes":{"name":"Bob"},"relationships":{"published":{"data":[{"type":"books","id":"3"},{"type":"books","id":"4"}]}}}],"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}},{"type":"books","id":"3","attributes":{"title":"Baz","year":1995}},{"type":"books","id":"4","attributes":{"title":"Quux","year":2000}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithEmptyHasManyInclude()
+    {
+        $this->manager->parseIncludes('published');
+
+        $authorsData = array(
+            array(
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => array(),
+            ),
+            array(
+                'id' => 2,
+                'name' => 'Bob',
+                '_published' => array(
+                    array(
+                        'id' => 3,
+                        'title' => 'Baz',
+                        'year' => '1995',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Collection($authorsData, new JsonApiAuthorTransformer(), 'people');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
+                        'name' => 'Dave',
+                    ),
+                    'relationships' => array(
+                        'published' => array(
+                            'data' => array(),
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => array(
+                        'name' => 'Bob',
+                    ),
+                    'relationships' => array(
+                        'published' => array(
+                            'data' => array(
+                                array(
+                                    'type' => 'books',
+                                    'id' => 3,
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '3',
+                    'attributes' => array(
+                        'title' => 'Baz',
+                        'year' => 1995,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[]}}},{"type":"people","id":"2","attributes":{"name":"Bob"},"relationships":{"published":{"data":[{"type":"books","id":"3"}]}}}],"included":[{"type":"books","id":"3","attributes":{"title":"Baz","year":1995}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithMeta()
+    {
+        $booksData = array(
+            array(
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => array(
+                    'name' => 'Dave',
+                ),
+            ),
+            array(
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
                     ),
                 ),
             ),
@@ -180,61 +756,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991}],"linked":{"author":[{"name":"Dave"}]},"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
-    }
-
-    public function testSerializingCollectionResourceWithMeta()
-    {
-        $this->manager->parseIncludes('author');
-
-        $booksData = array(
-            array(
-                'title' => 'Foo',
-                'year' => '1991',
-                '_author' => array(
-                    'name' => 'Dave',
-                ),
-            ),
-            array(
-                'title' => 'Bar',
-                'year' => '1997',
-                '_author' => array(
-                    'name' => 'Bob',
-                ),
-            ),
-        );
-
-        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
-        $resource->setMetaValue('foo', 'bar');
-
-        $scope = new Scope($this->manager, $resource);
-
-        $expected = array(
-            'book' => array(
-                array(
-                    'title' => 'Foo',
-                    'year' => 1991,
-                ),
-                array(
-                    'title' => 'Bar',
-                    'year' => 1997,
-                ),
-            ),
-            'linked' => array(
-                'author' => array(
-                    array('name' => 'Dave'),
-                    array('name' => 'Bob'),
-                ),
-            ),
-            'meta' => array(
-                'foo' => 'bar',
-            ),
-        );
-
-        $this->assertEquals($expected, $scope->toArray());
-
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"name":"Dave"},{"name":"Bob"}]},"meta":{"foo":"bar"}}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997}}],"meta":{"foo":"bar"}}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
@@ -244,6 +766,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $booksData = array(
             array(
+                'id' => 1,
                 'title' => 'Foo',
                 'year' => '1991',
                 '_author' => array(
@@ -252,6 +775,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 ),
             ),
             array(
+                'id' => 2,
                 'title' => 'Bar',
                 'year' => '1997',
                 '_author' => array(
@@ -261,24 +785,49 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
         $scope = new Scope($this->manager, $resource);
 
         $expected = array(
-            'book' => array(
+            'data' => array(
                 array(
-                    'title' => 'Foo',
-                    'year' => 1991,
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => array(
+                                'type' => 'people',
+                                'id' => '1',
+                            ),
+                        ),
+                    ),
                 ),
                 array(
-                    'title' => 'Bar',
-                    'year' => 1997,
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ),
+                    'relationships' => array(
+                        'author' => array(
+                            'data' => array(
+                                'type' => 'people',
+                                'id' => '1',
+                            ),
+                        ),
+                    ),
                 ),
             ),
-            'linked' => array(
-                'author' => array(
-                    array(
-                        'id' => 1,
+            'included' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
                         'name' => 'Dave',
                     ),
                 ),
@@ -287,32 +836,364 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"book":[{"title":"Foo","year":1991},{"title":"Bar","year":1997}],"linked":{"author":[{"id":1,"name":"Dave"}]}}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"relationships":{"author":{"data":{"type":"people","id":"1"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
         $this->assertEquals($expectedJson, $scope->toJson());
     }
 
-    public function testResourceKeyMissing()
+    public function testSerializingItemResourceWithNestedIncludes()
     {
-        $this->manager->setSerializer(new JsonApiSerializer());
+        $this->manager->parseIncludes(['author', 'author.published']);
 
         $bookData = array(
+            'id' => 1,
             'title' => 'Foo',
             'year' => '1991',
+            '_author' => array(
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => array(
+                    array(
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ),
+                    array(
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ),
+                ),
+            ),
         );
 
-        $resource = new Item($bookData, new GenericBookTransformer());
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
         $scope = new Scope($this->manager, $resource);
 
         $expected = array(
             'data' => array(
-                array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
                     'title' => 'Foo',
                     'year' => 1991,
+                ),
+                'relationships' => array(
+                    'author' => array(
+                        'data' => array(
+                            'type' => 'people',
+                            'id' => '1',
+                        ),
+                    ),
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ),
+                ),
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
+                        'name' => 'Dave',
+                    ),
+                    'relationships' => array(
+                        'published' => array(
+                            'data' => array(
+                                array(
+                                    'type' => 'books',
+                                    'id' => '1',
+                                ),
+                                array(
+                                    'type' => 'books',
+                                    'id' => '2',
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
             ),
         );
 
         $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"books","id":"2","attributes":{"title":"Bar","year":2015}},{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithSelfLink()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $bookData = array(
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => array(
+                'id' => 1,
+                'name' => 'Dave',
+            ),
+        );
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+                'links' => array(
+                    'self' => 'http://example.com/books/1',
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}}}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithSelfLink()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $booksData = array(
+            array(
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => array(
+                    'id' => 1,
+                    'name' => 'Dave',
+                ),
+            ),
+            array(
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => array(
+                    'id' => 2,
+                    'name' => 'Bob',
+                ),
+            ),
+        );
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                    'links' => array(
+                        'self' => 'http://example.com/books/1',
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ),
+                    'links' => array(
+                        'self' => 'http://example.com/books/2',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithLinksForHasOneRelationship()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $this->manager->parseIncludes('author');
+
+        $bookData = array(
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => array(
+                'id' => 1,
+                'name' => 'Dave',
+            ),
+        );
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => array(
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ),
+                'relationships' => array(
+                    'author' => array(
+                        'links' => array(
+                            'self' => 'http://example.com/books/1/relationships/author',
+                            'related' => 'http://example.com/books/1/author',
+                        ),
+                        'data' => array(
+                            'type' => 'people',
+                            'id' => '1',
+                        ),
+                    ),
+                ),
+                'links' => array(
+                    'self' => 'http://example.com/books/1',
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => array(
+                        'name' => 'Dave',
+                    ),
+                    'links' => array(
+                        'self' => 'http://example.com/people/1',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithLinksForHasManyRelationship()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $this->manager->parseIncludes('published');
+
+        $authorData = array(
+            'id' => 1,
+            'name' => 'Dave',
+            '_published' => array(
+                array(
+                    'id' => 1,
+                    'title' => 'Foo',
+                    'year' => '1991',
+                ),
+                array(
+                    'id' => 2,
+                    'title' => 'Bar',
+                    'year' => '2015',
+                ),
+            ),
+        );
+
+        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = array(
+            'data' => array(
+                'type' => 'people',
+                'id' => '1',
+                'attributes' => array(
+                    'name' => 'Dave',
+                ),
+                'relationships' => array(
+                    'published' => array(
+                        'links' => array(
+                            'self' => 'http://example.com/people/1/relationships/published',
+                            'related' => 'http://example.com/people/1/published',
+                        ),
+                        'data' => array(
+                            array(
+                                'type' => 'books',
+                                'id' => 1,
+                            ),
+                            array(
+                                'type' => 'books',
+                                'id' => 2,
+                            ),
+                        ),
+                    ),
+                ),
+                'links' => array(
+                    'self' => 'http://example.com/people/1',
+                ),
+            ),
+            'included' => array(
+                array(
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => array(
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ),
+                    'links' => array(
+                        'self' => 'http://example.com/books/1',
+                    ),
+                ),
+                array(
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => array(
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ),
+                    'links' => array(
+                        'self' => 'http://example.com/books/2',
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"}}]}';
+        $this->assertEquals($expectedJson, $scope->toJson());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage JSON API resource objects MUST have a valid id
+     */
+    public function testExceptionThrownIfResourceHasNoId()
+    {
+        $bookData = array(
+            'title' => 'Foo',
+            'year' => '1991',
+        );
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+        $scope->toArray();
     }
 
     public function tearDown()
