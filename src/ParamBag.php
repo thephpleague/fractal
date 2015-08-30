@@ -73,6 +73,7 @@ class ParamBag implements \ArrayAccess
      * Disallow changing the value of params in the data bag via property access.
      *
      * @param string $key
+     * @param mixed  $value
      *
      * @throws \LogicException
      *
@@ -125,6 +126,7 @@ class ParamBag implements \ArrayAccess
      * Disallow changing the value of params in the data bag via array access.
      *
      * @param string $key
+     * @param mixed  $value
      *
      * @throws \LogicException
      *
