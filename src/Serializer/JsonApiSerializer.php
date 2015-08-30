@@ -18,10 +18,12 @@ use League\Fractal\Resource\ResourceAbstract;
 class JsonApiSerializer extends ArraySerializer
 {
     protected $baseUrl;
+    protected $rootObjects;
 
     public function __construct($baseUrl = null)
     {
         $this->baseUrl = $baseUrl;
+        $this->rootObjects = [];
     }
 
     /**
@@ -164,23 +166,14 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         if ($this->isCollection($data)) {
-            $rootObjects = $data['data'];
+            $this->setRootObjects($data['data']);
         }
         else {
-            $rootObjects = [$data['data']];
+            $this->setRootObjects([$data['data']]);
         }
 
         // Filter out the root objects
-        $filteredIncludes = array_filter($includedData['included'],
-            function($inclusion) use ($rootObjects) {
-                foreach ($rootObjects as $rootObject) {
-                    if ($this->equalResourceObjects($inclusion, $rootObject)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        );
+        $filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
 
         // Reset array indizes
         $includedData['included'] = array_merge(array(), $filteredIncludes);
@@ -188,10 +181,41 @@ class JsonApiSerializer extends ArraySerializer
         return $includedData;
     }
 
-    private function equalResourceObjects($object1, $object2)
+    /**
+     * Filter function to delete root objects from array.
+     *
+     * @param array $object
+     *
+     * @return bool
+     */
+    private function filterRootObject($object)
     {
-        return $object1['type'] === $object2['type'] &&
-               $object1['id'] === $object2['id'];
+        return !$this->isRootObject($object);
+    }
+
+    /**
+     * Set the root objects of the JSON API tree.
+     *
+     * @param array $objects
+     */
+    private function setRootObjects(array $objects = array())
+    {
+        $this->rootObjects = array_map(function($object) {
+            return "{$object['type']}:{$object['id']}";
+        }, $objects);
+    }
+
+    /**
+     * Determines whether an object is a root object of the JSON API tree.
+     *
+     * @param array $object
+     *
+     * @return bool
+     */
+    private function isRootObject($object)
+    {
+        $objectKey = "{$object['type']}:{$object['id']}";
+        return in_array($objectKey, $this->rootObjects);
     }
 
     private function isCollection($data)
