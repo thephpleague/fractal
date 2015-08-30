@@ -33,7 +33,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     {
         $item = Mockery::mock('League\Fractal\Resource\Item')->makePartial();
 
-        $this->assertInstanceOf('League\Fractal\Resource\Item', $item->setResourceKey('foo'));
+        $this->assertSame($item, $item->setResourceKey('foo'));
     }
 
     /**
