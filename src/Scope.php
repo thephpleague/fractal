@@ -215,7 +215,7 @@ class Scope
                 // the objects that are sideloaded, it can do so now.
                 $includedData = $serializer->filterIncludes(
                     $includedData,
-                    $this->resource
+                    $data
                 );
             }
 

@@ -153,35 +153,32 @@ class JsonApiSerializer extends ArraySerializer
      * relationship.
      *
      * @param array             $includedData
-     * @param ResourceInterface $resource
+     * @param array             $data
      *
      * @return array
      */
-    public function filterIncludes($includedData, ResourceInterface $resource)
+    public function filterIncludes($includedData, $data)
     {
         if (!isset($includedData['included'])) {
             return $includedData;
         }
 
-        $resourceData = $resource->getData();
-        if (!isset($resourceData['id'])) {
-            // In order to construct the root object, we need to know its id.
-            // We don't need to filter, if the root object doesn't have an id.
-            return $includedData;
+        if ($this->isCollection($data)) {
+            $rootObjects = $data['data'];
+        }
+        else {
+            $rootObjects = [$data['data']];
         }
 
-        $rootObject = array(
-            'type' => $resource->getResourceKey(),
-            'id' => "{$resourceData['id']}",
-        );
-
-        // Filter out the root object
+        // Filter out the root objects
         $filteredIncludes = array_filter($includedData['included'],
-            function($inclusion) use ($rootObject) {
-                return !(
-                    $inclusion['type'] === $rootObject['type'] &&
-                    $inclusion['id'] === $rootObject['id']
-                );
+            function($inclusion) use ($rootObjects) {
+                foreach ($rootObjects as $rootObject) {
+                    if ($this->equalResourceObjects($inclusion, $rootObject)) {
+                        return false;
+                    }
+                }
+                return true;
             }
         );
 
@@ -189,6 +186,12 @@ class JsonApiSerializer extends ArraySerializer
         $includedData['included'] = array_merge(array(), $filteredIncludes);
 
         return $includedData;
+    }
+
+    private function equalResourceObjects($object1, $object2)
+    {
+        return $object1['type'] === $object2['type'] &&
+               $object1['id'] === $object2['id'];
     }
 
     private function isCollection($data)
