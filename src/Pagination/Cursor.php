@@ -51,6 +51,7 @@ class Cursor implements CursorInterface
      * Create a new Cursor instance.
      *
      * @param int   $current
+     * @param null  $prev
      * @param mixed $next
      * @param int   $count
      *
