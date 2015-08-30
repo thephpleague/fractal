@@ -10,17 +10,19 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     public function testGetData()
     {
         $resource = new Item($this->simpleItem, function () {});
+
         $this->assertEquals($resource->getData(), $this->simpleItem);
     }
 
     public function testGetTransformer()
     {
-        $resource = new Item($this->simpleItem, function () {
-        });
+        $resource = new Item($this->simpleItem, function () {});
+
         $this->assertTrue(is_callable($resource->getTransformer()));
 
         $transformer = 'thismightbeacallablestring';
         $resource = new Item($this->simpleItem, $transformer);
+
         $this->assertEquals($resource->getTransformer(), $transformer);
     }
 
@@ -30,6 +32,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     public function testSetResourceKey()
     {
         $collection = Mockery::mock('League\Fractal\Resource\Item')->makePartial();
+        
         $this->assertInstanceOf('League\Fractal\Resource\Item', $collection->setResourceKey('foo'));
     }
 
@@ -40,6 +43,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Item')->makePartial();
         $collection->setResourceKey('foo');
+
         $this->assertEquals('foo', $collection->getResourceKey());
     }
 }
