@@ -122,7 +122,7 @@ can be added for those included resources too.
 
 ## ArraySerializer
 
-Sometimes people want to remove that `'data'` namespace for items, and that can be done using the `ArraySerializer`. This is mostly the same, other than that namespace for items. Collections keep the 
+Sometimes people want to remove that `'data'` namespace for items, and that can be done using the `ArraySerializer`. This is mostly the same, other than that namespace for items. Collections keep the
 `'data'` namespace to avoid confusing JSON when meta data is added.
 
 ~~~ php
@@ -178,38 +178,66 @@ This is why ArraySerialzier is not recommended, but if you are not using meta da
 
 ## JsonApiSerializer
 
-This is a work in progress representation of the [JSON-API] standard. It is included as it is partially working, but has some work left.
+This is a representation of the [JSON-API] standard (v1.0). It implements the most common features such as
 
-There are few differences with the `JsonApiSerializer`. The first is that it uses "side-loading" to include
-other related resources, which is different from the "embedding" approach that is used to include resources
-by the other two serializers.
+ - Primary Data
+ - Resource Objects
+ - Resource Identifier Objects
+ - Compound Documents
+ - Meta Information
+ - Links
+ - Relationships
+ - Inclusion of Related Resources
 
-The second is that it requires a _Resource Key_, which the other two do not.
+Features that are not yet included
+
+ - Sparse Fieldsets
+ - Sorting
+ - Pagination
+ - Filtering
+
+As Fractal is a library to output data structures, the serializer can only transform the content of your HTTP response. Therefore, the following has to be implemented by you
+
+ - Content Negotiation
+ - HTTP Response Codes
+ - Error Objects
+
+For more information please refer to the official [JSON API specification](http://jsonapi.org/format).
+
+JSON API requires a _Resource Key_ for your resources, as well as an _id_ on every object.
 
 ~~~ php
 use League\Fractal\Serializer\JsonApiSerializer;
 $manager->setSerializer(new JsonApiSerializer());
 
 // Important, notice the Resource Key in the third parameter:
-$resource = new Item($book, new GenericBookTransformer(), 'book');
-$resource = new Collection($books, new GenericBookTransformer(), 'books');
+$resource = new Item($book, new JsonApiBookTransformer(), 'books');
+$resource = new Collection($books, new JsonApiBookTransformer(), 'books');
 ~~~
 
-That resource key is used to give it a named namespace:
+The resource key is used to give it a named namespace:
 
 ~~~ php
 // Item
 [
-    'book' => [
-        'foo' => 'bar'
+    'data' => [
+        'type' => 'books',
+        'id' => 1,
+        'attributes' => [
+            'foo' => 'bar'
+        ],
     ],
 ];
 
 // Collection
 [
-    'books' => [
+    'data' => [
         [
-            'foo' => 'bar'
+            'type' => 'books',
+            'id' => 1,
+            'attributes' => [
+                'foo' => 'bar'
+            ],
         ]
     ],
 ];
@@ -220,8 +248,12 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 ~~~ php
 // Item with Meta
 [
-    'book' => [
-        'foo' => 'bar'
+    'data' => [
+        'type' => 'books',
+        'id' => 1,
+        'attributes' => [
+            'foo' => 'bar'
+        ]
     ],
     'meta' => [
         ...
@@ -230,9 +262,13 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 
 // Collection with Meta
 [
-    'books' => [
+    'data' => [
         [
-            'foo' => 'bar'
+            'type' => 'books',
+            'id' => 1,
+            'attributes' => [
+                'foo' => 'bar'
+            ]
         ]
     ],
     'meta' => [
@@ -244,15 +280,79 @@ Just like `DataArraySerializer`, this works nicely for meta data:
 Adding a resource to an item response would look like this:
 
 ~~~ php
-// Item with Meta
+// Item with a related resource
 [
-    'book' => [
-        'foo' => 'bar'
+    'data' => [
+        'type' => 'books',
+        'id' => 1,
+        'attributes' => [
+            'foo' => 'bar'
+        ],
+        'relationships' => [
+            'author' => [
+                'data' => [
+                    'type' => 'people',
+                    'id' => '1',
+                ]
+            ]
+        ]
     ],
-    'linked' => [
-        'author' => [
-            [
+    'included' => [
+        [
+            'type' => 'people',
+            'id' => 1,
+            'attributes' => [
                 'name' => 'Dave'
+            ]
+        ]
+    ]
+];
+~~~
+
+If you want to enable `links` support, just set a _baseUrl_ on your serializer
+
+~~~ php
+use League\Fractal\Serializer\JsonApiSerializer;
+$baseUrl = 'http://example.com';
+$manager->setSerializer(new JsonApiSerializer($baseUrl));
+~~~
+
+The same resource as above will look like this
+
+~~~ php
+// Item with a related resource and links support
+[
+    'data' => [
+        'type' => 'books',
+        'id' => 1,
+        'attributes' => [
+            'foo' => 'bar'
+        ],
+        'links' => [
+            'self' => 'http://example.com/books/1'
+        ],
+        'relationships' => [
+            'author' => [
+                'links' => [
+                    'self' => 'http://example.com/books/1/relationships/author',
+                    'related' => 'http://example.com/books/1/author'
+                ],
+                'data' => [
+                    'type' => 'people',
+                    'id' => '1',
+                ]
+            ]
+        ]
+    ],
+    'included' => [
+        [
+            'type' => 'people',
+            'id' => 1,
+            'attributes' => [
+                'name' => 'Dave'
+            ],
+            'links' => [
+                'self' => 'http://example.com/people/1'
             ]
         ]
     ]
