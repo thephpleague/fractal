@@ -299,11 +299,13 @@ class Scope
 
         if ($this->resource instanceof Collection) {
             return $serializer->collection($resourceKey, $data);
-        } elseif ($this->resource instanceof Item) {
-            return $serializer->item($resourceKey, $data);
-        } else {
-            return $serializer->null();
         }
+
+        if ($this->resource instanceof Item) {
+            return $serializer->item($resourceKey, $data);
+        }
+
+        return $serializer->null();
     }
 
     /**
