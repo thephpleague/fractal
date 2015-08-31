@@ -64,7 +64,7 @@
             <ul>
                 {% for link in section[1] %}
                     <li {% if page.url == link[1] %}class="selected"{% endif %}>
-                        <a href="{{ link[1] }}">{{ link[0] }}</a>
+                        <a href="http://fractal.thephpleague.com{{ link[1] }}">{{ link[0] }}</a>
                     </li>
                 {% endfor %}
             </ul>
