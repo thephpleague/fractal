@@ -219,18 +219,20 @@ This will look identical in output as if the user requested `?include=author`.
 
 ### Include Parameters
 
-When including other resources, syntax can be used to provide extra parameters to the include 
+When including other resources, syntax can be used to provide extra parameters to the include
 methods. These parameters are constructed in the URL, `?include=comments:limit(5|1):order(created_at|desc)`.
 
-This syntax will be parsed and made available through a `League\Fractal\ParamBag` object, passed into the 
+This syntax will be parsed and made available through a `League\Fractal\ParamBag` object, passed into the
 include method as the second argument.
 
 ~~~ php
 <?php
-    
+
 use League\Fractal\ParamBag;
 
     // ... transformer stuff ...
+
+    private $validParams = ['limit', 'order'];
 
     /**
      * Include Comments
@@ -241,6 +243,13 @@ use League\Fractal\ParamBag;
      */
     public function includeComments(Book $book, ParamBag $params)
     {
+    	// Optional params validation
+        $usedParams = array_keys(iterator_to_array($params));
+        if ($invalidParams = array_diff($usedParams, $this->validParams)) {
+            throw new \Exception(sprintf('Invalid param(s): "%s". Valid param(s): "%s"', implode(',', $usedParams), implode(',', $this->validParams)));
+        }
+
+    	// Processing
         list($limit, $offset) = $params->get('limit');
         list($orderCol, $orderBy) = $params->get('order');
 
@@ -255,7 +264,7 @@ use League\Fractal\ParamBag;
 ~~~
 
 Parameters have a name, then multiple values which are always returned as an array, even if there is only one.
-They are accessed by the `get()` method, but array access is also an option, so `$params->get('limit')` and 
+They are accessed by the `get()` method, but array access is also an option, so `$params->get('limit')` and
 `$params['limit']` do the same thing.
 
 ### Eager-Loading vrs Lazy-Loading
