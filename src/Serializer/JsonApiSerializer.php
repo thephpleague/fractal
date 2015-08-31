@@ -18,10 +18,12 @@ use League\Fractal\Resource\ResourceAbstract;
 class JsonApiSerializer extends ArraySerializer
 {
     protected $baseUrl;
+    protected $rootObjects;
 
     public function __construct($baseUrl = null)
     {
         $this->baseUrl = $baseUrl;
+        $this->rootObjects = [];
     }
 
     /**
@@ -153,42 +155,67 @@ class JsonApiSerializer extends ArraySerializer
      * relationship.
      *
      * @param array             $includedData
-     * @param ResourceInterface $resource
+     * @param array             $data
      *
      * @return array
      */
-    public function filterIncludes($includedData, ResourceInterface $resource)
+    public function filterIncludes($includedData, $data)
     {
         if (!isset($includedData['included'])) {
             return $includedData;
         }
 
-        $resourceData = $resource->getData();
-        if (!isset($resourceData['id'])) {
-            // In order to construct the root object, we need to know its id.
-            // We don't need to filter, if the root object doesn't have an id.
-            return $includedData;
+        if ($this->isCollection($data)) {
+            $this->setRootObjects($data['data']);
+        }
+        else {
+            $this->setRootObjects([$data['data']]);
         }
 
-        $rootObject = array(
-            'type' => $resource->getResourceKey(),
-            'id' => "{$resourceData['id']}",
-        );
-
-        // Filter out the root object
-        $filteredIncludes = array_filter($includedData['included'],
-            function($inclusion) use ($rootObject) {
-                return !(
-                    $inclusion['type'] === $rootObject['type'] &&
-                    $inclusion['id'] === $rootObject['id']
-                );
-            }
-        );
+        // Filter out the root objects
+        $filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
 
         // Reset array indizes
         $includedData['included'] = array_merge(array(), $filteredIncludes);
 
         return $includedData;
+    }
+
+    /**
+     * Filter function to delete root objects from array.
+     *
+     * @param array $object
+     *
+     * @return bool
+     */
+    private function filterRootObject($object)
+    {
+        return !$this->isRootObject($object);
+    }
+
+    /**
+     * Set the root objects of the JSON API tree.
+     *
+     * @param array $objects
+     */
+    private function setRootObjects(array $objects = array())
+    {
+        $this->rootObjects = array_map(function($object) {
+            return "{$object['type']}:{$object['id']}";
+        }, $objects);
+    }
+
+    /**
+     * Determines whether an object is a root object of the JSON API tree.
+     *
+     * @param array $object
+     *
+     * @return bool
+     */
+    private function isRootObject($object)
+    {
+        $objectKey = "{$object['type']}:{$object['id']}";
+        return in_array($objectKey, $this->rootObjects);
     }
 
     private function isCollection($data)
