@@ -38,6 +38,17 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('League\Fractal\Manager', $scope->getManager());
     }
 
+    public function testGetResource()
+    {
+        $resource = new Item(array('foo' => 'bar'), function () {
+        });
+
+        $scope = new Scope(new Manager(), $resource, 'book');
+
+        $this->assertInstanceOf('League\Fractal\Resource\ResourceAbstract', $scope->getResource());
+        $this->assertInstanceOf('League\Fractal\Resource\Item', $scope->getResource());
+    }
+
     /**
      * @covers League\Fractal\Scope::toArray
      */
