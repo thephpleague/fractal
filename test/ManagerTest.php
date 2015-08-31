@@ -58,7 +58,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('foo', 'foo.bar'), $manager->getRequestedIncludes());
 
         // See if fancy syntax works
-        $manager->parseIncludes('foo:limit(5|1):order(-something)');
+        $manager->parseIncludes('foo:limit(5|1):order(-something):anotherparam');
 
         $params = $manager->getIncludeParams('foo');
 
@@ -66,6 +66,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('5', '1'), $params['limit']);
         $this->assertEquals(array('-something'), $params['order']);
+        $this->assertEquals(array(''), $params['anotherparam']);
         $this->assertNull($params['totallymadeup']);
     }
 
