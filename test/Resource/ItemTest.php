@@ -5,7 +5,7 @@ use Mockery;
 
 class ItemTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleItem = array('foo' => 'bar');
+    protected $simpleItem = ['foo' => 'bar'];
 
     public function testGetData()
     {

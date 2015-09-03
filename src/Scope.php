@@ -30,7 +30,7 @@ class Scope
     /**
      * @var array
      */
-    protected $availableIncludes = array();
+    protected $availableIncludes = [];
 
     /**
      * @var string
@@ -50,7 +50,7 @@ class Scope
     /**
      * @var array
      */
-    protected $parentScopes = array();
+    protected $parentScopes = [];
 
     /**
      * Create a new scope instance.
@@ -102,7 +102,7 @@ class Scope
      */
     public function getIdentifier($appendIdentifier = null)
     {
-        $identifierParts = array_merge($this->parentScopes, array($this->scopeIdentifier, $appendIdentifier));
+        $identifierParts = array_merge($this->parentScopes, [$this->scopeIdentifier, $appendIdentifier]);
 
         return implode('.', array_filter($identifierParts));
     }
@@ -156,7 +156,7 @@ class Scope
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
-            $scopeArray = array($checkScopeSegment);
+            $scopeArray = [$checkScopeSegment];
         }
 
         $scopeString = implode('.', (array) $scopeArray);
@@ -272,7 +272,7 @@ class Scope
         $transformer = $this->resource->getTransformer();
         $data = $this->resource->getData();
 
-        $transformedData = $includedData = array();
+        $transformedData = $includedData = [];
 
         if ($this->resource instanceof Item) {
             list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
@@ -290,7 +290,7 @@ class Scope
             );
         }
 
-        return array($transformedData, $includedData);
+        return [$transformedData, $includedData];
     }
 
     /**
@@ -330,7 +330,7 @@ class Scope
      */
     protected function fireTransformer($transformer, $data)
     {
-        $includedData = array();
+        $includedData = [];
 
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
@@ -343,7 +343,7 @@ class Scope
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
 
-        return array($transformedData, $includedData);
+        return [$transformedData, $includedData];
     }
 
     /**
@@ -360,7 +360,7 @@ class Scope
     {
         $this->availableIncludes = $transformer->getAvailableIncludes();
 
-        return $transformer->processIncludedResources($this, $data) ?: array();
+        return $transformer->processIncludedResources($this, $data) ?: [];
     }
 
     /**

@@ -4,9 +4,9 @@ use League\Fractal\TransformerAbstract;
 
 class GenericBookTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = array(
+    protected $availableIncludes = [
         'author',
-    );
+    ];
 
     public function transform(array $book)
     {

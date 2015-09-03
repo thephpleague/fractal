@@ -12,7 +12,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
 
         // Test that some includes provided returns self
-        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(array('foo')));
+        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(['foo']));
     }
 
     /**
@@ -43,19 +43,19 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         // Does a CSV string work
         $manager->parseIncludes('foo,bar');
-        $this->assertEquals(array('foo', 'bar'), $manager->getRequestedIncludes());
+        $this->assertEquals(['foo', 'bar'], $manager->getRequestedIncludes());
 
         // Does a big array of stuff work
-        $manager->parseIncludes(array('foo', 'bar', 'bar.baz'));
-        $this->assertEquals(array('foo', 'bar', 'bar.baz'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo', 'bar', 'bar.baz']);
+        $this->assertEquals(['foo', 'bar', 'bar.baz'], $manager->getRequestedIncludes());
 
         // Are repeated things stripped
-        $manager->parseIncludes(array('foo', 'foo', 'bar'));
-        $this->assertEquals(array('foo', 'bar'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo', 'foo', 'bar']);
+        $this->assertEquals(['foo', 'bar'], $manager->getRequestedIncludes());
 
         // Do requests for `baz.bart` also request `baz`?
-        $manager->parseIncludes(array('foo.bar'));
-        $this->assertEquals(array('foo', 'foo.bar'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo.bar']);
+        $this->assertEquals(['foo', 'foo.bar'], $manager->getRequestedIncludes());
 
         // See if fancy syntax works
         $manager->parseIncludes('foo:limit(5|1):order(-something):anotherparam');
@@ -64,9 +64,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\ParamBag', $params);
 
-        $this->assertEquals(array('5', '1'), $params['limit']);
-        $this->assertEquals(array('-something'), $params['order']);
-        $this->assertEquals(array(''), $params['anotherparam']);
+        $this->assertEquals(['5', '1'], $params['limit']);
+        $this->assertEquals(['-something'], $params['order']);
+        $this->assertEquals([''], $params['anotherparam']);
         $this->assertNull($params['totallymadeup']);
     }
 
@@ -77,7 +77,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         // Should limit to 10 by default
         $manager->parseIncludes('a.b.c.d.e.f.g.h.i.j.NEVER');
         $this->assertEquals(
-            array(
+            [
                 'a',
                 'a.b',
                 'a.b.c',
@@ -88,7 +88,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
                 'a.b.c.d.e.f.g.h',
                 'a.b.c.d.e.f.g.h.i',
                 'a.b.c.d.e.f.g.h.i.j',
-            ),
+            ],
             $manager->getRequestedIncludes()
         );
 
@@ -96,11 +96,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager->setRecursionLimit(3);
         $manager->parseIncludes('a.b.c.NEVER');
         $this->assertEquals(
-            array(
+            [
                 'a',
                 'a.b',
                 'a.b.c',
-            ),
+            ],
             $manager->getRequestedIncludes()
         );
     }
@@ -110,7 +110,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
 
         // Item
-        $resource = new Item(array('foo' => 'bar'), function (array $data) {
+        $resource = new Item(['foo' => 'bar'], function (array $data) {
             return $data;
         });
 
@@ -118,11 +118,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
-        $this->assertEquals(array('data' => array('foo' => 'bar')), $rootScope->toArray());
+        $this->assertEquals(['data' => ['foo' => 'bar']], $rootScope->toArray());
         $this->assertEquals('{"data":{"foo":"bar"}}', $rootScope->toJson());
 
         // Collection
-        $resource = new Collection(array(array('foo' => 'bar')), function (array $data) {
+        $resource = new Collection([['foo' => 'bar']], function (array $data) {
             return $data;
         });
 
@@ -130,7 +130,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
-        $this->assertEquals(array('data' => array(array('foo' => 'bar'))), $rootScope->toArray());
+        $this->assertEquals(['data' => [['foo' => 'bar']]], $rootScope->toArray());
         $this->assertEquals('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
     }
 

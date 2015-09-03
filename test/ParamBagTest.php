@@ -6,7 +6,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
 {
     public function testOldFashionedGet()
     {
-        $params = new ParamBag(array('one' => 'potato', 'two' => 'potato2'));
+        $params = new ParamBag(['one' => 'potato', 'two' => 'potato2']);
 
         $this->assertEquals('potato', $params->get('one'));
         $this->assertEquals('potato2', $params->get('two'));
@@ -14,14 +14,14 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
 
     public function testGettingValuesTheOldFashionedWayArray()
     {
-        $params = new ParamBag(array('one' => array('potato', 'tomato')));
+        $params = new ParamBag(['one' => ['potato', 'tomato']]);
 
-        $this->assertEquals(array('potato', 'tomato'), $params->get('one'));
+        $this->assertEquals(['potato', 'tomato'], $params->get('one'));
     }
 
     public function testArrayAccess()
     {
-        $params = new ParamBag(array('foo' => 'bar', 'baz' => 'ban'));
+        $params = new ParamBag(['foo' => 'bar', 'baz' => 'ban']);
 
         $this->assertInstanceOf('ArrayAccess', $params);
         $this->assertArrayHasKey('foo', $params);
@@ -37,7 +37,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrayAccessSetFails()
     {
-        $params = new ParamBag(array('foo' => 'bar'));
+        $params = new ParamBag(['foo' => 'bar']);
 
         $params['foo'] = 'someothervalue';
     }
@@ -48,14 +48,14 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrayAccessUnsetFails()
     {
-        $params = new ParamBag(array('foo' => 'bar'));
+        $params = new ParamBag(['foo' => 'bar']);
 
         unset($params['foo']);
     }
 
     public function testObjectAccess()
     {
-        $params = new ParamBag(array('foo' => 'bar', 'baz' => 'ban'));
+        $params = new ParamBag(['foo' => 'bar', 'baz' => 'ban']);
 
         $this->assertEquals('bar', $params->foo);
         $this->assertEquals('ban', $params->baz);
@@ -69,7 +69,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
      */
     public function testObjectAccessSetFails()
     {
-        $params = new ParamBag(array('foo' => 'bar'));
+        $params = new ParamBag(['foo' => 'bar']);
 
         $params->foo = 'someothervalue';
     }
@@ -80,7 +80,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
      */
     public function testObjectAccessUnsetFails()
     {
-        $params = new ParamBag(array('foo' => 'bar'));
+        $params = new ParamBag(['foo' => 'bar']);
 
         unset($params->foo);
     }

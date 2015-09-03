@@ -19,7 +19,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * Create a new parameter bag instance.
