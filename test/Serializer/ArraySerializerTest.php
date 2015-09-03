@@ -9,30 +9,30 @@ use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 
 class ArraySerializerTest extends PHPUnit_Framework_TestCase
 {
-    private $bookItemInput = array(
+    private $bookItemInput = [
         'title' => 'Foo',
         'year' => '1991',
-        '_author' => array(
+        '_author' => [
             'name' => 'Dave',
-        ),
-    );
+        ],
+    ];
 
-    private $bookCollectionInput = array(
-        array(
+    private $bookCollectionInput = [
+        [
             'title' => 'Foo',
             'year' => '1991',
-            '_author' => array(
+            '_author' => [
                 'name' => 'Dave',
-            ),
-        ),
-        array(
+            ],
+        ],
+        [
             'title' => 'Bar',
             'year' => '1997',
-            '_author' => array(
+            '_author' => [
                 'name' => 'Bob',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     public function testSerializingItemResource()
     {
@@ -45,13 +45,13 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
+        $expected = [
             'title' => 'Foo',
             'year' => 1991,
-            'author' => array(
+            'author' => [
                 'name' => 'Dave',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $scope->toArray());
 
@@ -60,16 +60,16 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
+        $expected = [
             'title' => 'Foo',
             'year' => 1991,
-            'author' => array(
+            'author' => [
                 'name' => 'Dave',
-            ),
-            'meta' => array(
+            ],
+            'meta' => [
                 'foo' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $scope->toArray());
     }
@@ -85,24 +85,24 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'books' => array(
-                array(
+        $expected = [
+            'books' => [
+                [
                     'title' => 'Foo',
                     'year' => 1991,
-                    'author' => array(
+                    'author' => [
                         'name' => 'Dave',
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'title' => 'Bar',
                     'year' => 1997,
-                    'author' => array(
+                    'author' => [
                         'name' => 'Bob',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $this->assertEquals($expected, $scope->toArray());
 
@@ -115,27 +115,27 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'books' => array(
-                array(
+        $expected = [
+            'books' => [
+                [
                     'title' => 'Foo',
                     'year' => 1991,
-                    'author' => array(
+                    'author' => [
                         'name' => 'Dave',
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'title' => 'Bar',
                     'year' => 1997,
-                    'author' => array(
+                    'author' => [
                         'name' => 'Bob',
-                    ),
-                ),
-            ),
-            'meta' => array(
+                    ],
+                ],
+            ],
+            'meta' => [
                 'foo' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $scope->toArray());
 
