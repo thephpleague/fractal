@@ -39,7 +39,7 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         // Same again with metadata
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
@@ -48,9 +48,6 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            'meta' => array(
-                'foo' => 'bar',
-            ),
             'data' => array(
                 'title' => 'Foo',
                 'year' => 1991,
@@ -60,9 +57,12 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
                     ),
                 ),
             ),
+            'meta' => array(
+                'foo' => 'bar',
+            ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
     }
 
     public function testSerializingCollectionResource()
@@ -116,10 +116,10 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}]}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
 
         // Same again with meta
         $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
@@ -128,9 +128,6 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
         $scope = new Scope($manager, $resource);
 
         $expected = array(
-            'meta' => array(
-                'foo' => 'bar',
-            ),
             'data' => array(
                 array(
                     'title' => 'Foo',
@@ -151,12 +148,15 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
                     ),
                 ),
             ),
+            'meta' => array(
+                'foo' => 'bar',
+            ),
         );
 
-        $this->assertEquals($expected, $scope->toArray());
+        $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"data":{"name":"Dave"}}},{"title":"Bar","year":1997,"author":{"data":{"name":"Bob"}}}],"meta":{"foo":"bar"}}';
-        $this->assertEquals($expectedJson, $scope->toJson());
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     public function tearDown()

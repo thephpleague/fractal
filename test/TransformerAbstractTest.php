@@ -24,7 +24,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
         $transformer->setAvailableIncludes(array('foo', 'bar'));
-        $this->assertEquals(array('foo', 'bar'), $transformer->getAvailableIncludes());
+        $this->assertSame(array('foo', 'bar'), $transformer->getAvailableIncludes());
     }
 
     /**
@@ -43,7 +43,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
         $transformer->setDefaultIncludes(array('foo', 'bar'));
-        $this->assertEquals(array('foo', 'bar'), $transformer->getDefaultIncludes());
+        $this->assertSame(array('foo', 'bar'), $transformer->getDefaultIncludes());
     }
 
     /**
@@ -66,7 +66,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
         $transformer->setCurrentScope($scope);
-        $this->assertEquals($transformer->getCurrentScope(), $scope);
+        $this->assertSame($transformer->getCurrentScope(), $scope);
     }
 
     public function testProcessEmbeddedResourcesNoAvailableIncludes()
@@ -145,7 +145,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->setAvailableIncludes(array('book', 'publisher'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
+        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
     /**
@@ -202,7 +202,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->setDefaultIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
+        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
     /**
@@ -223,7 +223,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Item(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => array('included' => 'thing'))), $included);
+        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
     }
 
     public function testParamBagIsProvidedForIncludes()
@@ -265,7 +265,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer->setAvailableIncludes(array('book'));
         $scope = new Scope($manager, new Collection(array(), $transformer));
         $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertEquals(array('book' => array('data' => $collectionData)), $included);
+        $this->assertSame(array('book' => array('data' => $collectionData)), $included);
     }
 
     /**
