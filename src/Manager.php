@@ -29,14 +29,14 @@ class Manager
      *
      * @var array
      */
-    protected $requestedIncludes = array();
+    protected $requestedIncludes = [];
 
     /**
      * Array containing modifiers as keys and an array value of params.
      *
      * @var array
      */
-    protected $includeParams = array();
+    protected $includeParams = [];
 
     /**
      * The character used to separate modifier parameters.
@@ -138,7 +138,7 @@ class Manager
     public function parseIncludes($includes)
     {
         // Wipe these before we go again
-        $this->requestedIncludes = $this->includeParams = array();
+        $this->requestedIncludes = $this->includeParams = [];
 
         if (is_string($includes)) {
             $includes = explode(',', $includes);
@@ -173,7 +173,7 @@ class Manager
             // [0] is full matched strings...
             $modifierCount = count($allModifiersArr[0]);
 
-            $modifierArr = array();
+            $modifierArr = [];
 
             for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
                 // [1] is the modifier
@@ -235,7 +235,7 @@ class Manager
      */
     protected function autoIncludeParents()
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($this->requestedIncludes as $include) {
             $nested = explode('.', $include);

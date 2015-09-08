@@ -12,7 +12,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
 
         // Test that some includes provided returns self
-        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(array('foo')));
+        $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(['foo']));
     }
 
     /**
@@ -43,19 +43,21 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         // Does a CSV string work
         $manager->parseIncludes('foo,bar');
-        $this->assertSame(array('foo', 'bar'), $manager->getRequestedIncludes());
+
+        $this->assertSame(['foo', 'bar'], $manager->getRequestedIncludes());
 
         // Does a big array of stuff work
-        $manager->parseIncludes(array('foo', 'bar', 'bar.baz'));
-        $this->assertSame(array('foo', 'bar', 'bar.baz'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo', 'bar', 'bar.baz']);
+        $this->assertSame(['foo', 'bar', 'bar.baz'], $manager->getRequestedIncludes());
 
         // Are repeated things stripped
-        $manager->parseIncludes(array('foo', 'foo', 'bar'));
-        $this->assertSame(array('foo', 'bar'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo', 'foo', 'bar']);
+        $this->assertSame(['foo', 'bar'], $manager->getRequestedIncludes());
 
         // Do requests for `baz.bart` also request `baz`?
-        $manager->parseIncludes(array('foo.bar'));
-        $this->assertSame(array('foo', 'foo.bar'), $manager->getRequestedIncludes());
+        $manager->parseIncludes(['foo.bar']);
+        $this->assertSame(['foo', 'foo.bar'], $manager->getRequestedIncludes());
+
 
         // See if fancy syntax works
         $manager->parseIncludes('foo:limit(5|1):order(-something):anotherparam');
@@ -64,9 +66,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\ParamBag', $params);
 
-        $this->assertSame(array('5', '1'), $params['limit']);
-        $this->assertSame(array('-something'), $params['order']);
-        $this->assertSame(array(''), $params['anotherparam']);
+
+        $this->assertSame(['5', '1'], $params['limit']);
+        $this->assertSame(['-something'], $params['order']);
+        $this->assertSame([''], $params['anotherparam']);
+
         $this->assertNull($params['totallymadeup']);
     }
 
@@ -76,8 +80,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         // Should limit to 10 by default
         $manager->parseIncludes('a.b.c.d.e.f.g.h.i.j.NEVER');
+
         $this->assertSame(
-            array(
+            [
                 'a',
                 'a.b',
                 'a.b.c',
@@ -88,19 +93,20 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
                 'a.b.c.d.e.f.g.h',
                 'a.b.c.d.e.f.g.h.i',
                 'a.b.c.d.e.f.g.h.i.j',
-            ),
+            ],
             $manager->getRequestedIncludes()
         );
 
         // Try setting to 3 and see what happens
         $manager->setRecursionLimit(3);
         $manager->parseIncludes('a.b.c.NEVER');
+
         $this->assertSame(
-            array(
+            [
                 'a',
                 'a.b',
                 'a.b.c',
-            ),
+            ],
             $manager->getRequestedIncludes()
         );
     }
@@ -110,7 +116,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
 
         // Item
-        $resource = new Item(array('foo' => 'bar'), function (array $data) {
+        $resource = new Item(['foo' => 'bar'], function (array $data) {
             return $data;
         });
 
@@ -118,11 +124,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
-        $this->assertSame(array('data' => array('foo' => 'bar')), $rootScope->toArray());
+
+        $this->assertSame(['data' => ['foo' => 'bar']], $rootScope->toArray());
         $this->assertSame('{"data":{"foo":"bar"}}', $rootScope->toJson());
 
         // Collection
-        $resource = new Collection(array(array('foo' => 'bar')), function (array $data) {
+        $resource = new Collection([['foo' => 'bar']], function (array $data) {
             return $data;
         });
 
@@ -130,8 +137,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
 
-        $this->assertSame(array('data' => array(array('foo' => 'bar'))), $rootScope->toArray());
+
+        $this->assertSame(['data' => [['foo' => 'bar']]], $rootScope->toArray());
         $this->assertSame('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
+
     }
 
     public function tearDown()

@@ -11,14 +11,14 @@ use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleItem = array('foo' => 'bar');
-    protected $simpleCollection = array(array('foo' => 'bar'));
+    protected $simpleItem = ['foo' => 'bar'];
+    protected $simpleCollection = [['foo' => 'bar']];
 
     public function testEmbedChildScope()
     {
         $manager = new Manager();
 
-        $resource = new Item(array('foo' => 'bar'), function () {
+        $resource = new Item(['foo' => 'bar'], function () {
         });
 
         $scope = new Scope($manager, $resource, 'book');
@@ -30,7 +30,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetManager()
     {
-        $resource = new Item(array('foo' => 'bar'), function () {
+        $resource = new Item(['foo' => 'bar'], function () {
         });
 
         $scope = new Scope(new Manager(), $resource, 'book');
@@ -40,7 +40,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResource()
     {
-        $resource = new Item(array('foo' => 'bar'), function () {
+        $resource = new Item(['foo' => 'bar'], function () {
         });
 
         $scope = new Scope(new Manager(), $resource, 'book');
@@ -56,13 +56,14 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(array('foo' => 'bar'), function ($data) {
+        $resource = new Item(['foo' => 'bar'], function ($data) {
             return $data;
         });
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertSame(array('data' => array('foo' => 'bar')), $scope->toArray());
+
+        $this->assertSame(['data' => ['foo' => 'bar']], $scope->toArray());
     }
 
     public function testToJson()
@@ -90,7 +91,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        $resource = new Item(['name' => 'Larry Ullman'], function () {
         });
 
         $scope = new Scope($manager, $resource, 'book');
@@ -107,7 +108,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        $resource = new Item(['name' => 'Larry Ullman'], function () {
         });
 
         $scope = new Scope($manager, $resource, 'book');
@@ -124,22 +125,23 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        $resource = new Item(['name' => 'Larry Ullman'], function () {
         });
 
         $scope = new Scope($manager, $resource, 'book');
 
         $childScope = $scope->embedChildScope('author', $resource);
-        $this->assertSame(array('book'), $childScope->getParentScopes());
+
+        $this->assertSame(['book'], $childScope->getParentScopes());
 
         $grandChildScope = $childScope->embedChildScope('profile', $resource);
-        $this->assertSame(array('book', 'author'), $grandChildScope->getParentScopes());
+        $this->assertSame(['book', 'author'], $grandChildScope->getParentScopes());
     }
 
     public function testIsRequested()
     {
         $manager = new Manager();
-        $manager->parseIncludes(array('foo', 'bar', 'baz.bart'));
+        $manager->parseIncludes(['foo', 'bar', 'baz.bart']);
 
         $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceAbstract'));
 
@@ -164,10 +166,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', array(
-            array('bar' => 'baz'),
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', [
+            ['bar' => 'baz'],
             function () {},
-        ))->makePartial();
+        ])->makePartial();
 
         $scope = new Scope($manager, $resource);
         $scope->toArray();
@@ -179,17 +181,18 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('book');
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(['book']);
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
-        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(['book' => ['yin' => 'yang']]);
 
-        $resource = new Item(array('bar' => 'baz'), $transformer);
+        $resource = new Item(['bar' => 'baz'], $transformer);
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertSame(array('data' => array('bar' => 'baz', 'book' => array('yin' => 'yang'))), $scope->toArray());
+
+        $this->assertSame(['data' => ['bar' => 'baz', 'book' => ['yin' => 'yang']]], $scope->toArray());
     }
 
     public function testToArrayWithSideloadedIncludes()
@@ -197,10 +200,10 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer')->makePartial();
         $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
         $serializer->shouldReceive('item')->andReturnUsing(function ($key, $data) {
-            return array('data' => $data);
+            return ['data' => $data];
         });
         $serializer->shouldReceive('includedData')->andReturnUsing(function ($key, $data) {
-            return array('sideloaded' => array_pop($data));
+            return ['sideloaded' => array_pop($data)];
         });
 
         $manager = new Manager();
@@ -208,20 +211,20 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->setSerializer($serializer);
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(array('book'));
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(['book']);
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
-        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(array('book' => array('yin' => 'yang')));
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(['book' => ['yin' => 'yang']]);
 
-        $resource = new Item(array('bar' => 'baz'), $transformer);
+        $resource = new Item(['bar' => 'baz'], $transformer);
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'data' => array('bar' => 'baz'),
-            'sideloaded' => array('book' => array('yin' => 'yang')),
-        );
+        $expected = [
+            'data' => ['bar' => 'baz'],
+            'sideloaded' => ['book' => ['yin' => 'yang']],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
     }
@@ -230,7 +233,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(array('name' => 'Larry Ullman'), function () {
+        $resource = new Item(['name' => 'Larry Ullman'], function () {
         });
 
         $scope = new Scope($manager, $resource);
@@ -239,7 +242,8 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $scope->pushParentScope('author'));
         $this->assertSame(3, $scope->pushParentScope('profile'));
 
-        $this->assertSame(array('book', 'author', 'profile'), $scope->getParentScopes());
+
+        $this->assertSame(['book', 'author', 'profile'], $scope->getParentScopes());
     }
 
     public function testRunAppropriateTransformerWithItem()
@@ -248,12 +252,13 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
-        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn(array());
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
+        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
-        $this->assertSame(array('data' => $this->simpleItem), $scope->toArray());
+
+        $this->assertSame(['data' => $this->simpleItem], $scope->toArray());
     }
 
     public function testRunAppropriateTransformerWithCollection()
@@ -261,14 +266,15 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
-        $transformer->shouldReceive('transform')->once()->andReturn(array('foo' => 'bar'));
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(array());
-        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn(array());
+        $transformer->shouldReceive('transform')->once()->andReturn(['foo' => 'bar']);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
+        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
 
-        $resource = new Collection(array(array('foo' => 'bar')), $transformer);
+        $resource = new Collection([['foo' => 'bar']], $transformer);
         $scope = $manager->createData($resource);
 
-        $this->assertSame(array('data' => array(array('foo' => 'bar'))), $scope->toArray());
+        $this->assertSame(['data' => [['foo' => 'bar']]], $scope->toArray());
+
     }
 
     /**
@@ -282,7 +288,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
 
-        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', array($this->simpleItem, $transformer))->makePartial();
+        $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', [$this->simpleItem, $transformer])->makePartial();
         $scope = $manager->createData($resource);
         $scope->toArray();
     }
@@ -291,7 +297,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $collection = new Collection(array(array('foo' => 'bar', 'baz' => 'ban')), function (array $data) {
+        $collection = new Collection([['foo' => 'bar', 'baz' => 'ban']], function (array $data) {
             return $data;
         });
 
@@ -315,27 +321,29 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $rootScope = $manager->createData($collection);
 
-        $expectedOutput = array(
-            'data' => array(
-                array(
+
+        $expectedOutput = [
+            'data' => [
+                [
                     'foo' => 'bar',
                     'baz' => 'ban',
-                ),
-            ),
-            'meta' => array(
-                'pagination' => array(
+                ],
+            ],
+            'meta' => [
+                'pagination' => [
                     'total' => $total,
                     'count' => $count,
                     'per_page' => $perPage,
                     'current_page' => $currentPage,
                     'total_pages' => $lastPage,
-                    'links' => array(
+                    'links' => [
                         'previous' => 'http://example.com/foo?page=1',
                         'next' => 'http://example.com/foo?page=3',
-                    ),
-                ),
-            ),
-        );
+
+                    ],
+                ],
+            ],
+        ];
 
         $this->assertSame($expectedOutput, $rootScope->toArray());
     }
@@ -344,12 +352,12 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new Manager();
 
-        $inputData = array(
-            array(
+        $inputData = [
+            [
                 'foo' => 'bar',
                 'baz' => 'ban',
-            ),
-        );
+            ],
+        ];
 
         $collection = new Collection($inputData, function (array $data) {
             return $data;
@@ -361,17 +369,19 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $rootScope = $manager->createData($collection);
 
-        $expectedOutput = array(
+
+        $expectedOutput = [
             'data' => $inputData,
-            'meta' => array(
-                'cursor' => array(
+            'meta' => [
+                'cursor' => [
                     'current' => 0,
                     'prev' => 'ban',
                     'next' => 'ban',
                     'count' => 2,
-                ),
-            ),
-        );
+
+                ],
+            ],
+        ];
 
         $this->assertSame($expectedOutput, $rootScope->toArray());
     }
@@ -382,17 +392,17 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->setSerializer(new ArraySerializer());
 
         // Send this stub junk, it has a specific format anyhow
-        $resource = new Item(array(), new DefaultIncludeBookTransformer());
+        $resource = new Item([], new DefaultIncludeBookTransformer());
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
+        $expected = [
             'a' => 'b',
-            'author' => array(
+            'author' => [
                 'c' => 'd',
-            ),
-        );
+            ],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
     }

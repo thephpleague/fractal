@@ -15,29 +15,29 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new DataArraySerializer());
 
-        $bookData = array(
+        $bookData = [
             'title' => 'Foo',
             'year' => '1991',
-            '_author' => array(
+            '_author' => [
                 'name' => 'Dave',
-            ),
-        );
+            ],
+        ];
 
         // Try without metadata
         $resource = new Item($bookData, new GenericBookTransformer(), 'book');
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'data' => array(
+        $expected = [
+            'data' => [
                 'title' => 'Foo',
                 'year' => 1991,
-                'author' => array(
-                    'data' => array(
+                'author' => [
+                    'data' => [
                         'name' => 'Dave',
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
 
@@ -47,20 +47,22 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'data' => array(
+
+        $expected = [
+            'data' => [
                 'title' => 'Foo',
                 'year' => 1991,
-                'author' => array(
-                    'data' => array(
+                'author' => [
+                    'data' => [
                         'name' => 'Dave',
-                    ),
-                ),
-            ),
-            'meta' => array(
+
+                    ],
+                ],
+            ],
+            'meta' => [
                 'foo' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
     }
@@ -71,50 +73,50 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new DataArraySerializer());
 
-        $booksData = array(
-            array(
+        $booksData = [
+            [
                 'title' => 'Foo',
                 'year' => '1991',
-                '_author' => array(
+                '_author' => [
                     'name' => 'Dave',
-                ),
-            ),
-            array(
+                ],
+            ],
+            [
                 'title' => 'Bar',
                 'year' => '1997',
-                '_author' => array(
+                '_author' => [
                     'name' => 'Bob',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         // Try without metadata
         $resource = new Collection($booksData, new GenericBookTransformer(), 'book');
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'data' => array(
-                array(
+        $expected = [
+            'data' => [
+                [
                     'title' => 'Foo',
                     'year' => 1991,
-                    'author' => array(
-                        'data' => array(
+                    'author' => [
+                        'data' => [
                             'name' => 'Dave',
-                        ),
-                    ),
-                ),
-                array(
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'Bar',
                     'year' => 1997,
-                    'author' => array(
-                        'data' => array(
+                    'author' => [
+                        'data' => [
                             'name' => 'Bob',
-                        ),
-                    ),
-                ),
-            ),
-        );
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
 
@@ -127,31 +129,33 @@ class DataArraySerializerTest extends PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expected = array(
-            'data' => array(
-                array(
+
+        $expected = [
+            'data' => [
+                [
                     'title' => 'Foo',
                     'year' => 1991,
-                    'author' => array(
-                        'data' => array(
+                    'author' => [
+                        'data' => [
                             'name' => 'Dave',
-                        ),
-                    ),
-                ),
-                array(
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'Bar',
                     'year' => 1997,
-                    'author' => array(
-                        'data' => array(
+                    'author' => [
+                        'data' => [
                             'name' => 'Bob',
-                        ),
-                    ),
-                ),
-            ),
-            'meta' => array(
+
+                        ],
+                    ],
+                ],
+            ],
+            'meta' => [
                 'foo' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         $this->assertSame($expected, $scope->toArray());
 

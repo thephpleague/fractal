@@ -42,7 +42,7 @@ class JsonApiSerializer extends ArraySerializer
             $resources[] = $this->item($resourceKey, $resource)['data'];
         }
 
-        return array('data' => $resources);
+        return ['data' => $resources];
     }
 
     /**
@@ -57,20 +57,20 @@ class JsonApiSerializer extends ArraySerializer
     {
         $id = $this->getIdFromData($data);
 
-        $resource = array(
-            'data' => array(
+        $resource = [
+            'data' => [
                 'type' => $resourceKey,
                 'id' => "$id",
                 'attributes' => $data,
-            ),
-        );
+            ],
+        ];
 
         unset($resource['data']['attributes']['id']);
 
         if ($this->shouldIncludeLinks()) {
-            $resource['data']['links'] = array(
+            $resource['data']['links'] = [
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
-            );
+            ];
         }
 
         return $resource;
@@ -78,9 +78,9 @@ class JsonApiSerializer extends ArraySerializer
 
     public function null()
     {
-        return array(
+        return [
             'data' => null,
-        );
+        ];
     }
 
     /**
@@ -107,7 +107,7 @@ class JsonApiSerializer extends ArraySerializer
                     $includeObjects = $includeObject['data'];
                 }
                 else {
-                    $includeObjects = array($includeObject['data']);
+                    $includeObjects = [$includeObject['data']];
                 }
 
                 foreach ($includeObjects as $object) {
@@ -122,7 +122,7 @@ class JsonApiSerializer extends ArraySerializer
             }
         }
 
-        return empty($serializedData) ? array() : array('included' => $serializedData);
+        return empty($serializedData) ? [] : ['included' => $serializedData];
     }
 
     /**
@@ -176,7 +176,7 @@ class JsonApiSerializer extends ArraySerializer
         $filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
 
         // Reset array indizes
-        $includedData['included'] = array_merge(array(), $filteredIncludes);
+        $includedData['included'] = array_merge([], $filteredIncludes);
 
         return $includedData;
     }
@@ -198,7 +198,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param array $objects
      */
-    private function setRootObjects(array $objects = array())
+    private function setRootObjects(array $objects = [])
     {
         $this->rootObjects = array_map(function($object) {
             return "{$object['type']}:{$object['id']}";
@@ -230,7 +230,7 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     private function isEmpty($data) {
-        return array_key_exists('data', $data) && $data['data'] === array();
+        return array_key_exists('data', $data) && $data['data'] === [];
     }
 
     private function fillRelationships($data, $relationships)
@@ -247,12 +247,12 @@ class JsonApiSerializer extends ArraySerializer
                 $data['data']['relationships'][$key] = $relationship[0];
 
                 if ($this->shouldIncludeLinks()) {
-                    $data['data']['relationships'][$key] = array_merge(array(
-                        'links' => array(
+                    $data['data']['relationships'][$key] = array_merge([
+                        'links' => [
                             'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
                             'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
-                        ),
-                    ), $data['data']['relationships'][$key]);
+                        ],
+                    ], $data['data']['relationships'][$key]);
                 }
             }
         }
@@ -262,40 +262,40 @@ class JsonApiSerializer extends ArraySerializer
 
     private function parseRelationships($includedData)
     {
-        $relationships = array();
+        $relationships = [];
 
         foreach ($includedData as $inclusion) {
             foreach ($inclusion as $includeKey => $includeObject)
             {
                 if (!array_key_exists($includeKey, $relationships)) {
-                    $relationships[$includeKey] = array();
+                    $relationships[$includeKey] = [];
                 }
 
                 if ($this->isNull($includeObject)) {
                     $relationship = $this->null();
                 }
                 elseif ($this->isEmpty($includeObject)) {
-                    $relationship = array(
-                        'data' => array(),
-                    );
+                    $relationship = [
+                        'data' => [],
+                    ];
                 }
                 elseif ($this->isCollection($includeObject)) {
-                    $relationship = array('data' => array());
+                    $relationship = ['data' => []];
 
                     foreach ($includeObject['data'] as $object) {
-                        $relationship['data'][] = array(
+                        $relationship['data'][] = [
                             'type' => $object['type'],
                             'id' => $object['id'],
-                        );
+                        ];
                     }
                 }
                 else {
-                    $relationship = array(
-                        'data' => array(
+                    $relationship = [
+                        'data' => [
                             'type' => $includeObject['data']['type'],
                             'id' => $includeObject['data']['id'],
-                        ),
-                    );
+                        ],
+                    ];
                 }
 
                 $relationships[$includeKey][] = $relationship;
@@ -325,8 +325,8 @@ class JsonApiSerializer extends ArraySerializer
      */
     private function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
     {
-        $includedData = array();
-        $linkedIds = array();
+        $includedData = [];
+        $linkedIds = [];
 
         foreach ($data as $value) {
             foreach ($value as $includeKey => $includeObject) {
@@ -345,7 +345,7 @@ class JsonApiSerializer extends ArraySerializer
             }
         }
 
-        return array($includedData, $linkedIds);
+        return [$includedData, $linkedIds];
     }
 
     /**
