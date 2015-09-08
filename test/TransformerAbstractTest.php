@@ -14,7 +14,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testSetAvailableIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setAvailableIncludes(array('foo')));
+        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setAvailableIncludes(['foo']));
     }
 
     /**
@@ -23,8 +23,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetAvailableIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->setAvailableIncludes(array('foo', 'bar'));
-        $this->assertSame(array('foo', 'bar'), $transformer->getAvailableIncludes());
+
+        $transformer->setAvailableIncludes(['foo', 'bar']);
+        $this->assertSame(['foo', 'bar'], $transformer->getAvailableIncludes());
     }
 
     /**
@@ -33,7 +34,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testSetDefaultIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setDefaultIncludes(array('foo')));
+        $this->assertInstanceOf('League\Fractal\TransformerAbstract', $transformer->setDefaultIncludes(['foo']));
     }
 
     /**
@@ -42,8 +43,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->setDefaultIncludes(array('foo', 'bar'));
-        $this->assertSame(array('foo', 'bar'), $transformer->getDefaultIncludes());
+
+        $transformer->setDefaultIncludes(['foo', 'bar']);
+        $this->assertSame(['foo', 'bar'], $transformer->getDefaultIncludes());
     }
 
     /**
@@ -77,7 +79,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('foo');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
-        $this->assertFalse($transformer->processIncludedResources($scope, array('some' => 'data')));
+        $this->assertFalse($transformer->processIncludedResources($scope, ['some' => 'data']));
     }
 
     public function testProcessEmbeddedResourcesNoDefaultIncludes()
@@ -88,7 +90,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('foo');
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
-        $this->assertFalse($transformer->processIncludedResources($scope, array('some' => 'data')));
+        $this->assertFalse($transformer->processIncludedResources($scope, ['some' => 'data']));
     }
 
     /**
@@ -106,8 +108,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
         $transformer->setCurrentScope($scope);
 
-        $transformer->setAvailableIncludes(array('book'));
-        $transformer->processIncludedResources($scope, array());
+        $transformer->setAvailableIncludes(['book']);
+        $transformer->processIncludedResources($scope, []);
     }
 
     /**
@@ -123,8 +125,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));
 
-        $transformer->setDefaultIncludes(array('book'));
-        $transformer->processIncludedResources($scope, array());
+        $transformer->setDefaultIncludes(['book']);
+        $transformer->processIncludedResources($scope, []);
     }
 
     /**
@@ -138,14 +140,15 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
-            return new Item(array('included' => 'thing'), function ($data) {
+            return new Item(['included' => 'thing'], function ($data) {
                 return $data;
             });
         });
-        $transformer->setAvailableIncludes(array('book', 'publisher'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
+
+        $transformer->setAvailableIncludes(['book', 'publisher']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['book' => ['data' => ['included' => 'thing']]], $included);
     }
 
     /**
@@ -155,14 +158,14 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testProcessIncludedAvailableResourcesEmptyEmbed()
     {
         $manager = new Manager();
-        $manager->parseIncludes(array('book'));
+        $manager->parseIncludes(['book']);
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturn(null);
 
-        $transformer->setAvailableIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $transformer->setAvailableIncludes(['book']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
 
         $this->assertFalse($included);
     }
@@ -180,9 +183,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->shouldReceive('includeBook')->once()->andReturn(new \stdClass());
 
-        $transformer->setAvailableIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $transformer->processIncludedResources($scope, array('meh'));
+        $transformer->setAvailableIncludes(['book']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $transformer->processIncludedResources($scope, ['meh']);
     }
 
     /**
@@ -195,14 +198,15 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
 
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
-            return new Item(array('included' => 'thing'), function ($data) {
+            return new Item(['included' => 'thing'], function ($data) {
                 return $data;
             });
         });
-        $transformer->setDefaultIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
+
+        $transformer->setDefaultIncludes(['book']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['book' => ['data' => ['included' => 'thing']]], $included);
     }
 
     /**
@@ -216,14 +220,15 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) {
-            return new Item(array('included' => 'thing'), function ($data) {
+            return new Item(['included' => 'thing'], function ($data) {
                 return $data;
             });
         });
-        $transformer->setAvailableIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertSame(array('book' => array('data' => array('included' => 'thing'))), $included);
+
+        $transformer->setAvailableIncludes(['book']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['book' => ['data' => ['included' => 'thing']]], $included);
     }
 
     public function testParamBagIsProvidedForIncludes()
@@ -237,9 +242,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
             ->with(m::any(), m::type('\League\Fractal\ParamBag'))
             ->once();
 
-        $transformer->setAvailableIncludes(array('book'));
-        $scope = new Scope($manager, new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array());
+        $transformer->setAvailableIncludes(['book']);
+        $scope = new Scope($manager, new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, []);
     }
 
     /**
@@ -251,10 +256,10 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $manager->parseIncludes('book');
 
-        $collectionData = array(
-            array('included' => 'thing'),
-            array('another' => 'thing'),
-        );
+        $collectionData = [
+            ['included' => 'thing'],
+            ['another' => 'thing'],
+        ];
 
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
         $transformer->shouldReceive('includeBook')->once()->andReturnUsing(function ($data) use ($collectionData) {
@@ -262,10 +267,12 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
                 return $data;
             });
         });
-        $transformer->setAvailableIncludes(array('book'));
-        $scope = new Scope($manager, new Collection(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
-        $this->assertSame(array('book' => array('data' => $collectionData)), $included);
+
+        $transformer->setAvailableIncludes(['book']);
+        $scope = new Scope($manager, new Collection([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['book' => ['data' => $collectionData]], $included);
+
     }
 
     /**
@@ -277,9 +284,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
         $transformer->shouldReceive('includeBook')->once()->andReturn(null);
 
-        $transformer->setDefaultIncludes(array('book'));
-        $scope = new Scope(new Manager(), new Item(array(), $transformer));
-        $included = $transformer->processIncludedResources($scope, array('meh'));
+        $transformer->setDefaultIncludes(['book']);
+        $scope = new Scope(new Manager(), new Item([], $transformer));
+        $included = $transformer->processIncludedResources($scope, ['meh']);
 
         $this->assertFalse($included);
     }
@@ -290,7 +297,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testItem()
     {
         $mock = m::mock('League\Fractal\TransformerAbstract');
-        $item = $mock->item(array(), function () {
+        $item = $mock->item([], function () {
         });
         $this->assertInstanceOf('League\Fractal\Resource\Item', $item);
     }
@@ -301,7 +308,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     public function testCollection()
     {
         $mock = m::mock('League\Fractal\TransformerAbstract');
-        $collection = $mock->collection(array(), function () {
+        $collection = $mock->collection([], function () {
         });
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }

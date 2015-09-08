@@ -6,10 +6,10 @@ use Mockery;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $simpleCollection = array(
-        array('foo' => 'bar'),
-        array('baz' => 'ban'),
-    );
+    protected $simpleCollection = [
+        ['foo' => 'bar'],
+        ['baz' => 'ban'],
+    ];
 
     public function testGetData()
     {
@@ -91,10 +91,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setMetaValue('foo', 'bar'));
-        $this->assertSame(array('foo' => 'bar'), $collection->getMeta());
+
+        $this->assertSame(['foo' => 'bar'], $collection->getMeta());
         $this->assertSame('bar', $collection->getMetaValue('foo'));
-        $collection->setMeta(array('baz' => 'bat'));
-        $this->assertSame(array('baz' => 'bat'), $collection->getMeta());
+        $collection->setMeta(['baz' => 'bat']);
+        $this->assertSame(['baz' => 'bat'], $collection->getMeta());
     }
 
     /**

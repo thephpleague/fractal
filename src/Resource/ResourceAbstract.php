@@ -25,7 +25,7 @@ abstract class ResourceAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected $meta = array();
+    protected $meta = [];
 
     /**
      * The resource key.
