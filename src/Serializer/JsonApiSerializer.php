@@ -13,7 +13,6 @@ namespace League\Fractal\Serializer;
 
 use InvalidArgumentException;
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Resource\ResourceAbstract;
 
 class JsonApiSerializer extends ArraySerializer
 {
