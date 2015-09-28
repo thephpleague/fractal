@@ -13,7 +13,6 @@ namespace League\Fractal\Serializer;
 
 use InvalidArgumentException;
 use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Resource\ResourceAbstract;
 
 class JsonApiSerializer extends ArraySerializer
 {
@@ -188,7 +187,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    private function filterRootObject($object)
+    protected function filterRootObject($object)
     {
         return !$this->isRootObject($object);
     }
@@ -198,7 +197,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param array $objects
      */
-    private function setRootObjects(array $objects = [])
+    protected function setRootObjects(array $objects = [])
     {
         $this->rootObjects = array_map(function($object) {
             return "{$object['type']}:{$object['id']}";
@@ -212,28 +211,28 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    private function isRootObject($object)
+    protected function isRootObject($object)
     {
         $objectKey = "{$object['type']}:{$object['id']}";
         return in_array($objectKey, $this->rootObjects);
     }
 
-    private function isCollection($data)
+    protected function isCollection($data)
     {
         return array_key_exists('data', $data) &&
                array_key_exists(0, $data['data']);
     }
 
-    private function isNull($data)
+    protected function isNull($data)
     {
         return array_key_exists('data', $data) && $data['data'] === null;
     }
 
-    private function isEmpty($data) {
+    protected function isEmpty($data) {
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
-    private function fillRelationships($data, $relationships)
+    protected function fillRelationships($data, $relationships)
     {
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
@@ -260,7 +259,7 @@ class JsonApiSerializer extends ArraySerializer
         return $data;
     }
 
-    private function parseRelationships($includedData)
+    protected function parseRelationships($includedData)
     {
         $relationships = [];
 
@@ -305,7 +304,7 @@ class JsonApiSerializer extends ArraySerializer
         return $relationships;
     }
 
-    private function getIdFromData(array $data)
+    protected function getIdFromData(array $data)
     {
         if (!array_key_exists('id', $data)) {
             throw new InvalidArgumentException(
@@ -323,7 +322,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    private function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
+    protected function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
     {
         $includedData = [];
         $linkedIds = [];
@@ -353,7 +352,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    private function shouldIncludeLinks()
+    protected function shouldIncludeLinks()
     {
         return $this->baseUrl !== null;
     }
