@@ -70,6 +70,62 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingItemResourceWithHasOneDasherizedInclude()
+    {
+        $this->manager->parseIncludes('co-author');
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            '_co_author' => [
+                'id' => 2,
+                'name' => 'Jim',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'relationships' => [
+                    'co-author' => [
+                        'data' => [
+                            'type' => 'people',
+                            'id' => '2',
+                        ],
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => [
+                        'name' => 'Jim',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"co-author":{"data":{"type":"people","id":"2"}}}},"included":[{"type":"people","id":"2","attributes":{"name":"Jim"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemResourceWithEmptyHasOneInclude()
     {
         $this->manager->parseIncludes('author');

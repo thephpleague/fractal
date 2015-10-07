@@ -6,12 +6,14 @@ class JsonApiBookTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'author',
+        'co-author',
     ];
 
     public function transform(array $book)
     {
         $book['year'] = (int) $book['year'];
         unset($book['_author']);
+        unset($book['_co_author']);
 
         return $book;
     }
@@ -27,5 +29,18 @@ class JsonApiBookTransformer extends TransformerAbstract
         }
 
         return $this->item($book['_author'], new JsonApiAuthorTransformer(), 'people');
+    }
+
+    public function includeCoAuthor(array $book)
+    {
+        if (!array_key_exists('_co_author', $book)) {
+            return;
+        }
+
+        if ($book['_co_author'] === null) {
+            return $this->null();
+        }
+
+        return $this->item($book['_co_author'], new JsonApiAuthorTransformer(), 'people');
     }
 }
