@@ -57,7 +57,7 @@ Contribute to this documentation in the [gh-pages branch](https://github.com/the
 
 ## Todo
 
-- Add JSON-API (kinda done) and HAL serializers
+- add HAL serializers
 
 ## Testing
 
@@ -67,12 +67,12 @@ $ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CONTRIBUTING.md) for details.
-
+Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CONTRIBUTING.md) and [CONDUCT](https://github.com/thephpleague/fractal/blob/master/CONDUCT.md) for details.
 
 ## Credits
 
 - [Jason Lewis](https://github.com/jasonlewis)
+- [Andrew Willis](https://github.com/willishq)
 - [Phil Sturgeon](https://github.com/philsturgeon)
 - [All Contributors](https://github.com/thephpleague/fractal/contributors)
 
