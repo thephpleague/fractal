@@ -38,3 +38,4 @@ or used by mobile applications then this will quickly lead to inconsistent outpu
 ## Questions?
 
 Fractal was created by Phil Sturgeon. Find him on Twitter at [@philsturgeon](https://twitter.com/philsturgeon).
+Fractal is maintained by Andrew Willis and Jason Lewis. They can be found on Twitter at [@ilovefluffy](https://twitter.com/ilovefluffy) and [@jasonclewis](https://twitter.com/jasonclewis).
