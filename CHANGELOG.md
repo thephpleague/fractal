@@ -1,5 +1,18 @@
 ### Development
 
+## 0.13.0 - 2015-10-16
+
+### Added
+ - `->setData(...)` and `->setTransformer(...)` methods to resources
+ - able to set
+
+### Changed
+ - Finally, much improved JSON-API support thanks to @felixkiss
+
+### Enhancements
+ - Short array syntax throughout
+ - Test improvements
+
 ## 0.12.0 - 2015-03-19
 
 ### Added
