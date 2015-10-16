@@ -4,7 +4,7 @@
 
 ### Added
  - `->setData(...)` and `->setTransformer(...)` methods to resources
- - able to set
+ - able to set url include parameters with no set variables, ie. `include=comments:limit(5|1):new`
 
 ### Changed
  - Finally, much improved JSON-API support thanks to @felixkiss
