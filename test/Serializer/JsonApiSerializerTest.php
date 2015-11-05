@@ -1443,6 +1443,303 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingCollectionResourceWithPaginator()
+    {
+        $baseUrl = 'http://example.com';
+
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $total = 10;
+        $count = 2;
+        $perPage = 2;
+        $currentPage = 2;
+        $lastPage = 5;
+        $previousUrl = 'http://example.com/books/?page=1';
+        $currentUrl = 'http://example.com/books/?page=2';
+        $nextUrl = 'http://example.com/books/?page=3';
+        $lastUrl = 'http://example.com/books/?page=5';
+
+        $paginator = Mockery::mock('League\Fractal\Pagination\PaginatorInterface');
+        $paginator->shouldReceive('getCurrentPage')->andReturn($currentPage);
+        $paginator->shouldReceive('getLastPage')->andReturn($lastPage);
+        $paginator->shouldReceive('getTotal')->andReturn($total);
+        $paginator->shouldReceive('getCount')->andReturn($count);
+        $paginator->shouldReceive('getPerPage')->andReturn($perPage);
+        $paginator->shouldReceive('getUrl')->with(1)->andReturn($previousUrl);
+        $paginator->shouldReceive('getUrl')->with(2)->andReturn($currentUrl);
+        $paginator->shouldReceive('getUrl')->with(3)->andReturn($nextUrl);
+        $paginator->shouldReceive('getUrl')->with(5)->andReturn($lastUrl);
+
+        $booksData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => [
+                    'id' => 2,
+                    'name' => 'Bob',
+                ],
+            ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource->setPaginator($paginator);
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/1',
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/2',
+                    ],
+                ],
+            ],
+            'meta' => [
+                'pagination' => [
+                    'total' =>  10,
+                    'count' => 2,
+                    'per_page' => 2,
+                    'current_page' => 2,
+                    'total_pages' => 5
+                ]
+            ],
+            'links' => [
+                'self' => 'http://example.com/books/?page=2',
+                'first' => 'http://example.com/books/?page=1',
+                'prev' => 'http://example.com/books/?page=1',
+                'next' => 'http://example.com/books/?page=3',
+                'last' => 'http://example.com/books/?page=5'
+            ]
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":2,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=2","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=3","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithPaginatorWithOmittedUnavailablePreviousLink()
+    {
+        $baseUrl = 'http://example.com';
+
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $total = 10;
+        $count = 2;
+        $perPage = 2;
+        $currentPage = 1;
+        $lastPage = 5;
+        $currentUrl = 'http://example.com/books/?page=1';
+        $nextUrl = 'http://example.com/books/?page=2';
+        $lastUrl = 'http://example.com/books/?page=5';
+
+        $paginator = Mockery::mock('League\Fractal\Pagination\PaginatorInterface');
+        $paginator->shouldReceive('getCurrentPage')->andReturn($currentPage);
+        $paginator->shouldReceive('getLastPage')->andReturn($lastPage);
+        $paginator->shouldReceive('getTotal')->andReturn($total);
+        $paginator->shouldReceive('getCount')->andReturn($count);
+        $paginator->shouldReceive('getPerPage')->andReturn($perPage);
+        $paginator->shouldReceive('getUrl')->with(1)->andReturn($currentUrl);
+        $paginator->shouldReceive('getUrl')->with(2)->andReturn($nextUrl);
+        $paginator->shouldReceive('getUrl')->with(5)->andReturn($lastUrl);
+
+        $booksData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => [
+                    'id' => 2,
+                    'name' => 'Bob',
+                ],
+            ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource->setPaginator($paginator);
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/1',
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/2',
+                    ],
+                ],
+            ],
+            'meta' => [
+                'pagination' => [
+                    'total' =>  10,
+                    'count' => 2,
+                    'per_page' => 2,
+                    'current_page' => 1,
+                    'total_pages' => 5
+                ]
+            ],
+            'links' => [
+                'self' => 'http://example.com/books/?page=1',
+                'first' => 'http://example.com/books/?page=1',
+                'next' => 'http://example.com/books/?page=2',
+                'last' => 'http://example.com/books/?page=5'
+            ]
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":1,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=1","first":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=2","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithPaginatorWithOmittedUnavailableNextLink()
+    {
+        $baseUrl = 'http://example.com';
+
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $total = 10;
+        $count = 2;
+        $perPage = 2;
+        $currentPage = 5;
+        $lastPage = 5;
+        $firstUrl = 'http://example.com/books/?page=1';
+        $previousUrl = 'http://example.com/books/?page=4';
+        $lastUrl = 'http://example.com/books/?page=5';
+
+        $paginator = Mockery::mock('League\Fractal\Pagination\PaginatorInterface');
+        $paginator->shouldReceive('getCurrentPage')->andReturn($currentPage);
+        $paginator->shouldReceive('getLastPage')->andReturn($lastPage);
+        $paginator->shouldReceive('getTotal')->andReturn($total);
+        $paginator->shouldReceive('getCount')->andReturn($count);
+        $paginator->shouldReceive('getPerPage')->andReturn($perPage);
+        $paginator->shouldReceive('getUrl')->with(1)->andReturn($firstUrl);
+        $paginator->shouldReceive('getUrl')->with(4)->andReturn($previousUrl);
+        $paginator->shouldReceive('getUrl')->with(5)->andReturn($lastUrl);
+
+        $booksData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => [
+                    'id' => 2,
+                    'name' => 'Bob',
+                ],
+            ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource->setPaginator($paginator);
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/1',
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/2',
+                    ],
+                ],
+            ],
+            'meta' => [
+                'pagination' => [
+                    'total' =>  10,
+                    'count' => 2,
+                    'per_page' => 2,
+                    'current_page' => 5,
+                    'total_pages' => 5
+                ]
+            ],
+            'links' => [
+                'self' => 'http://example.com/books/?page=5',
+                'first' => 'http://example.com/books/?page=1',
+                'prev' => 'http://example.com/books/?page=4',
+                'last' => 'http://example.com/books/?page=5'
+            ]
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":5,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=5","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=4","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function tearDown()
     {
         Mockery::close();

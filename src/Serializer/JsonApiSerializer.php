@@ -12,6 +12,7 @@
 namespace League\Fractal\Serializer;
 
 use InvalidArgumentException;
+use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\ResourceInterface;
 
 class JsonApiSerializer extends ArraySerializer
@@ -73,6 +74,67 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         return $resource;
+    }
+
+    /**
+     * Serialize the paginator.
+     *
+     * @param PaginatorInterface $paginator
+     *
+     * @return array
+     */
+    public function paginator(PaginatorInterface $paginator)
+    {
+        $currentPage = (int) $paginator->getCurrentPage();
+        $lastPage = (int) $paginator->getLastPage();
+
+        $pagination = [
+            'total' => (int) $paginator->getTotal(),
+            'count' => (int) $paginator->getCount(),
+            'per_page' => (int) $paginator->getPerPage(),
+            'current_page' => $currentPage,
+            'total_pages' => $lastPage,
+        ];
+
+        $pagination['links'] = [];
+
+        $pagination['links']['self'] = $paginator->getUrl($currentPage);
+        $pagination['links']['first'] = $paginator->getUrl(1);
+
+        if ($currentPage > 1) {
+            $pagination['links']['prev'] = $paginator->getUrl($currentPage - 1);
+        }
+
+        if ($currentPage < $lastPage) {
+            $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
+        }
+
+        $pagination['links']['last'] = $paginator->getUrl($lastPage);
+
+        return ['pagination' => $pagination];
+    }
+
+    /**
+     * Serialize the meta.
+     *
+     * @param array $meta
+     *
+     * @return array
+     */
+    public function meta(array $meta)
+    {
+        if (empty($meta)) {
+            return [];
+        }
+
+        $result['meta'] = $meta;
+
+        if (array_key_exists('pagination', $result['meta'])) {
+            $result['links'] = $result['meta']['pagination']['links'];
+            unset($result['meta']['pagination']['links']);
+        }
+
+        return $result;
     }
 
     public function null()
