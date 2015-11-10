@@ -325,7 +325,7 @@ class JsonApiSerializer extends ArraySerializer
     {
         $relationships = [];
 
-        foreach ($includedData as $inclusion) {
+        foreach ($includedData as $key => $inclusion) {
             foreach ($inclusion as $includeKey => $includeObject)
             {
                 if (!array_key_exists($includeKey, $relationships)) {
@@ -359,7 +359,7 @@ class JsonApiSerializer extends ArraySerializer
                     ];
                 }
 
-                $relationships[$includeKey][] = $relationship;
+                $relationships[$includeKey][$key] = $relationship;
             }
         }
 
