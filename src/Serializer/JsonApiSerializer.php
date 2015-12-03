@@ -137,6 +137,9 @@ class JsonApiSerializer extends ArraySerializer
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function null()
     {
         return [
@@ -154,13 +157,10 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function includedData(ResourceInterface $resource, array $data)
     {
-        list($serializedData, $linkedIds) = $this->pullOutNestedIncludedData(
-            $resource,
-            $data
-        );
+        list($serializedData, $linkedIds) = $this->pullOutNestedIncludedData($data);
 
         foreach ($data as $value) {
-            foreach ($value as $includeKey => $includeObject) {
+            foreach ($value as $includeObject) {
                 if ($this->isNull($includeObject) || $this->isEmpty($includeObject)) {
                     continue;
                 }
@@ -196,6 +196,12 @@ class JsonApiSerializer extends ArraySerializer
         return true;
     }
 
+    /**
+     * @param array $data
+     * @param array $includedData
+     *
+     * @return array
+     */
     public function injectData($data, $includedData)
     {
         $relationships = $this->parseRelationships($includedData);
@@ -261,7 +267,7 @@ class JsonApiSerializer extends ArraySerializer
      */
     protected function setRootObjects(array $objects = [])
     {
-        $this->rootObjects = array_map(function($object) {
+        $this->rootObjects = array_map(function ($object) {
             return "{$object['type']}:{$object['id']}";
         }, $objects);
     }
@@ -279,21 +285,42 @@ class JsonApiSerializer extends ArraySerializer
         return in_array($objectKey, $this->rootObjects);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
     protected function isCollection($data)
     {
         return array_key_exists('data', $data) &&
                array_key_exists(0, $data['data']);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
     protected function isNull($data)
     {
         return array_key_exists('data', $data) && $data['data'] === null;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
     protected function isEmpty($data) {
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
+    /**
+     * @param array $data
+     * @param array $relationships
+     *
+     * @return mixed
+     */
     protected function fillRelationships($data, $relationships)
     {
         if ($this->isCollection($data)) {
@@ -321,6 +348,11 @@ class JsonApiSerializer extends ArraySerializer
         return $data;
     }
 
+    /**
+     * @param array $includedData
+     *
+     * @return array
+     */
     protected function parseRelationships($includedData)
     {
         $relationships = [];
@@ -366,6 +398,11 @@ class JsonApiSerializer extends ArraySerializer
         return $relationships;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return mixed
+     */
     protected function getIdFromData(array $data)
     {
         if (!array_key_exists('id', $data)) {
@@ -379,18 +416,17 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Keep all sideloaded inclusion data on the top level.
      *
-     * @param ResourceInterface $resource
-     * @param array             $data
+     * @param array $data
      *
      * @return array
      */
-    protected function pullOutNestedIncludedData(ResourceInterface $resource, array $data)
+    protected function pullOutNestedIncludedData(array $data)
     {
         $includedData = [];
         $linkedIds = [];
 
         foreach ($data as $value) {
-            foreach ($value as $includeKey => $includeObject) {
+            foreach ($value as $includeObject) {
                 if (isset($includeObject['included'])) {
                     foreach ($includeObject['included'] as $object) {
                         $includeType = $object['type'];
