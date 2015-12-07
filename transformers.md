@@ -238,11 +238,15 @@ use League\Fractal\ParamBag;
      * Include Comments
      *
      * @param Book $book
-     * @param \League\Fractal\ParamBag
+     * @param \League\Fractal\ParamBag|null
      * @return \League\Fractal\Resource\Item
      */
-    public function includeComments(Book $book, ParamBag $params)
+    public function includeComments(Book $book, ParamBag $params = null)
     {
+        if ($params === null) {
+            return $book->comments;
+        }
+
     	// Optional params validation
         $usedParams = array_keys(iterator_to_array($params));
         if ($invalidParams = array_diff($usedParams, $this->validParams)) {
