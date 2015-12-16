@@ -254,6 +254,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -269,6 +270,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $transformer->shouldReceive('transform')->once()->andReturn(['foo' => 'bar']);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
 
         $resource = new Collection([['foo' => 'bar']], $transformer);
         $scope = $manager->createData($resource);
