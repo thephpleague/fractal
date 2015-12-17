@@ -113,11 +113,11 @@ API users do not try and do anything too clever with them. They just need to pas
 ~~~ json
 {
 	"books": [
-		{ id: 6 },
-		{ id: 7 },
-		{ id: 8 },
-		{ id: 9 },
-		{ id: 10 }
+		{ "id": 6 },
+		{ "id": 7 },
+		{ "id": 8 },
+		{ "id": 9 },
+		{ "id": 10 }
 	],
 	"meta": {
 		"cursor": {
@@ -142,11 +142,11 @@ On the next request, we move the cursor forward.
 ~~~ json
 {
 	"books": [
-		{ id: 11 },
-		{ id: 12 },
-		{ id: 13 },
-		{ id: 14 },
-		{ id: 15 }
+		{ "id": 11 },
+		{ "id": 12 },
+		{ "id": 13 },
+		{ "id": 14 },
+		{ "id": 15 }
 	],
 	"meta": {
 		"cursor": {
