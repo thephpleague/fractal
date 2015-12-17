@@ -158,6 +158,26 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($childScope->isRequested('baz'));
     }
 
+    public function testIsExcluded()
+    {
+        $manager = new Manager();
+        $manager->parseIncludes(['foo', 'bar', 'baz.bart']);
+
+        $scope = new Scope($manager, Mockery::mock('League\Fractal\Resource\ResourceAbstract'));
+        $childScope = $scope->embedChildScope('baz', Mockery::mock('League\Fractal\Resource\ResourceAbstract'));
+
+        $manager->parseExcludes('bar');
+
+        $this->assertFalse($scope->isExcluded('foo'));
+        $this->assertTrue($scope->isExcluded('bar'));
+        $this->assertFalse($scope->isExcluded('baz.bart'));
+
+        $manager->parseExcludes('baz.bart');
+
+        $this->assertFalse($scope->isExcluded('baz'));
+        $this->assertTrue($scope->isExcluded('baz.bart'));
+    }
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -190,7 +210,6 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $resource = new Item(['bar' => 'baz'], $transformer);
 
         $scope = new Scope($manager, $resource);
-
 
         $this->assertSame(['data' => ['bar' => 'baz', 'book' => ['yin' => 'yang']]], $scope->toArray());
     }

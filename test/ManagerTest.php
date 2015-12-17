@@ -74,6 +74,58 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($params['totallymadeup']);
     }
 
+        public function testParseExcludeSelfie()
+    {
+        $manager = new Manager();
+
+        // Test that some excludes provided returns self
+        $this->assertInstanceOf(get_class($manager), $manager->parseExcludes(['foo']));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseExcludes() method expects a string or an array. NULL given
+     */
+    public function testInvalidParseExclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseExcludes(null);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The parseExcludes() method expects a string or an array. integer given
+     */
+    public function testIceTParseExclude()
+    {
+        $manager = new Manager();
+
+        $manager->parseExcludes(99);
+    }
+
+    public function testParseExcludes()
+    {
+        $manager = new Manager();
+
+        // Does a CSV string work
+        $manager->parseExcludes('foo,bar');
+
+        $this->assertSame(['foo', 'bar'], $manager->getRequestedExcludes());
+
+        // Does a big array of stuff work
+        $manager->parseExcludes(['foo', 'bar', 'bar.baz']);
+        $this->assertSame(['foo', 'bar', 'bar.baz'], $manager->getRequestedExcludes());
+
+        // Are repeated things stripped
+        $manager->parseExcludes(['foo', 'foo', 'bar']);
+        $this->assertSame(['foo', 'bar'], $manager->getRequestedExcludes());
+
+        // Do requests for `baz.bart` also request `baz`?
+        $manager->parseExcludes(['foo.bar']);
+        $this->assertSame(['foo.bar'], $manager->getRequestedExcludes());
+    }
+
     public function testRecursionLimiting()
     {
         $manager = new Manager();
