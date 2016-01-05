@@ -267,7 +267,7 @@ Parameters have a name, then multiple values which are always returned as an arr
 They are accessed by the `get()` method, but array access is also an option, so `$params->get('limit')` and
 `$params['limit']` do the same thing.
 
-### Eager-Loading vrs Lazy-Loading
+### Eager-Loading vs Lazy-Loading
 
 This above examples happen to be using the lazy-loading functionality of an ORM for `$book->author`. Lazy-Loading
 can be notoriously slow, as each time one item is transformered, it would have to go off and find other data leading to a
