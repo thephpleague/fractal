@@ -298,6 +298,9 @@ class JsonApiSerializer extends ArraySerializer
     {
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
+                if (count($data['data']) !== count($relationship)) {
+                    throw(new \Exception(sprintf('Included data count for %s does not match original data count.', $key)));
+                }
                 foreach ($relationship as $index => $relationshipData) {
                     $data['data'][$index]['relationships'][$key] = $relationshipData;
                 }
