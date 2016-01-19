@@ -238,15 +238,23 @@ use League\Fractal\ParamBag;
      * Include Comments
      *
      * @param Book $book
-     * @param \League\Fractal\ParamBag
+     * @param \League\Fractal\ParamBag|null
      * @return \League\Fractal\Resource\Item
      */
-    public function includeComments(Book $book, ParamBag $params)
+    public function includeComments(Book $book, ParamBag $params = null)
     {
+        if ($params === null) {
+            return $book->comments;
+        }
+
     	// Optional params validation
         $usedParams = array_keys(iterator_to_array($params));
         if ($invalidParams = array_diff($usedParams, $this->validParams)) {
-            throw new \Exception(sprintf('Invalid param(s): "%s". Valid param(s): "%s"', implode(',', $usedParams), implode(',', $this->validParams)));
+            throw new \Exception(sprintf(
+                'Invalid param(s): "%s". Valid param(s): "%s"', 
+                implode(',', $usedParams), 
+                implode(',', $this->validParams)
+            ));
         }
 
     	// Processing
@@ -269,7 +277,7 @@ They are accessed by the `get()` method, but array access is also an option, so 
 
 ### Eager-Loading vrs Lazy-Loading
 
-This above examples happen to be using the lazy-loading functionality of an ORM for `$book->author`. Lazy-Loading
+This above examples happen to be using the lazy-loading functionality of an ORM for `$book->comments`. Lazy-Loading
 can be notoriously slow, as each time one item is transformered, it would have to go off and find other data leading to a
 huge number of SQL requests.
 
