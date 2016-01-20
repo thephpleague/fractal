@@ -53,10 +53,10 @@ $books = Book::all();
 
 $resource = new Fractal\Resource\Collection($books, function(Book $book) {
     return [
-        'id' => (int) $book->id,
+        'id'    => (int) $book->id,
         'title' => $book->title,
-        'year' => (int) $book->yr,
-        'links'   => [
+        'year'  => (int) $book->yr,
+        'links' => [
             [
                 'rel' => 'self',
                 'uri' => '/books/'.$book->id,
