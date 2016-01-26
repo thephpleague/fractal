@@ -84,15 +84,18 @@ use Acme\Transformer\BookTransformer;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 
-if ($currentCursorStr = Input::get('cursor', false)) {
-    $books = Book::where('id', '>', $currentCursorStr)->take(5)->get();
+$currentCursor = Input::get('cursor', null);
+$previousCursor = Input::get('previous', null);
+$limit = Input::get('limit', 10);
+
+if ($currentCursor) {
+    $books = Book::where('id', '>', $currentCursor)->take($limit)->get();
 } else {
-    $books = Book::take(5)->get();
+    $books = Book::take($limit)->get();
 }
 
-$prevCursorStr = Input::get('prevCursor', 6); // If prevCursor is not present, then indicate to fetch the first five results instead.
-$newCursorStr = $books->last()->id;
-$cursor = new Cursor($currentCursorStr, $prevCursorStr, $newCursorStr, $books->count());
+$newCursor = $books->last()->id;
+$cursor = new Cursor($currentCursor, $previousCursor, $newCursor, $books->count());
 
 $resource = new Collection($books, new BookTransformer);
 $resource->setCursor($cursor);
@@ -102,3 +105,59 @@ These examples are for Laravel's `illuminate\database` package, but you can do i
 also happens to be constructed from the `id` field, but it could just as easily be an offset number. Whatever
 is picked to represent a cursor, maybe consider using `base64_encode()` and `base64_decode()` on the values to make sure
 API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.
+
+### Example Cursor Usage
+
+**GET /books?cursor=5&limit=5**
+
+~~~ json
+{
+	"books": [
+		{ "id": 6 },
+		{ "id": 7 },
+		{ "id": 8 },
+		{ "id": 9 },
+		{ "id": 10 }
+	],
+	"meta": {
+		"cursor": {
+			"previous": null,
+			"current": 5,
+			"next": 10,
+			"count": 5
+		}
+	}
+}
+~~~
+
+On the next request, we move the cursor forward. 
+
+ * Set `cursor` to `next` from the last response
+ * Set `previous` to `current` from the last response
+ * `limit` is optional
+ 	* You can set it to `count` from the previous request to maintain the same limit 
+
+**GET /books?cursor=10&previous=5&limit=5**
+
+~~~ json
+{
+	"books": [
+		{ "id": 11 },
+		{ "id": 12 },
+		{ "id": 13 },
+		{ "id": 14 },
+		{ "id": 15 }
+	],
+	"meta": {
+		"cursor": {
+			"previous": 5,
+			"current": 10,
+			"next": 15,
+			"count": 5
+		}
+	}
+}
+
+~~~
+
+
