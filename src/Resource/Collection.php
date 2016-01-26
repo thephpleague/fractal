@@ -45,13 +45,6 @@ class Collection extends ResourceAbstract
     protected $cursor;
 
     /**
-     * A callable to process the data attached to this resource.
-     *
-     * @var callable|string
-     */
-    protected $transformer;
-
-    /**
      * Get the paginator instance.
      *
      * @return PaginatorInterface
