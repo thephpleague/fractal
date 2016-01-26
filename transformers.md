@@ -277,7 +277,7 @@ They are accessed by the `get()` method, but array access is also an option, so 
 
 ### Eager-Loading vs Lazy-Loading
 
-This above examples happen to be using the lazy-loading functionality of an ORM for `$book->comments`. Lazy-Loading
+The above examples happen to be using the lazy-loading functionality of an ORM for `$book->author`. Lazy-Loading
 can be notoriously slow, as each time one item is transformered, it would have to go off and find other data leading to a
 huge number of SQL requests.
 
