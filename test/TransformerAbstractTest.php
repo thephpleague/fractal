@@ -153,6 +153,61 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers League\Fractal\TransformerAbstract::figureOutWhichIncludes
+     */
+    public function testProcessExcludedAvailableResources()
+    {
+        $manager = new Manager();
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+        $scope = new Scope($manager, new Item([], $transformer));
+
+        $transformer->shouldReceive('includeBook')->never();
+
+        $transformer->shouldReceive('includePublisher')->once()->andReturnUsing(function ($data) {
+            return new Item(['another' => 'thing'], function ($data) {
+                return $data;
+            });
+        });
+
+        // available includes that have been requested are excluded
+        $manager->parseIncludes('book,publisher');
+        $manager->parseExcludes('book');
+
+        $transformer->setAvailableIncludes(['book', 'publisher']);
+
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['publisher' => ['data' => ['another' => 'thing']]], $included);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers League\Fractal\TransformerAbstract::figureOutWhichIncludes
+     */
+    public function testProcessExcludedDefaultResources()
+    {
+        $manager = new Manager();
+        $transformer = m::mock('League\Fractal\TransformerAbstract[transform]');
+        $scope = new Scope($manager, new Item([], $transformer));
+
+        $transformer->shouldReceive('includeBook')->never();
+
+        $transformer->shouldReceive('includePublisher')->once()->andReturnUsing(function ($data) {
+            return new Item(['another' => 'thing'], function ($data) {
+                return $data;
+            });
+        });
+
+        $manager->parseIncludes('book,publisher');
+        $manager->parseExcludes('book');
+
+        $transformer->setDefaultIncludes(['book', 'publisher']);
+
+        $included = $transformer->processIncludedResources($scope, ['meh']);
+        $this->assertSame(['publisher' => ['data' => ['another' => 'thing']]], $included);
+    }
+
+    /**
+     * @covers League\Fractal\TransformerAbstract::processIncludedResources
      * @covers League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessIncludedAvailableResourcesEmptyEmbed()
@@ -272,7 +327,6 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
         $scope = new Scope($manager, new Collection([], $transformer));
         $included = $transformer->processIncludedResources($scope, ['meh']);
         $this->assertSame(['book' => ['data' => $collectionData]], $included);
-
     }
 
     /**
