@@ -201,7 +201,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->parseIncludes('book');
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(['book']);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(['book']);
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
@@ -230,7 +230,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $manager->setSerializer($serializer);
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
-        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(['book']);
+        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn(['book']);
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });

@@ -28,11 +28,6 @@ use League\Fractal\Serializer\SerializerAbstract;
 class Scope
 {
     /**
-     * @var array
-     */
-    protected $availableIncludes = [];
-
-    /**
      * @var string
      */
     protected $scopeIdentifier;
@@ -385,8 +380,6 @@ class Scope
      */
     protected function fireIncludedTransformers($transformer, $data)
     {
-        $this->availableIncludes = $transformer->getAvailableIncludes();
-
         return $transformer->processIncludedResources($this, $data) ?: [];
     }
 
