@@ -242,6 +242,9 @@ class Scope
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
+            //Filter out any relation that wasn't requested
+            $rawIncludedData = array_map(array($this, 'filterFieldsets'), $rawIncludedData);
+
             // If the serializer wants to inject additional information
             // about the included resources, it can do so now.
             $data = $serializer->injectData($data, $rawIncludedData);
@@ -378,6 +381,9 @@ class Scope
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
 
+        //Stick only with requested fields
+        $transformedData = $this->filterFieldsets($transformedData);
+
         return [$transformedData, $includedData];
     }
 
@@ -427,5 +433,68 @@ class Scope
     protected function isRootScope()
     {
         return empty($this->parentScopes);
+    }
+
+    /**
+     * Filter the provided data with the requested filter fieldset for
+     * the scope resource
+     *
+     * @internal
+     *
+     * @param array  $data
+     *
+     * @return array
+     */
+    protected function filterFieldsets(array $data)
+    {
+        if (!$this->hasFilterFieldset()) {
+            return $data;
+        }
+        $serializer = $this->manager->getSerializer();
+        $requestedFieldset = iterator_to_array($this->getFilterFieldset());
+        //Build the array of requested fieldsets with the mandatory serializer fields
+        $filterFieldset = array_flip(
+            array_merge(
+                $serializer->getMandatoryFields(),
+                $requestedFieldset
+            )
+        );
+        return array_intersect_key($data, $filterFieldset);
+    }
+
+    /**
+     * Return the requested filter fieldset for the scope resource
+     *
+     * @internal
+     *
+     * @return \League\Fractal\ParamBag|null
+     */
+    protected function getFilterFieldset()
+    {
+        return $this->manager->getFieldset($this->getResourceType());
+    }
+
+    /**
+     * Check if there are requested filter fieldsets for the scope resource.
+     *
+     * @internal
+     *
+     * @return bool
+     */
+    protected function hasFilterFieldset()
+    {
+        return $this->getFilterFieldset() !== null;
+    }
+
+    /**
+     * Return the scope resource type.
+     *
+     * @internal
+     *
+     * @return string
+     */
+    protected function getResourceType()
+    {
+        return $this->resource->getResourceKey();
     }
 }
