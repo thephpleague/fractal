@@ -39,6 +39,13 @@ class Manager
     protected $requestedExcludes = [];
 
     /**
+     * Array of requested fieldsets.
+     *
+     * @var array
+     */
+    protected $requestedFieldsets = [];
+
+    /**
      * Array containing modifiers as keys and an array value of params.
      *
      * @var array
@@ -210,6 +217,47 @@ class Manager
         $this->autoIncludeParents();
 
         return $this;
+    }
+
+    /**
+     * Parse field parameter.
+     *
+     * @param array $fieldsets Array of fields to include. It must be an array
+     *                         whose keys are resource types and values a string
+     *                         of the fields to return, separated by a comma
+     *
+     * @return $this
+     */
+    public function parseFieldsets(array $fieldsets)
+    {
+        foreach ($fieldsets as $type => $fields) {
+            $this->requestedFieldsets[$type] = explode(',', $fields);
+        }
+        return $this;
+    }
+
+    /**
+     * Get requested fieldsets.
+     *
+     * @return array
+     */
+    public function getRequestedFieldsets()
+    {
+        return $this->requestedFieldsets;
+    }
+
+    /**
+     * Get fieldset params for the specified type.
+     *
+     * @param string $type
+     *
+     * @return \League\Fractal\ParamBag|null
+     */
+    public function getFieldset($type)
+    {
+        return !isset($this->requestedFieldsets[$type]) ?
+            null :
+            new ParamBag($this->requestedFieldsets[$type]);
     }
 
     /**
