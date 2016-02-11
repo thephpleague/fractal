@@ -65,6 +65,10 @@ Contribute to this documentation in the [gh-pages branch](https://github.com/the
 $ phpunit
 ```
 
+## Integrations
+
+- [CakePHP 3](https://github.com/andrej-griniuk/cakephp-fractal-transformer-view)
+
 ## Contributing
 
 Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CONTRIBUTING.md) and [CONDUCT](https://github.com/thephpleague/fractal/blob/master/CONDUCT.md) for details.
