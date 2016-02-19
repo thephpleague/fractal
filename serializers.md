@@ -144,7 +144,7 @@ $manager->setSerializer(new ArraySerializer());
 ];
 ~~~
 
-Meta data is is fine for items, but gets a little confusing for collections:
+Meta data is fine for items, but gets a little confusing for collections:
 
 ~~~ php
 // Item with Meta
