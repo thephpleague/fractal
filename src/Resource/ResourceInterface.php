@@ -14,6 +14,13 @@ namespace League\Fractal\Resource;
 interface ResourceInterface
 {
     /**
+     * Get the resource key.
+     *
+     * @return string
+     */
+    public function getResourceKey();
+
+    /**
      * Get the data.
      *
      * @return mixed

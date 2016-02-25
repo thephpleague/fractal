@@ -38,6 +38,13 @@ abstract class SerializerAbstract
     abstract public function item($resourceKey, array $data);
 
     /**
+     * Serialize null resource.
+     *
+     * @return array
+     */
+    abstract public function null();
+
+    /**
      * Serialize the included data.
      *
      * @param ResourceInterface $resource
