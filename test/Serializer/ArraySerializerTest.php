@@ -3,6 +3,7 @@
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
@@ -140,6 +141,39 @@ class ArraySerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingNullResource()
+    {
+        $manager = new Manager();
+        $manager->parseIncludes('author');
+        $manager->setSerializer(new ArraySerializer());
+
+        $resource = new NullResource($this->bookCollectionInput, new GenericBookTransformer(), 'books');
+
+        // Try without metadata
+        $scope = new Scope($manager, $resource);
+
+        $expected = [];
+        $this->assertSame($expected, $scope->toArray());
+
+        // JSON array of JSON objects
+        $expectedJson = '[]';
+        $this->assertSame($expectedJson, $scope->toJson());
+
+        // Same again with metadata
+        $resource->setMetaValue('foo', 'bar');
+        $scope = new Scope($manager, $resource);
+
+        $expected = [
+            'meta' => [
+                'foo' => 'bar',
+            ],
+        ];
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
