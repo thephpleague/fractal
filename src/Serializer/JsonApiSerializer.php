@@ -30,7 +30,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize a collection.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -49,7 +49,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize an item.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -85,13 +85,13 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function paginator(PaginatorInterface $paginator)
     {
-        $currentPage = (int) $paginator->getCurrentPage();
-        $lastPage = (int) $paginator->getLastPage();
+        $currentPage = (int)$paginator->getCurrentPage();
+        $lastPage = (int)$paginator->getLastPage();
 
         $pagination = [
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->getCount(),
-            'per_page' => (int) $paginator->getPerPage(),
+            'total' => (int)$paginator->getTotal(),
+            'count' => (int)$paginator->getCount(),
+            'per_page' => (int)$paginator->getPerPage(),
             'current_page' => $currentPage,
             'total_pages' => $lastPage,
         ];
@@ -151,7 +151,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize the included data.
      *
      * @param ResourceInterface $resource
-     * @param array             $data
+     * @param array $data
      *
      * @return array
      */
@@ -211,14 +211,13 @@ class JsonApiSerializer extends ArraySerializer
 
     /**
      * Hook to manipulate the final sideloaded includes.
-     *
      * The JSON API specification does not allow the root object to be included
      * into the sideloaded `included`-array. We have to make sure it is
      * filtered out, in case some object links to the root object in a
      * relationship.
      *
-     * @param array             $includedData
-     * @param array             $data
+     * @param array $includedData
+     * @param array $data
      *
      * @return array
      */
@@ -303,7 +302,8 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    protected function isEmpty($data) {
+    protected function isEmpty($data)
+    {
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
@@ -319,8 +319,7 @@ class JsonApiSerializer extends ArraySerializer
             foreach ($relationships as $key => $relationship) {
                 $data = $this->FillRelationshipAsCollection($data, $relationship, $key);
             }
-        }
-        else { // Single resource
+        } else { // Single resource
             foreach ($relationships as $key => $relationship) {
                 $data = $this->FillRelationshipAsSingleResource($data, $relationship, $key);
             }
@@ -339,8 +338,7 @@ class JsonApiSerializer extends ArraySerializer
         $relationships = [];
 
         foreach ($includedData as $key => $inclusion) {
-            foreach ($inclusion as $includeKey => $includeObject)
-            {
+            foreach ($inclusion as $includeKey => $includeObject) {
                 $relationships = $this->buildRelationships($includeKey, $relationships, $includeObject, $key);
             }
         }
