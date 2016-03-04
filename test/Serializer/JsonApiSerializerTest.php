@@ -7,6 +7,7 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiFaultyIncludeTransformer;
 
 class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 {
@@ -1738,6 +1739,38 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":5,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=5","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=4","last":"http:\/\/example.com\/books\/?page=5"}}';
         $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testSerializingCollectionResourceWithEmptyHasOneIncludeWithFaultyTransformer()
+    {
+        $this->manager->parseIncludes('author');
+
+        $booksData = [
+          [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+              'id' => 2,
+              'name' => 'Bob',
+            ],
+          ],
+          [
+            'id' => 2,
+            'title' => 'Bar',
+            'year' => '1997',
+            '_author' => null
+          ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiFaultyIncludeTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $scope->toArray();
+        $scope->toJson();
     }
 
     public function tearDown()
