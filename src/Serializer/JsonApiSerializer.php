@@ -464,7 +464,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    protected function FillRelationshipAsSingleResource($data, $relationship, $key)
+    private function FillRelationshipAsSingleResource($data, $relationship, $key)
     {
         $data['data']['relationships'][$key] = $relationship[0];
 
@@ -489,7 +489,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    protected function buildRelationships($includeKey, $relationships, $includeObject, $key)
+    private function buildRelationships($includeKey, $relationships, $includeObject, $key)
     {
         $relationships = $this->addIncludekeyToRelationsIfNotSet($includeKey, $relationships);
 
@@ -523,7 +523,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    protected function addIncludekeyToRelationsIfNotSet($includeKey, $relationships)
+    private function addIncludekeyToRelationsIfNotSet($includeKey, $relationships)
     {
         if (!array_key_exists($includeKey, $relationships)) {
             $relationships[$includeKey] = [];
@@ -539,7 +539,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    protected function addIncludedDataToRelationship($includeObject, $relationship)
+    private function addIncludedDataToRelationship($includeObject, $relationship)
     {
         foreach ($includeObject['data'] as $object) {
             $relationship['data'][] = [
