@@ -20,6 +20,11 @@ class JsonApiSerializer extends ArraySerializer
     protected $baseUrl;
     protected $rootObjects;
 
+    /**
+     * JsonApiSerializer constructor.
+     *
+     * @param string $baseUrl
+     */
     public function __construct($baseUrl = null)
     {
         $this->baseUrl = $baseUrl;
