@@ -327,6 +327,15 @@ class JsonApiSerializer extends ArraySerializer
             foreach ($relationships as $key => $relationship) {
                 foreach ($relationship as $index => $relationshipData) {
                     $data['data'][$index]['relationships'][$key] = $relationshipData;
+
+                    if ($this->shouldIncludeLinks()) {
+                        $data['data'][$index]['relationships'][$key] = array_merge([
+                            'links' => [
+                                'self' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/relationships/$key",
+                                'related' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/$key",
+                            ],
+                        ], $data['data'][$index]['relationships'][$key]);
+                    }
                 }
             }
         }
