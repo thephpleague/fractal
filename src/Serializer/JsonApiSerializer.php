@@ -166,8 +166,7 @@ class JsonApiSerializer extends ArraySerializer
                 }
                 if ($this->isCollection($includeObject)) {
                     $includeObjects = $includeObject['data'];
-                }
-                else {
+                } else {
                     $includeObjects = [$includeObject['data']];
                 }
 
@@ -234,8 +233,7 @@ class JsonApiSerializer extends ArraySerializer
 
         if ($this->isCollection($data)) {
             $this->setRootObjects($data['data']);
-        }
-        else {
+        } else {
             $this->setRootObjects([$data['data']]);
         }
 
@@ -311,7 +309,8 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    protected function isEmpty($data) {
+    protected function isEmpty($data)
+    {
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
@@ -338,8 +337,7 @@ class JsonApiSerializer extends ArraySerializer
                     }
                 }
             }
-        }
-        else { // Single resource
+        } else { // Single resource
             foreach ($relationships as $key => $relationship) {
                 $data['data']['relationships'][$key] = $relationship[0];
 
@@ -367,21 +365,18 @@ class JsonApiSerializer extends ArraySerializer
         $relationships = [];
 
         foreach ($includedData as $key => $inclusion) {
-            foreach ($inclusion as $includeKey => $includeObject)
-            {
+            foreach ($inclusion as $includeKey => $includeObject) {
                 if (!array_key_exists($includeKey, $relationships)) {
                     $relationships[$includeKey] = [];
                 }
 
                 if ($this->isNull($includeObject)) {
                     $relationship = $this->null();
-                }
-                elseif ($this->isEmpty($includeObject)) {
+                } elseif ($this->isEmpty($includeObject)) {
                     $relationship = [
                         'data' => [],
                     ];
-                }
-                elseif ($this->isCollection($includeObject)) {
+                } elseif ($this->isCollection($includeObject)) {
                     $relationship = ['data' => []];
 
                     foreach ($includeObject['data'] as $object) {
@@ -390,8 +385,7 @@ class JsonApiSerializer extends ArraySerializer
                             'id' => $object['id'],
                         ];
                     }
-                }
-                else {
+                } else {
                     $relationship = [
                         'data' => [
                             'type' => $includeObject['data']['type'],
