@@ -165,7 +165,7 @@ class JsonApiSerializer extends ArraySerializer
                     continue;
                 }
 
-                $includeObjects = $this->CreateIncludeObjects($includeObject);
+                $includeObjects = $this->createIncludeObjects($includeObject);
 
                 foreach ($includeObjects as $object) {
                     $includeType = $object['type'];
@@ -228,7 +228,7 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         // Create the RootObjects
-        $this->CreateRootObjects($data);
+        $this->createRootObjects($data);
 
         // Filter out the root objects
         $filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
@@ -317,7 +317,7 @@ class JsonApiSerializer extends ArraySerializer
     {
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
-                $data = $this->FillRelationshipAsCollection($data, $relationship, $key);
+                $data = $this->fillRelationshipAsCollection($data, $relationship, $key);
             }
         } else { // Single resource
             foreach ($relationships as $key => $relationship) {
@@ -410,7 +410,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    private function CreateIncludeObjects($includeObject)
+    private function createIncludeObjects($includeObject)
     {
         if ($this->isCollection($includeObject)) {
             $includeObjects = $includeObject['data'];
@@ -428,7 +428,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param $data
      */
-    private function CreateRootObjects($data)
+    private function createRootObjects($data)
     {
         if ($this->isCollection($data)) {
             $this->setRootObjects($data['data']);
@@ -447,7 +447,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    private function FillRelationshipAsCollection($data, $relationship, $nestedDepth)
+    private function fillRelationshipAsCollection($data, $relationship, $nestedDepth)
     {
         foreach ($relationship as $index => $relationshipData) {
             $data['data'][$index]['relationships'][$nestedDepth] = $relationshipData;
