@@ -5,8 +5,8 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
-use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
 
 class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 {

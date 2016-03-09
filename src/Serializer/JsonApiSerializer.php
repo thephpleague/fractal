@@ -20,6 +20,11 @@ class JsonApiSerializer extends ArraySerializer
     protected $baseUrl;
     protected $rootObjects;
 
+    /**
+     * JsonApiSerializer constructor.
+     *
+     * @param string $baseUrl
+     */
     public function __construct($baseUrl = null)
     {
         $this->baseUrl = $baseUrl;
@@ -30,7 +35,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize a collection.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -49,7 +54,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize an item.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -85,13 +90,13 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function paginator(PaginatorInterface $paginator)
     {
-        $currentPage = (int) $paginator->getCurrentPage();
-        $lastPage = (int) $paginator->getLastPage();
+        $currentPage = (int)$paginator->getCurrentPage();
+        $lastPage = (int)$paginator->getLastPage();
 
         $pagination = [
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->getCount(),
-            'per_page' => (int) $paginator->getPerPage(),
+            'total' => (int)$paginator->getTotal(),
+            'count' => (int)$paginator->getCount(),
+            'per_page' => (int)$paginator->getPerPage(),
             'current_page' => $currentPage,
             'total_pages' => $lastPage,
         ];
@@ -151,7 +156,7 @@ class JsonApiSerializer extends ArraySerializer
      * Serialize the included data.
      *
      * @param ResourceInterface $resource
-     * @param array             $data
+     * @param array $data
      *
      * @return array
      */
@@ -164,12 +169,8 @@ class JsonApiSerializer extends ArraySerializer
                 if ($this->isNull($includeObject) || $this->isEmpty($includeObject)) {
                     continue;
                 }
-                if ($this->isCollection($includeObject)) {
-                    $includeObjects = $includeObject['data'];
-                }
-                else {
-                    $includeObjects = [$includeObject['data']];
-                }
+
+                $includeObjects = $this->createIncludeObjects($includeObject);
 
                 foreach ($includeObjects as $object) {
                     $includeType = $object['type'];
@@ -215,14 +216,13 @@ class JsonApiSerializer extends ArraySerializer
 
     /**
      * Hook to manipulate the final sideloaded includes.
-     *
      * The JSON API specification does not allow the root object to be included
      * into the sideloaded `included`-array. We have to make sure it is
      * filtered out, in case some object links to the root object in a
      * relationship.
      *
-     * @param array             $includedData
-     * @param array             $data
+     * @param array $includedData
+     * @param array $data
      *
      * @return array
      */
@@ -232,12 +232,8 @@ class JsonApiSerializer extends ArraySerializer
             return $includedData;
         }
 
-        if ($this->isCollection($data)) {
-            $this->setRootObjects($data['data']);
-        }
-        else {
-            $this->setRootObjects([$data['data']]);
-        }
+        // Create the RootObjects
+        $this->createRootObjects($data);
 
         // Filter out the root objects
         $filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
@@ -293,7 +289,7 @@ class JsonApiSerializer extends ArraySerializer
     protected function isCollection($data)
     {
         return array_key_exists('data', $data) &&
-               array_key_exists(0, $data['data']);
+        array_key_exists(0, $data['data']);
     }
 
     /**
@@ -311,7 +307,8 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return bool
      */
-    protected function isEmpty($data) {
+    protected function isEmpty($data)
+    {
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
@@ -319,29 +316,17 @@ class JsonApiSerializer extends ArraySerializer
      * @param array $data
      * @param array $relationships
      *
-     * @return mixed
+     * @return array
      */
     protected function fillRelationships($data, $relationships)
     {
         if ($this->isCollection($data)) {
             foreach ($relationships as $key => $relationship) {
-                foreach ($relationship as $index => $relationshipData) {
-                    $data['data'][$index]['relationships'][$key] = $relationshipData;
-                }
+                $data = $this->fillRelationshipAsCollection($data, $relationship, $key);
             }
-        }
-        else { // Single resource
+        } else { // Single resource
             foreach ($relationships as $key => $relationship) {
-                $data['data']['relationships'][$key] = $relationship[0];
-
-                if ($this->shouldIncludeLinks()) {
-                    $data['data']['relationships'][$key] = array_merge([
-                        'links' => [
-                            'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
-                            'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
-                        ],
-                    ], $data['data']['relationships'][$key]);
-                }
+                $data = $this->FillRelationshipAsSingleResource($data, $relationship, $key);
             }
         }
 
@@ -358,40 +343,8 @@ class JsonApiSerializer extends ArraySerializer
         $relationships = [];
 
         foreach ($includedData as $key => $inclusion) {
-            foreach ($inclusion as $includeKey => $includeObject)
-            {
-                if (!array_key_exists($includeKey, $relationships)) {
-                    $relationships[$includeKey] = [];
-                }
-
-                if ($this->isNull($includeObject)) {
-                    $relationship = $this->null();
-                }
-                elseif ($this->isEmpty($includeObject)) {
-                    $relationship = [
-                        'data' => [],
-                    ];
-                }
-                elseif ($this->isCollection($includeObject)) {
-                    $relationship = ['data' => []];
-
-                    foreach ($includeObject['data'] as $object) {
-                        $relationship['data'][] = [
-                            'type' => $object['type'],
-                            'id' => $object['id'],
-                        ];
-                    }
-                }
-                else {
-                    $relationship = [
-                        'data' => [
-                            'type' => $includeObject['data']['type'],
-                            'id' => $includeObject['data']['id'],
-                        ],
-                    ];
-                }
-
-                $relationships[$includeKey][$key] = $relationship;
+            foreach ($inclusion as $includeKey => $includeObject) {
+                $relationships = $this->buildRelationships($includeKey, $relationships, $includeObject, $key);
             }
         }
 
@@ -401,7 +354,7 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * @param array $data
      *
-     * @return mixed
+     * @return integer
      */
     protected function getIdFromData(array $data)
     {
@@ -453,5 +406,153 @@ class JsonApiSerializer extends ArraySerializer
     protected function shouldIncludeLinks()
     {
         return $this->baseUrl !== null;
+    }
+
+    /**
+     * Check if the objects are part of a collection or not
+     *
+     * @param $includeObject
+     *
+     * @return array
+     */
+    private function createIncludeObjects($includeObject)
+    {
+        if ($this->isCollection($includeObject)) {
+            $includeObjects = $includeObject['data'];
+
+            return $includeObjects;
+        } else {
+            $includeObjects = [$includeObject['data']];
+
+            return $includeObjects;
+        }
+    }
+
+    /**
+     * Sets the RootObjects, either as collection or not.
+     *
+     * @param $data
+     */
+    private function createRootObjects($data)
+    {
+        if ($this->isCollection($data)) {
+            $this->setRootObjects($data['data']);
+        } else {
+            $this->setRootObjects([$data['data']]);
+        }
+    }
+
+
+    /**
+     * Loops over the relationships of the provided data and formats it
+     *
+     * @param $data
+     * @param $relationship
+     * @param $nestedDepth
+     *
+     * @return array
+     */
+    private function fillRelationshipAsCollection($data, $relationship, $nestedDepth)
+    {
+        foreach ($relationship as $index => $relationshipData) {
+            $data['data'][$index]['relationships'][$nestedDepth] = $relationshipData;
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * @param $data
+     * @param $relationship
+     * @param $key
+     *
+     * @return array
+     */
+    private function FillRelationshipAsSingleResource($data, $relationship, $key)
+    {
+        $data['data']['relationships'][$key] = $relationship[0];
+
+        if ($this->shouldIncludeLinks()) {
+            $data['data']['relationships'][$key] = array_merge([
+                'links' => [
+                    'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
+                    'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
+                ],
+            ], $data['data']['relationships'][$key]);
+
+            return $data;
+        }
+        return $data;
+    }
+
+    /**
+     * @param $includeKey
+     * @param $relationships
+     * @param $includeObject
+     * @param $key
+     *
+     * @return array
+     */
+    private function buildRelationships($includeKey, $relationships, $includeObject, $key)
+    {
+        $relationships = $this->addIncludekeyToRelationsIfNotSet($includeKey, $relationships);
+
+        if ($this->isNull($includeObject)) {
+            $relationship = $this->null();
+        } elseif ($this->isEmpty($includeObject)) {
+            $relationship = [
+                'data' => [],
+            ];
+        } elseif ($this->isCollection($includeObject)) {
+            $relationship = ['data' => []];
+
+            $relationship = $this->addIncludedDataToRelationship($includeObject, $relationship);
+        } else {
+            $relationship = [
+                'data' => [
+                    'type' => $includeObject['data']['type'],
+                    'id' => $includeObject['data']['id'],
+                ],
+            ];
+        }
+
+        $relationships[$includeKey][$key] = $relationship;
+
+        return $relationships;
+    }
+
+    /**
+     * @param $includeKey
+     * @param $relationships
+     *
+     * @return array
+     */
+    private function addIncludekeyToRelationsIfNotSet($includeKey, $relationships)
+    {
+        if (!array_key_exists($includeKey, $relationships)) {
+            $relationships[$includeKey] = [];
+            return $relationships;
+        }
+
+        return $relationships;
+    }
+
+    /**
+     * @param $includeObject
+     * @param $relationship
+     *
+     * @return array
+     */
+    private function addIncludedDataToRelationship($includeObject, $relationship)
+    {
+        foreach ($includeObject['data'] as $object) {
+            $relationship['data'][] = [
+                'type' => $object['type'],
+                'id' => $object['id'],
+            ];
+        }
+
+        return $relationship;
     }
 }
