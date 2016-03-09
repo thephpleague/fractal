@@ -217,6 +217,29 @@ class BookTransformer extends TransformerAbstract
 
 This will look identical in output as if the user requested `?include=author`.
 
+### Excluding Includes
+
+The `Manager::parseExcludes()` method is available for odd situations where a default include should be omitted from a single response.
+
+~~~ php
+<?php
+use League\Fractal;
+
+$fractal = new Fractal\Manager();
+
+$fractal->parseExcludes('author');
+
+~~~~
+
+
+The same dot notation seen for `Manager::parseIncludes()` can be used here.
+
+Only the mostly deeply nested resource from the exclude path will be omitted.
+
+To omit both the default `author` include on the `BookTransformer` and a default `editor` include on the nested `AuthorTransformer`, `author.editor,author` would need to be passed, since `author.editor` alone will omit only the `editor` resource from the respone.
+
+Parsed exclusions have the final say whether or not an include will will be seen in the response data. This means they can also be used to omit an available include requested in `Manager::parseIncludes()`.
+
 ### Include Parameters
 
 When including other resources, syntax can be used to provide extra parameters to the include
