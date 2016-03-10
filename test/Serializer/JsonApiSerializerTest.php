@@ -1740,6 +1740,73 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testCustomLinkMerge()
+    {
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            'links' => [
+                'custom_link' => '/custom/link',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'links' => [
+                    'custom_link' => '/custom/link',
+                ]
+            ],
+        ];
+
+        $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    public function testCustomLinkMergeNoLink()
+    {
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+            ],
+        ];
+
+        $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
     public function tearDown()
     {
         Mockery::close();

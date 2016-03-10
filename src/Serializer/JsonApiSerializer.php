@@ -72,6 +72,11 @@ class JsonApiSerializer extends ArraySerializer
 
         unset($resource['data']['attributes']['id']);
 
+        if(isset($resource['data']['attributes']['links'])) {
+            $resource['data']['links'] = $data['links'];
+            unset($resource['data']['attributes']['links']);
+        }
+
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = [
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
