@@ -326,7 +326,7 @@ class JsonApiSerializer extends ArraySerializer
             }
         } else { // Single resource
             foreach ($relationships as $key => $relationship) {
-                $data = $this->FillRelationshipAsSingleResource($data, $relationship, $key);
+                $data = $this->fillRelationshipAsSingleResource($data, $relationship, $key);
             }
         }
 
@@ -469,7 +469,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    private function FillRelationshipAsSingleResource($data, $relationship, $key)
+    private function fillRelationshipAsSingleResource($data, $relationship, $key)
     {
         $data['data']['relationships'][$key] = $relationship[0];
 
