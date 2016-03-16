@@ -73,7 +73,7 @@ class JsonApiSerializer extends ArraySerializer
         unset($resource['data']['attributes']['id']);
 
         if(isset($resource['data']['attributes']['links'])) {
-            $resource['data']['links'] = $data['links'];
+            $custom_links = $data['links'];
             unset($resource['data']['attributes']['links']);
         }
 
@@ -81,6 +81,9 @@ class JsonApiSerializer extends ArraySerializer
             $resource['data']['links'] = [
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
             ];
+            if(isset($custom_links)) {
+                $resource['data']['links'] = array_merge($custom_links, $resource['data']['links']);
+            }
         }
 
         return $resource;

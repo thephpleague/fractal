@@ -1742,6 +1742,8 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
     public function testCustomLinkMerge()
     {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer('http://test.de'));
 
         $bookData = [
             'id' => 1,
@@ -1756,9 +1758,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
 
-        $scope = new Scope($this->manager, $resource);
+        $scope = new Scope($manager, $resource);
 
         $expected = [
             'data' => [
@@ -1770,6 +1772,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                 ],
                 'links' => [
                     'custom_link' => '/custom/link',
+                    'self' => 'http://test.de/books/1',
                 ]
             ],
         ];
@@ -1779,6 +1782,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
     public function testCustomLinkMergeNoLink()
     {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer('http://test.de'));
+
         $bookData = [
             'id' => 1,
             'title' => 'Foo',
@@ -1791,7 +1797,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
 
         $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
 
-        $scope = new Scope($this->manager, $resource);
+        $scope = new Scope($manager, $resource);
 
         $expected = [
             'data' => [
@@ -1801,6 +1807,9 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                     'title' => 'Foo',
                     'year' => 1991,
                 ],
+                'links' => [
+                    'self' => 'http://test.de/books/1',
+                ]
             ],
         ];
 
