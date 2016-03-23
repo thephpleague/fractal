@@ -11,6 +11,8 @@
 
 namespace League\Fractal\Resource;
 
+use League\Fractal\TransformerAbstract;
+
 abstract class ResourceAbstract implements ResourceInterface
 {
     /**
@@ -37,18 +39,16 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * A callable to process the data attached to this resource.
      *
-     * @var callable|string
+     * @var callable|TransformerAbstract|null
      */
     protected $transformer;
 
     /**
      * Create a new resource instance.
      *
-     * @param mixed           $data
-     * @param callable|string $transformer
-     * @param string          $resourceKey
-     *
-     * @return void
+     * @param mixed                             $data
+     * @param callable|TransformerAbstract|null $transformer
+     * @param string                            $resourceKey
      */
     public function __construct($data = null, $transformer = null, $resourceKey = null)
     {
@@ -71,7 +71,8 @@ abstract class ResourceAbstract implements ResourceInterface
      * Set the data.
      *
      * @param mixed $data
-     * @return \League\Fractal\Resource\ResourceAbstract
+     *
+     * @return $this
      */
     public function setData($data)
     {
@@ -115,7 +116,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Get the transformer.
      *
-     * @return callable|string
+     * @return callable|TransformerAbstract
      */
     public function getTransformer()
     {
@@ -125,8 +126,9 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Set the transformer.
      *
-     * @param callable|string $transformer
-     * @return \League\Fractal\Resource\ResourceAbstract
+     * @param callable|TransformerAbstract $transformer
+     * 
+     * @return $this
      */
     public function setTransformer($transformer)
     {
@@ -169,7 +171,7 @@ abstract class ResourceAbstract implements ResourceInterface
      *
      * @param string $resourceKey
      *
-     * @return \League\Fractal\Resource\ResourceAbstract
+     * @return $this
      */
     public function setResourceKey($resourceKey)
     {
