@@ -1235,6 +1235,242 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingCollectionResourceWithLinksForHasOneRelationship()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $this->manager->parseIncludes('author');
+
+        $bookData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+            ],
+        ];
+
+        $resource = new Collection($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author',
+                                'related' => 'http://example.com/books/1/author',
+                            ],
+                            'data' => [
+                                'type' => 'people',
+                                'id' => '1',
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/1',
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1991,
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author',
+                                'related' => 'http://example.com/books/2/author',
+                            ],
+                            'data' => [
+                                'type' => 'people',
+                                'id' => '1',
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/2',
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/people/1',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1991},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"},"data":{"type":"people","id":"1"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingCollectionResourceWithLinksForHasManyRelationship()
+    {
+        $baseUrl = 'http://example.com';
+        $this->manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $this->manager->parseIncludes('published');
+
+        $authorData = [
+            [
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => [
+                    [
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ],
+                ],
+            ],
+            [
+                'id' => 2,
+                'name' => 'Bill',
+                '_published' => [
+                    [
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ],
+                ],
+            ],
+        ];
+
+        $resource = new Collection($authorData, new JsonApiAuthorTransformer(), 'people');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                    'relationships' => [
+                        'published' => [
+                            'links' => [
+                                'self' => 'http://example.com/people/1/relationships/published',
+                                'related' => 'http://example.com/people/1/published',
+                            ],
+                            'data' => [
+                                [
+                                    'type' => 'books',
+                                    'id' => 1,
+                                ],
+                                [
+                                    'type' => 'books',
+                                    'id' => 2,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/people/1',
+                    ],
+                ],
+                [
+                    'type' => 'people',
+                    'id' => '2',
+                    'attributes' => [
+                        'name' => 'Bill',
+                    ],
+                    'relationships' => [
+                        'published' => [
+                            'links' => [
+                                'self' => 'http://example.com/people/2/relationships/published',
+                                'related' => 'http://example.com/people/2/published',
+                            ],
+                            'data' => [
+                                [
+                                    'type' => 'books',
+                                    'id' => 1,
+                                ],
+                                [
+                                    'type' => 'books',
+                                    'id' => 2,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/people/2',
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/1',
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/books/2',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"people","id":"2","attributes":{"name":"Bill"},"links":{"self":"http:\/\/example.com\/people\/2"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/2\/relationships\/published","related":"http:\/\/example.com\/people\/2\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}],"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage JSON API resource objects MUST have a valid id

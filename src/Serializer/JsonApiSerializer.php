@@ -326,7 +326,7 @@ class JsonApiSerializer extends ArraySerializer
             }
         } else { // Single resource
             foreach ($relationships as $key => $relationship) {
-                $data = $this->FillRelationshipAsSingleResource($data, $relationship, $key);
+                $data = $this->fillRelationshipAsSingleResource($data, $relationship, $key);
             }
         }
 
@@ -448,14 +448,23 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param $data
      * @param $relationship
-     * @param $nestedDepth
+     * @param $key
      *
      * @return array
      */
-    private function fillRelationshipAsCollection($data, $relationship, $nestedDepth)
+    private function fillRelationshipAsCollection($data, $relationship, $key)
     {
         foreach ($relationship as $index => $relationshipData) {
-            $data['data'][$index]['relationships'][$nestedDepth] = $relationshipData;
+            $data['data'][$index]['relationships'][$key] = $relationshipData;
+
+            if ($this->shouldIncludeLinks()) {
+                $data['data'][$index]['relationships'][$key] = array_merge([
+                    'links' => [
+                        'self' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/relationships/$key",
+                        'related' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/$key",
+                    ],
+                ], $data['data'][$index]['relationships'][$key]);
+            }
         }
 
         return $data;
@@ -469,7 +478,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    private function FillRelationshipAsSingleResource($data, $relationship, $key)
+    private function fillRelationshipAsSingleResource($data, $relationship, $key)
     {
         $data['data']['relationships'][$key] = $relationship[0];
 
