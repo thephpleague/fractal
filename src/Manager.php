@@ -230,8 +230,10 @@ class Manager
      */
     public function parseFieldsets(array $fieldsets)
     {
+        $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
-            $this->requestedFieldsets[$type] = explode(',', $fields);
+            //Remove empty and repeated fields
+            $this->requestedFieldsets[$type] = array_unique(array_filter(explode(',', $fields)));
         }
         return $this;
     }
