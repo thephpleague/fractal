@@ -240,10 +240,10 @@ class Scope
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
-            $includedData = $serializer->includedData($this->resource, $rawIncludedData);
-
             //Filter out any relation that wasn't requested
             $rawIncludedData = array_map(array($this, 'filterFieldsets'), $rawIncludedData);
+
+            $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
             // If the serializer wants to inject additional information
             // about the included resources, it can do so now.

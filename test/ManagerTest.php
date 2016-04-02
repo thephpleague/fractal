@@ -1,6 +1,7 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\Manager;
+use League\Fractal\ParamBag;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Mockery;
@@ -74,7 +75,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($params['totallymadeup']);
     }
 
-        public function testParseExcludeSelfie()
+    public function testParseExcludeSelfie()
     {
         $manager = new Manager();
 
@@ -193,6 +194,37 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['data' => [['foo' => 'bar']]], $rootScope->toArray());
         $this->assertSame('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
 
+    }
+
+    public function testParseFieldsets()
+    {
+        $manager = new Manager();
+
+        $fields = [
+            'articles' => 'title,body',
+            'people' => 'name'
+        ];
+
+        $expectedFieldset = [
+            'articles' => ['title' , 'body'],
+            'people' => ['name']
+        ];
+
+        $manager->parseFieldsets($fields);
+        $this->assertSame($expectedFieldset, $manager->getRequestedFieldsets());
+
+        $paramBag = new ParamBag($expectedFieldset['articles']);
+        $this->assertEquals($paramBag, $manager->getFieldset('articles'));
+
+        // Are repeated fields stripped
+        $manager->parseFieldsets(['foo' => 'bar,baz,bar']);
+        $this->assertSame(['foo' => ['bar', 'baz']], $manager->getRequestedFieldsets());
+
+        // Are empty fields stripped
+        $manager->parseFieldsets(['foo' => 'bar,']);
+        $this->assertSame(['foo' => ['bar']], $manager->getRequestedFieldsets());
+
+        $this->assertSame(null, $manager->getFieldset('inexistent'));
     }
 
     public function tearDown()
