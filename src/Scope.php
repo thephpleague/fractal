@@ -12,11 +12,13 @@
 namespace League\Fractal;
 
 use InvalidArgumentException;
+use League\Fractal\Hal\HalTransformer;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
+use League\Fractal\Hal\HalInterface;
 
 /**
  * Scope
@@ -365,8 +367,37 @@ class Scope
             $transformedData = $transformer->transform($data);
         }
 
+        list($transformedData, $includedData) = $this->getIncludes($transformer, $data, $transformedData, $includedData);
+
+        return $this->getHalTransformedData($data, $transformedData, $includedData);
+    }
+
+    protected function getHalTransformedData($data, $transformedData, $includedData)
+    {
+        if ($data instanceof HalInterface) {
+            $transformer = new HalTransformer();
+            $transformedData += [HalInterface::STRUCTURE_KEY => $transformer->transform($data)];
+
+            return $this->getIncludes($transformer, $data, $transformedData, $includedData);
+        } else {
+            return [$transformedData, $includedData];
+        }
+    }
+
+    /**
+     * Check and get transformer include data.
+     *
+     * @param TransformerAbstract|callable $transformer
+     * @param array $data
+     * @param array $transformedData
+     * @param array $includedData
+     *
+     * @return array
+     */
+    protected function getIncludes($transformer, $data, $transformedData, $includedData)
+    {
         if ($this->transformerHasIncludes($transformer)) {
-            $includedData = $this->fireIncludedTransformers($transformer, $data);
+            $includedData += $this->fireIncludedTransformers($transformer, $data);
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
 
