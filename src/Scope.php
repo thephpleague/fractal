@@ -301,10 +301,10 @@ class Scope
         $transformedData = $includedData = [];
 
         if ($this->resource instanceof Item) {
-            list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
+            list($transformedData, $includedData) = $this->fireTransformer($transformer, $data);
         } elseif ($this->resource instanceof Collection) {
             foreach ($data as $value) {
-                list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
+                list($transformedData[], $includedData) = $this->fireTransformer($transformer, $value);
             }
         } elseif ($this->resource instanceof NullResource) {
             $transformedData = null;
