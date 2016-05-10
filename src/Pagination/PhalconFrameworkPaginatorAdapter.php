@@ -12,9 +12,10 @@
 namespace League\Fractal\Pagination;
 
 /**
- * A paginator adapter for illuminate/pagination.
+ * A paginator adapter for PhalconPHP/pagination.
  *
- * @author Thien Tran <fcduythiengmail.com>
+ * @author Thien Tran <fcduythien@gmail.com>
+ * 
  */
 class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
 {
@@ -108,8 +109,9 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the paginator instance.
-     *
+     * Get the paginate object.
+     * 
+     * @return object
      */
     public function getPaginate()
     {
