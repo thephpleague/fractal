@@ -341,7 +341,7 @@ class Scope
             return $serializer->item($resourceKey, $data);
         }
 
-        return $serializer->null();
+        return $serializer->null($resourceKey);
     }
 
     /**

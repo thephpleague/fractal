@@ -143,9 +143,10 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
+     * @param string $resourceKey
      * @return array
      */
-    public function null()
+    public function null($resourceKey)
     {
         return [
             'data' => null,
@@ -499,7 +500,7 @@ class JsonApiSerializer extends ArraySerializer
         $relationships = $this->addIncludekeyToRelationsIfNotSet($includeKey, $relationships);
 
         if ($this->isNull($includeObject)) {
-            $relationship = $this->null();
+            $relationship = $this->null($includeKey);
         } elseif ($this->isEmpty($includeObject)) {
             $relationship = [
                 'data' => [],

@@ -40,9 +40,11 @@ abstract class SerializerAbstract
     /**
      * Serialize null resource.
      *
-     * @return array
+     * @param string $resourceKey
+     *
+     * @return array|null
      */
-    abstract public function null();
+    abstract public function null($resourceKey);
 
     /**
      * Serialize the included data.
