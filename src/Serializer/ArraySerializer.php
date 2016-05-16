@@ -48,7 +48,7 @@ class ArraySerializer extends SerializerAbstract
      *
      * @param string $resourceKey
      *
-     * @return array
+     * @return array|null
      */
     public function null($resourceKey)
     {

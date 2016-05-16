@@ -199,7 +199,7 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param array $data
+     * @param array|null $data
      * @param array $includedData
      *
      * @return array
@@ -209,10 +209,10 @@ class JsonApiSerializer extends ArraySerializer
         $relationships = $this->parseRelationships($includedData);
 
         if (!empty($relationships)) {
-            $data = $this->fillRelationships($data, $relationships);
+            $data = $this->fillRelationships((array)$data, $relationships);
         }
 
-        return $data;
+        return (array)$data;
     }
 
     /**
