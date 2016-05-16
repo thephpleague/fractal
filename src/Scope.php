@@ -335,12 +335,14 @@ class Scope
     {
         $resourceKey = $this->resource->getResourceKey();
 
-        if ($this->resource instanceof Collection) {
-            return $serializer->collection($resourceKey, $data);
-        }
+        if (null !== $data) {
+            if ($this->resource instanceof Collection) {
+                return $serializer->collection($resourceKey, $data);
+            }
 
-        if ($this->resource instanceof Item) {
-            return $serializer->item($resourceKey, $data);
+            if ($this->resource instanceof Item) {
+                return $serializer->item($resourceKey, $data);
+            }
         }
 
         return $serializer->null($resourceKey);
