@@ -18,10 +18,11 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $sut = $this->createSut();
 
+        $manager = $this->createManager();
         $resource = $this->createResource();
         $scopeIdentifier = 'foo_identifier';
 
-        $scope = $sut->createScopeFor($resource, $scopeIdentifier);
+        $scope = $sut->createScopeFor($manager, $resource, $scopeIdentifier);
 
         $this->assertInstanceOf('League\\Fractal\\Scope', $scope);
         $this->assertSame($resource, $scope->getResource());
@@ -45,8 +46,8 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
             'parent_identifier',
         ];
 
-        $sut = $this->createSut($manager);
-        $scope = $sut->createChildScopeFor($scope, $resource, $scopeIdentifier);
+        $sut = $this->createSut();
+        $scope = $sut->createChildScopeFor($manager, $scope, $resource, $scopeIdentifier);
 
         $this->assertInstanceOf('League\\Fractal\\Scope', $scope);
         $this->assertSame($resource, $scope->getResource());
@@ -55,16 +56,11 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Manager $manager
      * @return ScopeFactory
      */
-    private function createSut(Manager $manager = null)
+    private function createSut()
     {
-        if ($manager === null) {
-            $manager = $this->createManager();
-        }
-
-        return new ScopeFactory($manager);
+        return new ScopeFactory();
     }
 
     /**

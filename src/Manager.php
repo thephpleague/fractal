@@ -73,6 +73,11 @@ class Manager
      */
     private $scopeFactory;
 
+    public function __construct(ScopeFactoryInterface $scopeFactory = null)
+    {
+        $this->scopeFactory = $scopeFactory ?: new ScopeFactory();
+    }
+
     /**
      * Create Data.
      *
@@ -87,10 +92,10 @@ class Manager
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
         if ($parentScopeInstance !== null) {
-            return $this->getScopeFactory()->createChildScopeFor($parentScopeInstance, $resource, $scopeIdentifier);
+            return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
         }
 
-        return $this->getScopeFactory()->createScopeFor($resource, $scopeIdentifier);
+        return $this->scopeFactory->createScopeFor($this, $resource, $scopeIdentifier);
     }
 
     /**
@@ -266,32 +271,6 @@ class Manager
     public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
-
-        return $this;
-    }
-
-    /**
-     * @return ScopeFactoryInterface
-     */
-    public function getScopeFactory()
-    {
-        if (!$this->scopeFactory) {
-            $this->scopeFactory = new ScopeFactory($this);
-        }
-
-        return $this->scopeFactory;
-    }
-
-    /**
-     * Set ScopeFactory
-     *
-     * @param ScopeFactoryInterface $scopeFactory
-     *
-     * @return $this
-     */
-    public function setScopeFactory(ScopeFactoryInterface $scopeFactory)
-    {
-        $this->scopeFactory = $scopeFactory;
 
         return $this;
     }

@@ -16,34 +16,26 @@ use League\Fractal\Resource\ResourceInterface;
 class ScopeFactory implements ScopeFactoryInterface
 {
     /**
-     * @var Manager
-     */
-    private $manager;
-
-    public function __construct(Manager $manager)
-    {
-        $this->manager = $manager;
-    }
-
-    /**
+     * @param Manager $manager
      * @param ResourceInterface $resource
      * @param string|null $scopeIdentifier
      * @return Scope
      */
-    public function createScopeFor(ResourceInterface $resource, $scopeIdentifier = null)
+    public function createScopeFor(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null)
     {
-        return new Scope($this->manager, $resource, $scopeIdentifier);
+        return new Scope($manager, $resource, $scopeIdentifier);
     }
 
     /**
+     * @param Manager $manager
      * @param Scope $parentScopeInstance
      * @param ResourceInterface $resource
      * @param string|null $scopeIdentifier
      * @return Scope
      */
-    public function createChildScopeFor(Scope $parentScopeInstance, ResourceInterface $resource, $scopeIdentifier = null)
+    public function createChildScopeFor(Manager $manager, Scope $parentScopeInstance, ResourceInterface $resource, $scopeIdentifier = null)
     {
-        $scopeInstance = $this->createScopeFor($resource, $scopeIdentifier);
+        $scopeInstance = $this->createScopeFor($manager, $resource, $scopeIdentifier);
 
         // This will be the new children list of parents (parents parents, plus the parent)
         $scopeArray = $parentScopeInstance->getParentScopes();
