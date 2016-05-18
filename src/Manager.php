@@ -67,6 +67,13 @@ class Manager
     protected $serializer;
 
     /**
+     * Factory used to create new configured scopes.
+     *
+     * @var ScopeFactoryInterface
+     */
+    private $scopeFactory;
+
+    /**
      * Create Data.
      *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
@@ -79,18 +86,11 @@ class Manager
      */
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
-        $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
-
-        // Update scope history
         if ($parentScopeInstance !== null) {
-            // This will be the new children list of parents (parents parents, plus the parent)
-            $scopeArray = $parentScopeInstance->getParentScopes();
-            $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
-
-            $scopeInstance->setParentScopes($scopeArray);
+            return $this->getScopeFactory()->createChildScopeFor($parentScopeInstance, $resource, $scopeIdentifier);
         }
 
-        return $scopeInstance;
+        return $this->getScopeFactory()->createScopeFor($resource, $scopeIdentifier);
     }
 
     /**
@@ -266,6 +266,32 @@ class Manager
     public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
+
+        return $this;
+    }
+
+    /**
+     * @return ScopeFactoryInterface
+     */
+    public function getScopeFactory()
+    {
+        if (!$this->scopeFactory) {
+            $this->scopeFactory = new ScopeFactory($this);
+        }
+
+        return $this->scopeFactory;
+    }
+
+    /**
+     * Set ScopeFactory
+     *
+     * @param ScopeFactoryInterface $scopeFactory
+     *
+     * @return $this
+     */
+    public function setScopeFactory(ScopeFactoryInterface $scopeFactory)
+    {
+        $this->scopeFactory = $scopeFactory;
 
         return $this;
     }
