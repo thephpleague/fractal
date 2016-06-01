@@ -238,7 +238,7 @@ Only the mostly deeply nested resource from the exclude path will be omitted.
 
 To omit both the default `author` include on the `BookTransformer` and a default `editor` include on the nested `AuthorTransformer`, `author.editor,author` would need to be passed, since `author.editor` alone will omit only the `editor` resource from the respone.
 
-Parsed exclusions have the final say whether or not an include will will be seen in the response data. This means they can also be used to omit an available include requested in `Manager::parseIncludes()`.
+Parsed exclusions have the final say whether or not an include will be seen in the response data. This means they can also be used to omit an available include requested in `Manager::parseIncludes()`.
 
 ### Include Parameters
 
