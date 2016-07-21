@@ -245,6 +245,16 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
+     * Get the mandatory fields for the serializer
+     *
+     * @return array
+     */
+    public function getMandatoryFields()
+    {
+        return ['id'];
+    }
+
+    /**
      * Filter function to delete root objects from array.
      *
      * @param array $object

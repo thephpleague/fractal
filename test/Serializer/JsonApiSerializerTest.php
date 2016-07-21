@@ -1976,6 +1976,157 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    /**
+     * @dataProvider serializingWithFieldsetsProvider
+     */
+    public function testSerializingWithFieldsets($fieldsetsToParse, $expected)
+    {
+        $this->manager->parseIncludes(['author', 'author.published']);
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => [
+                    [
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ],
+                ],
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $this->manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function serializingWithFieldsetsProvider()
+    {
+        return [
+            [
+                //Single field
+                ['books' => 'title'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Multiple fields
+                ['books' => 'title,year'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo',
+                            'year' => 1991
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Include 1st level relationship
+                ['books' => 'title,author', 'people' => 'name'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'data' => [
+                                    'type' => 'people',
+                                    'id' => '1'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'included' => [
+                        [
+                            'type' => 'people',
+                            'id' => '1',
+                            'attributes' => [
+                                'name' => 'Dave'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Include 2nd level relationship
+                ['books' => 'title,author', 'people' => 'name,published'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'data' => [
+                                    'type' => 'people',
+                                    'id' => '1'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'included' => [
+                        [
+                            'type' => 'books',
+                            'id' => '2',
+                            'attributes' => [
+                                'title' => 'Bar'
+                            ]
+                        ],
+                        [
+                            'type' => 'people',
+                            'id' => '1',
+                            'attributes' => [
+                                'name' => 'Dave'
+                            ],
+                            'relationships' => [
+                                'published' => [
+                                    'data' => [
+                                        [
+                                            'type' => 'books',
+                                            'id' => '1'
+                                        ],
+                                        [
+                                            'type' => 'books',
+                                            'id' => '2'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function tearDown()
     {
         Mockery::close();
