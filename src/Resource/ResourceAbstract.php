@@ -127,7 +127,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * Set the transformer.
      *
      * @param callable|TransformerAbstract $transformer
-     * 
+     *
      * @return $this
      */
     public function setTransformer($transformer)
