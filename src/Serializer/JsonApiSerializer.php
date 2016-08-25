@@ -358,7 +358,7 @@ class JsonApiSerializer extends ArraySerializer
      */
     protected function getIdFromData(array $data)
     {
-        if (!array_key_exists('id', $data)) {
+        if (!array_key_exists('id', $data) || (!is_string($data['id']) && !is_numeric($data['id']))) {
             throw new InvalidArgumentException(
                 'JSON API resource objects MUST have a valid id'
             );
