@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the League\Fractal package.
  *
@@ -8,13 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace League\Fractal;
-
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
-
 /**
  * Manager
  *
@@ -30,42 +26,46 @@ class Manager
      * @var array
      */
     protected $requestedIncludes = [];
-
     /**
      * Array of scope identifiers for resources to exclude.
      *
      * @var array
      */
     protected $requestedExcludes = [];
-
     /**
      * Array containing modifiers as keys and an array value of params.
      *
      * @var array
      */
     protected $includeParams = [];
-
     /**
      * The character used to separate modifier parameters.
      *
      * @var string
      */
     protected $paramDelimiter = '|';
-
     /**
      * Upper limit to how many levels of included data are allowed.
      *
      * @var int
      */
     protected $recursionLimit = 10;
-
     /**
      * Serializer.
      *
      * @var SerializerAbstract
      */
     protected $serializer;
-
+    /**
+     * Factory used to create new configured scopes.
+     *
+     * @var ScopeFactoryInterface
+     */
+    private $scopeFactory;
+    public function __construct(ScopeFactoryInterface $scopeFactory = null)
+    {
+        $this->scopeFactory = $scopeFactory ?: new ScopeFactory();
+    }
     /**
      * Create Data.
      *
@@ -79,34 +79,26 @@ class Manager
      */
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
-        $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
-
-        // Update scope history
         if ($parentScopeInstance !== null) {
-            // This will be the new children list of parents (parents parents, plus the parent)
-            $scopeArray = $parentScopeInstance->getParentScopes();
-            $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
-
-            $scopeInstance->setParentScopes($scopeArray);
+            return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
         }
-
-        return $scopeInstance;
+        return $this->scopeFactory->createScopeFor($this, $resource, $scopeIdentifier);
     }
-
     /**
      * Get Include Params.
      *
      * @param string $include
      *
-     * @return \League\Fractal\ParamBag
+     * @return \League\Fractal\ParamBag|null
      */
     public function getIncludeParams($include)
     {
-        $params = isset($this->includeParams[$include]) ? $this->includeParams[$include] : [];
-
+        if (! isset($this->includeParams[$include])) {
+            return;
+        }
+        $params = $this->includeParams[$include];
         return new ParamBag($params);
     }
-
     /**
      * Get Requested Includes.
      *
@@ -116,7 +108,6 @@ class Manager
     {
         return $this->requestedIncludes;
     }
-
     /**
      * Get Requested Excludes.
      *
@@ -126,7 +117,6 @@ class Manager
     {
         return $this->requestedExcludes;
     }
-
     /**
      * Get Serializer.
      *
@@ -137,10 +127,8 @@ class Manager
         if (! $this->serializer) {
             $this->setSerializer(new DataArraySerializer());
         }
-
         return $this->serializer;
     }
-
     /**
      * Parse Include String.
      *
@@ -152,62 +140,46 @@ class Manager
     {
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = [];
-
         if (is_string($includes)) {
             $includes = explode(',', $includes);
         }
-
         if (! is_array($includes)) {
             throw new \InvalidArgumentException(
                 'The parseIncludes() method expects a string or an array. '.gettype($includes).' given'
             );
         }
-
         foreach ($includes as $include) {
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
-
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
-
             if (in_array($includeName, $this->requestedIncludes)) {
                 continue;
             }
             $this->requestedIncludes[] = $includeName;
-
             // No Params? Bored
             if ($allModifiersStr === null) {
                 continue;
             }
-
             // Matches multiple instances of 'something(foo|bar|baz)' in the string
             // I guess it ignores : so you could use anything, but probably don't do that
             preg_match_all('/([\w]+)(\(([^\)]+)\))?/', $allModifiersStr, $allModifiersArr);
-
             // [0] is full matched strings...
             $modifierCount = count($allModifiersArr[0]);
-
             $modifierArr = [];
-
             for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
                 // [1] is the modifier
                 $modifierName = $allModifiersArr[1][$modifierIt];
-
                 // and [3] is delimited params
                 $modifierParamStr = $allModifiersArr[3][$modifierIt];
-
                 // Make modifier array key with an array of params as the value
                 $modifierArr[$modifierName] = explode($this->paramDelimiter, $modifierParamStr);
             }
-
             $this->includeParams[$includeName] = $modifierArr;
         }
-
         // This should be optional and public someday, but without it includes would never show up
         $this->autoIncludeParents();
-
         return $this;
     }
-
     /**
      * Parse Exclude String.
      *
@@ -218,30 +190,23 @@ class Manager
     public function parseExcludes($excludes)
     {
         $this->requestedExcludes = [];
-
         if (is_string($excludes)) {
             $excludes = explode(',', $excludes);
         }
-
         if (! is_array($excludes)) {
             throw new \InvalidArgumentException(
                 'The parseExcludes() method expects a string or an array. '.gettype($excludes).' given'
             );
         }
-
         foreach ($excludes as $excludeName) {
             $excludeName = $this->trimToAcceptableRecursionLevel($excludeName);
-
             if (in_array($excludeName, $this->requestedExcludes)) {
                 continue;
             }
-
             $this->requestedExcludes[] = $excludeName;
         }
-
         return $this;
     }
-
     /**
      * Set Recursion Limit.
      *
@@ -252,10 +217,8 @@ class Manager
     public function setRecursionLimit($recursionLimit)
     {
         $this->recursionLimit = $recursionLimit;
-
         return $this;
     }
-
     /**
      * Set Serializer
      *
@@ -266,10 +229,8 @@ class Manager
     public function setSerializer(SerializerAbstract $serializer)
     {
         $this->serializer = $serializer;
-
         return $this;
     }
-
     /**
      * Auto-include Parents
      *
@@ -283,22 +244,17 @@ class Manager
     protected function autoIncludeParents()
     {
         $parsed = [];
-
         foreach ($this->requestedIncludes as $include) {
             $nested = explode('.', $include);
-
             $part = array_shift($nested);
             $parsed[] = $part;
-
             while (count($nested) > 0) {
                 $part .= '.'.array_shift($nested);
                 $parsed[] = $part;
             }
         }
-
         $this->requestedIncludes = array_values(array_unique($parsed));
     }
-
     /**
      * Trim to Acceptable Recursion Level
      *

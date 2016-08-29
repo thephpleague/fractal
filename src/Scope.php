@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the League\Fractal package.
  *
@@ -8,16 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  **/
-
 namespace League\Fractal;
-
 use InvalidArgumentException;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
-
 /**
  * Scope
  *
@@ -103,7 +99,6 @@ class Scope
     public function getIdentifier($appendIdentifier = null)
     {
         $identifierParts = array_merge($this->parentScopes, [$this->scopeIdentifier, $appendIdentifier]);
-
         return implode('.', array_filter($identifierParts));
     }
 
@@ -158,9 +153,7 @@ class Scope
         } else {
             $scopeArray = [$checkScopeSegment];
         }
-
         $scopeString = implode('.', (array) $scopeArray);
-
         return in_array($scopeString, $this->manager->getRequestedIncludes());
     }
 
@@ -186,9 +179,7 @@ class Scope
         } else {
             $scopeArray = [$checkScopeSegment];
         }
-
         $scopeString = implode('.', (array) $scopeArray);
-
         return in_array($scopeString, $this->manager->getRequestedExcludes());
     }
 
@@ -220,32 +211,28 @@ class Scope
     public function setParentScopes($parentScopes)
     {
         $this->parentScopes = $parentScopes;
-
         return $this;
     }
 
     /**
      * Convert the current data for this scope to an array.
      *
-     * @return array
+     * In case Serializer used could return null, this could also return null
+     *
+     * @return array|null
      */
     public function toArray()
     {
         list($rawData, $rawIncludedData) = $this->executeResourceTransformers();
-
         $serializer = $this->manager->getSerializer();
-
         $data = $this->serializeResource($serializer, $rawData);
-
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
-
             // If the serializer wants to inject additional information
             // about the included resources, it can do so now.
             $data = $serializer->injectData($data, $rawIncludedData);
-
             if ($this->isRootScope()) {
                 // If the serializer wants to have a final word about all
                 // the objects that are sideloaded, it can do so now.
@@ -254,26 +241,21 @@ class Scope
                     $data
                 );
             }
-
             $data = array_merge($data, $includedData);
         }
-
         if ($this->resource instanceof Collection) {
             if ($this->resource->hasCursor()) {
                 $pagination = $serializer->cursor($this->resource->getCursor());
             } elseif ($this->resource->hasPaginator()) {
                 $pagination = $serializer->paginator($this->resource->getPaginator());
             }
-
             if (! empty($pagination)) {
                 $this->resource->setMetaValue(key($pagination), current($pagination));
             }
         }
-
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
-
-        return array_merge($data, $meta);
+        return null === $data ? null : array_merge($data, $meta);
     }
 
     /**
@@ -297,9 +279,7 @@ class Scope
     {
         $transformer = $this->resource->getTransformer();
         $data = $this->resource->getData();
-
         $transformedData = $includedData = [];
-
         if ($this->resource instanceof Item) {
             list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
         } elseif ($this->resource instanceof Collection) {
@@ -315,7 +295,6 @@ class Scope
                 .' or League\Fractal\Resource\Collection'
             );
         }
-
         return [$transformedData, $includedData];
     }
 
@@ -332,16 +311,15 @@ class Scope
     protected function serializeResource(SerializerAbstract $serializer, $data)
     {
         $resourceKey = $this->resource->getResourceKey();
-
-        if ($this->resource instanceof Collection) {
-            return $serializer->collection($resourceKey, $data);
+        if (null !== $data) {
+            if ($this->resource instanceof Collection) {
+                return $serializer->collection($resourceKey, $data);
+            }
+            if ($this->resource instanceof Item) {
+                return $serializer->item($resourceKey, $data);
+            }
         }
-
-        if ($this->resource instanceof Item) {
-            return $serializer->item($resourceKey, $data);
-        }
-
-        return $serializer->null();
+        return $serializer->null($resourceKey);
     }
 
     /**
@@ -357,19 +335,16 @@ class Scope
     protected function fireTransformer($transformer, $data)
     {
         $includedData = [];
-
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
             $transformer->setCurrentScope($this);
             $transformedData = $transformer->transform($data);
         }
-
         if ($this->transformerHasIncludes($transformer)) {
             $includedData = $this->fireIncludedTransformers($transformer, $data);
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
-
         return [$transformedData, $includedData];
     }
 
@@ -386,7 +361,6 @@ class Scope
     protected function fireIncludedTransformers($transformer, $data)
     {
         $this->availableIncludes = $transformer->getAvailableIncludes();
-
         return $transformer->processIncludedResources($this, $data) ?: [];
     }
 
@@ -404,10 +378,8 @@ class Scope
         if (! $transformer instanceof TransformerAbstract) {
             return false;
         }
-
         $defaultIncludes = $transformer->getDefaultIncludes();
         $availableIncludes = $transformer->getAvailableIncludes();
-
         return ! empty($defaultIncludes) || ! empty($availableIncludes);
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the League\Fractal package.
  *
@@ -8,13 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace League\Fractal\Serializer;
-
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\ResourceInterface;
-
 abstract class SerializerAbstract
 {
     /**
@@ -26,7 +22,6 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function collection($resourceKey, array $data);
-
     /**
      * Serialize an item.
      *
@@ -36,14 +31,14 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function item($resourceKey, array $data);
-
     /**
      * Serialize null resource.
      *
-     * @return array
+     * @param string $resourceKey
+     *
+     * @return array|null
      */
-    abstract public function null();
-
+    abstract public function null($resourceKey);
     /**
      * Serialize the included data.
      *
@@ -53,7 +48,6 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function includedData(ResourceInterface $resource, array $data);
-
     /**
      * Serialize the meta.
      *
@@ -62,7 +56,6 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function meta(array $meta);
-
     /**
      * Serialize the paginator.
      *
@@ -71,7 +64,6 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function paginator(PaginatorInterface $paginator);
-
     /**
      * Serialize the cursor.
      *
@@ -80,7 +72,6 @@ abstract class SerializerAbstract
      * @return array
      */
     abstract public function cursor(CursorInterface $cursor);
-
     public function mergeIncludes($transformedData, $includedData)
     {
         // If the serializer does not want the includes to be side-loaded then
@@ -88,10 +79,8 @@ abstract class SerializerAbstract
         if (! $this->sideloadIncludes()) {
             return array_merge($transformedData, $includedData);
         }
-
         return $transformedData;
     }
-
     /**
      * Indicates if includes should be side-loaded.
      *
@@ -101,20 +90,18 @@ abstract class SerializerAbstract
     {
         return false;
     }
-
     /**
      * Hook for the serializer to inject custom data based on the relationships of the resource.
      *
-     * @param array $data
+     * @param array|null $data
      * @param array $rawIncludedData
      *
      * @return array
      */
     public function injectData($data, $rawIncludedData)
     {
-        return $data;
+        return $data ?: [];
     }
-
     /**
      * Hook for the serializer to modify the final list of includes.
      *
