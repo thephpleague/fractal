@@ -8,7 +8,8 @@ matrix:
     - php: 5.5
     - php: 5.6
       env: COLLECT_COVERAGE=true
-    - php: 7
+    - php: 7.0
+    - php: 7.1
     - php: hhvm
 
 install:
