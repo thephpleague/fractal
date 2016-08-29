@@ -71,7 +71,7 @@ Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CO
 
 ## Credits
 
-- [Jason Lewis](https://github.com/jasonlewis)
+- [Graham Daniels](https://github.com/greydnls)
 - [Andrew Willis](https://github.com/willishq)
 - [Phil Sturgeon](https://github.com/philsturgeon)
 - [All Contributors](https://github.com/thephpleague/fractal/contributors)
