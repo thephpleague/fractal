@@ -1517,6 +1517,43 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @dataProvider provideResourcesWithValidIds
+     */
+    public function testNoExceptionThrownIfResourceHasAValidId($resourceData)
+    {
+        $resource = new Item($resourceData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+        $scope->toArray();
+    }
+
+    public function provideResourcesWithValidIds()
+    {
+        return [
+            'integer' => [[
+                'id' => 2,
+                'title' => 'Foo',
+                'year' => '1991',
+            ]],
+            'numeric' => [[
+                'id' => '1010122',
+                'title' => 'Foo',
+                'year' => '1991',
+            ]],
+            'serializable_id_object' => [[
+                'id' => new UuidStub(),
+                'title' => 'Bar',
+                'year' => '1992',
+            ]],
+            'uuid' => [[
+                'id' => 'e11a81b6-b1d6-4bf6-b730-aa8ce49e60d4',
+                'title' => 'Tic',
+                'year' => '1993',
+            ]]
+        ];
+    }
+
     public function testSerializingItemWithReferenceToRootObject()
     {
         $this->manager->parseIncludes('published.author');
@@ -2008,5 +2045,13 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         Mockery::close();
+    }
+}
+
+class UuidStub
+{
+    public function __toString()
+    {
+        return '841232a2-8afb-4de5-b018-afc90c97f852';
     }
 }
