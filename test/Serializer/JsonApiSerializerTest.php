@@ -1976,6 +1976,82 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testCustomLinkMerge()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer('http://test.de'));
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            'links' => [
+                'custom_link' => '/custom/link',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'links' => [
+                    'custom_link' => '/custom/link',
+                    'self' => 'http://test.de/books/1',
+                ]
+            ],
+        ];
+
+        $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    public function testCustomLinkMergeNoLink()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer('http://test.de'));
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'links' => [
+                    'self' => 'http://test.de/books/1',
+                ]
+            ],
+        ];
+
+        $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
     public function tearDown()
     {
         Mockery::close();
