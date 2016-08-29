@@ -98,7 +98,7 @@ abstract class TransformerAbstract
 
         foreach ($includes as $include) {
             if ($scope->isExcluded($include)) {
-              $includes = array_diff($includes, [$include]);
+                $includes = array_diff($includes, [$include]);
             }
         }
 
