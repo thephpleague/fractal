@@ -4,6 +4,7 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
@@ -246,6 +247,21 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function testItCanReturnAnObject()
+    {
+        $serializer = Mockery::mock('League\Fractal\Serializer\ArraySerializer')->makePartial();
+        $serializer->shouldReceive('null')->andReturn((object) []);
+
+        $manager = new Manager();
+        $manager->setSerializer($serializer);
+
+        $resource = new NullResource;
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertEquals((object) [], $scope->toArray());
     }
 
     public function testPushParentScope()

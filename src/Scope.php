@@ -273,6 +273,10 @@ class Scope
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
 
+        if (is_object($data)) {
+            return (object) array_merge((array) $data, $meta);
+        }
+
         return array_merge($data, $meta);
     }
 
