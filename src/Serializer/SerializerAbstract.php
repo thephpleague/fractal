@@ -40,9 +40,11 @@ abstract class SerializerAbstract
     /**
      * Serialize null resource.
      *
-     * @return array
+     * @param string $resourceKey
+     *
+     * @return array|null
      */
-    abstract public function null();
+    abstract public function null($resourceKey);
 
     /**
      * Serialize the included data.
@@ -105,14 +107,14 @@ abstract class SerializerAbstract
     /**
      * Hook for the serializer to inject custom data based on the relationships of the resource.
      *
-     * @param array $data
+     * @param array|null $data
      * @param array $rawIncludedData
      *
      * @return array
      */
     public function injectData($data, $rawIncludedData)
     {
-        return $data;
+        return $data ?: [];
     }
 
     /**
