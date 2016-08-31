@@ -24,12 +24,9 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      *
      * @var \Phalcon\Paginator\AdapterInterface
      */
-    protected $paginator;
+    private $paginator;
 
-    /***
-     *
-     * @return void
-     */
+    
     public function __construct($paginator)
     {
         $this->paginator = $paginator;
@@ -42,7 +39,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getCurrentPage()
     {
-        return $this->getPaginate()->current;
+        return $this->getPaginator()->current;
     }
 
     /**
@@ -52,7 +49,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getLastPage()
     {
-        return $this->getPaginate()->last;
+        return $this->getPaginator()->last;
     }
 
     /**
@@ -62,7 +59,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getTotal()
     {
-        return $this->getPaginate()->total_items;
+        return $this->getPaginator()->total_items;
     }
 
     /**
@@ -72,7 +69,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getCount()
     {
-        return $this->getPaginate()->total_pages;
+        return $this->getPaginator()->total_pages;
     }
 
     /**
@@ -93,7 +90,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */ 
     public function getNext()
     {
-        return $this->getPaginate()->next;
+        return $this->getPaginator()->next;
     }
 
     /**
@@ -105,7 +102,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        //PhalconPHP not yet
+        throw new \Exception("NotYetImplementedException");
     }
 
     /**
@@ -113,7 +110,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      * 
      * @return object
      */
-    public function getPaginate()
+    public function getPaginator()
     {
         
         return $this->paginator->getPaginate();
