@@ -258,6 +258,10 @@ class Scope
             $data = array_merge($data, $includedData);
         }
 
+        if (!empty($this->availableIncludes)) {
+            $data = $serializer->injectAvailableIncludeData($data, $this->availableIncludes);
+        }
+
         if ($this->resource instanceof Collection) {
             if ($this->resource->hasCursor()) {
                 $pagination = $serializer->cursor($this->resource->getCursor());
