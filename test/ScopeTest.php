@@ -7,7 +7,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
-use League\Fractal\Serializer\ArraySerializerWithNull;
+use League\Fractal\Test\Stub\ArraySerializerWithNull;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use Mockery;
