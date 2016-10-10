@@ -30,7 +30,7 @@ class PhalconFrameworkPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
         $paginator->shouldReceive('total')->andReturn($total);
         $paginator->shouldReceive('getPaginate')->andReturn((object) $paginate);
 
-        $adapter = new PhalconFrameworkPaginatorAdapter($paginator->getPaginate());
+        $adapter = new PhalconFrameworkPaginatorAdapter($paginator);
 
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);
         $this->assertSame($currentPage, $adapter->getCurrentPage());
