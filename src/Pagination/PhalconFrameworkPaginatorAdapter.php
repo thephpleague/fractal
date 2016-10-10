@@ -111,6 +111,6 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getPaginator()
     {
-        return $this->paginator;
+        return $this->paginator->getPaginate();
     }
 }
