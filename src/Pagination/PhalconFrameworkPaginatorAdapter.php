@@ -79,7 +79,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getPerPage()
     {
-        return $this->paginator->getLimit();
+        return $this->getPaginator()->items->count();;
 
     }
 
@@ -113,6 +113,6 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     public function getPaginator()
     {
         
-        return $this->paginator->getPaginate();
+        return $this->paginator;
     }
 }
