@@ -79,7 +79,9 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getPerPage()
     {
-        return $this->paginator->items->count();
+        // $this->paginator->items->count()
+        // Because when we use raw sql have not this method
+        return count($this->paginator->items);
     }
 
     /**
