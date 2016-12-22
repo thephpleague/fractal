@@ -4,9 +4,12 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Test\Stub\ArraySerializerWithNull;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
+use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
@@ -50,7 +53,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::toArray
+     * @covers \League\Fractal\Scope::toArray
      */
     public function testToArray()
     {
@@ -299,7 +302,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::executeResourceTransformers
+     * @covers \League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
@@ -426,6 +429,40 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function testNullResourceIncludeSuccess()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializerWithNull);
+
+        // Send this stub junk, it has a specific format anyhow
+        $resource = new Item([], new NullIncludeBookTransformer);
+
+        // Try without metadata
+        $scope = new Scope($manager, $resource);
+        $expected = [
+            'a' => 'b',
+            'author' => null,
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    /**
+     * @covers \League\Fractal\Scope::toArray
+     */
+    public function testNullResourceDataAndJustMeta()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializerWithNull);
+
+        $resource = new NullResource();
+        $resource->setMeta(['foo' => 'bar']);
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertSame(['meta' => ['foo' => 'bar']], $scope->toArray());
     }
 
     public function tearDown()
