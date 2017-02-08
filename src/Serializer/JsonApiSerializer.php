@@ -179,16 +179,7 @@ class JsonApiSerializer extends ArraySerializer
                 }
 
                 $includeObjects = $this->createIncludeObjects($includeObject);
-
-                foreach ($includeObjects as $object) {
-                    $includeType = $object['type'];
-                    $includeId = $object['id'];
-                    $cacheKey = "$includeType:$includeId";
-                    if (!array_key_exists($cacheKey, $linkedIds)) {
-                        $serializedData[] = $object;
-                        $linkedIds[$cacheKey] = $object;
-                    }
-                }
+                list($serializedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObjects, $linkedIds, $serializedData);
             }
         }
 
@@ -389,16 +380,7 @@ class JsonApiSerializer extends ArraySerializer
         foreach ($data as $value) {
             foreach ($value as $includeObject) {
                 if (isset($includeObject['included'])) {
-                    foreach ($includeObject['included'] as $object) {
-                        $includeType = $object['type'];
-                        $includeId = $object['id'];
-                        $cacheKey = "$includeType:$includeId";
-
-                        if (!array_key_exists($cacheKey, $linkedIds)) {
-                            $includedData[] = $object;
-                            $linkedIds[$cacheKey] = $object;
-                        }
-                    }
+                    list($includedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObject['included'], $linkedIds, $includedData);
                 }
             }
         }
@@ -571,5 +553,26 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         return $relationship;
+    }
+
+    /**
+     * @param $includeObjects
+     * @param $linkedIds
+     * @param $serializedData
+     *
+     * @return array
+     */
+    private function serializeIncludedObjectsWithCacheKey($includeObjects, $linkedIds, $serializedData)
+    {
+        foreach ($includeObjects as $object) {
+            $includeType = $object['type'];
+            $includeId = $object['id'];
+            $cacheKey = "$includeType:$includeId";
+            if (!array_key_exists($cacheKey, $linkedIds)) {
+                $serializedData[] = $object;
+                $linkedIds[$cacheKey] = $object;
+            }
+        }
+        return [$serializedData, $linkedIds];
     }
 }
