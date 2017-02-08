@@ -34,10 +34,7 @@ $resource = new Fractal\Resource\Item($book, function(Book $book) {
         'title'   => $book->title,
         'year'    => (int) $book->yr,
         'links'   => [
-            [
-                'rel' => 'self',
-                'uri' => '/books/'.$book->id,
-            ]
+            'self' => '/books/'.$book->id,
         ]
     ];
 });
@@ -57,10 +54,7 @@ $resource = new Fractal\Resource\Collection($books, function(Book $book) {
         'title' => $book->title,
         'year'  => (int) $book->yr,
         'links' => [
-            [
-                'rel' => 'self',
-                'uri' => '/books/'.$book->id,
-            ]
+            'self' => '/books/'.$book->id,
         ]
     ];
 });
