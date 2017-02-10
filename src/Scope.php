@@ -266,7 +266,7 @@ class Scope
             }
 
             if (! empty($pagination)) {
-                $this->resource->setMetaValue(key($pagination), current($pagination));
+                $this->resource->setMeta($pagination);
             }
         }
 
