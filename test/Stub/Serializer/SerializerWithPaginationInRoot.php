@@ -10,7 +10,7 @@ final class SerializerWithPaginationInRoot extends DataArraySerializer
     /**
      * {@inheritdoc}
      */
-    public function meta(array $meta): array
+    public function meta(array $meta)
     {
         return $meta;
     }
