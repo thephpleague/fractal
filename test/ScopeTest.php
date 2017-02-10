@@ -8,6 +8,7 @@ use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\ArraySerializerWithNull;
+use League\Fractal\Test\Stub\Serializer\SerializerWithPaginationInRoot;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use Mockery;
@@ -367,6 +368,50 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
+        ];
+
+        $this->assertSame($expectedOutput, $rootScope->toArray());
+    }
+
+    public function testPaginatorDataCanBeAddedToRootScope()
+    {
+        $manager = new Manager();
+
+        $manager->setSerializer(new SerializerWithPaginationInRoot());
+
+        $collection = new Collection([['foo' => 'bar', 'baz' => 'ban']], function (array $data) {
+            return $data;
+        });
+
+        $paginator = Mockery::mock('League\Fractal\Pagination\PaginatorInterface')->makePartial();
+
+        $total = 100;
+        $perPage = $count = 5;
+        $currentPage = 2;
+        $lastPage = 20;
+
+        $paginator->shouldReceive('getTotal')->once()->andReturn($total);
+        $paginator->shouldReceive('getCount')->once()->andReturn($count);
+        $paginator->shouldReceive('getPerPage')->once()->andReturn($perPage);
+        $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
+        $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
+
+        $collection->setPaginator($paginator);
+
+        $rootScope = $manager->createData($collection);
+
+        $expectedOutput = [
+            'data' => [
+                [
+                    'foo' => 'bar',
+                    'baz' => 'ban',
+                ],
+            ],
+            'total' => $total,
+            'count' => $count,
+            'per_page' => $perPage,
+            'current_page' => $currentPage,
+            'total_pages' => $lastPage,
         ];
 
         $this->assertSame($expectedOutput, $rootScope->toArray());
