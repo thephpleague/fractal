@@ -94,6 +94,34 @@ class Manager
     }
 
     /**
+     * Transform resource to an array.
+     *
+     * @param ResourceInterface $resource
+     * @param string            $scopeIdentifier
+     * @param Scope             $parentScopeInstance
+     *
+     * @return array
+     */
+    public function transformToArray(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
+    {
+        return $this->createData($resource, $scopeIdentifier, $parentScopeInstance)->toArray();
+    }
+
+    /**
+     * Transform resource to Json.
+     *
+     * @param ResourceInterface $resource
+     * @param string            $scopeIdentifier
+     * @param Scope             $parentScopeInstance
+     *
+     * @return string
+     */
+    public function transformToJson(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
+    {
+        return $this->createData($resource, $scopeIdentifier, $parentScopeInstance)->toJson();
+    }
+
+    /**
      * Get Include Params.
      *
      * @param string $include
