@@ -18,6 +18,71 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->manager->setSerializer(new JsonApiSerializer());
     }
 
+    public function testSerializeCollectionWithExtraMeta()
+    {
+        $booksData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+                'meta' => [
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => [
+                    'id' => 2,
+                    'name' => 'Bob',
+                ],
+                'meta' => [
+                    'bar' => 'baz'
+                ]
+            ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'meta' => [
+                        'foo' => 'bar'
+                    ]
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ],
+                    'meta' => [
+                        'bar' => 'baz'
+                    ]
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"meta":{"foo":"bar"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"meta":{"bar":"baz"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemResourceWithHasOneInclude()
     {
         $this->manager->parseIncludes('author');
@@ -338,6 +403,49 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},"meta":{"foo":"bar"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithMetaInBody()
+    {
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            'meta' => [
+                'something' => 'something'
+            ]
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'meta' => [
+                    'something' => 'something'
+                ]
+            ],
+            'meta' => [
+                'foo' => 'bar'
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"meta":{"something":"something"}},"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
