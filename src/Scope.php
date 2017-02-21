@@ -287,11 +287,13 @@ class Scope
     /**
      * Convert the current data for this scope to JSON.
      *
+     * @param int $options
+     *
      * @return string
      */
-    public function toJson()
+    public function toJson($options = 0)
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray(), $options);
     }
 
     /**
