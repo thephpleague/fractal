@@ -31,7 +31,7 @@ class Collection extends ResourceAbstract
     protected $data;
 
     /**
-     * A the paginator instance.
+     * The paginator instance.
      *
      * @var PaginatorInterface
      */
