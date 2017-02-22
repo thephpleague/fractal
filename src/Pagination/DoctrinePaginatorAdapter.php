@@ -23,14 +23,14 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      * The paginator instance.
      * @var  Paginator
      */
-    protected $paginator;
+    private $paginator;
 
     /**
      * The route generator.
      *
      * @var callable
      */
-    protected $routeGenerator;
+    private $routeGenerator;
 
     /**
      * Create a new DoctrinePaginatorAdapter.
@@ -38,7 +38,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      * @param callable $routeGenerator
      *
      */
-    public function __construct(Paginator $paginator, $routeGenerator)
+    public function __construct(Paginator $paginator, callable $routeGenerator)
     {
         $this->paginator = $paginator;
         $this->routeGenerator = $routeGenerator;
@@ -103,7 +103,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        return call_user_func($this->routeGenerator, $page);
+        return call_user_func($this->getRouteGenerator(), $page);
     }
 
     /**
@@ -111,7 +111,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      *
      * @return callable
      */
-    public function getRouteGenerator()
+    private function getRouteGenerator()
     {
         return $this->routeGenerator;
     }
