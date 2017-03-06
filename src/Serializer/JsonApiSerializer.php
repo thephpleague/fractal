@@ -21,14 +21,20 @@ class JsonApiSerializer extends ArraySerializer
     protected $rootObjects;
 
     /**
+     * @var boolean $includeRelationshipsLinks true if all available relationships shoud be included with links
+     */
+    private $includeRelationshipsLinks;
+
+    /**
      * JsonApiSerializer constructor.
      *
      * @param string $baseUrl
      */
-    public function __construct($baseUrl = null)
+    public function __construct($baseUrl = null, $includeRelationshipsLinks = false)
     {
         $this->baseUrl = $baseUrl;
         $this->rootObjects = [];
+        $this->includeRelationshipsLinks = boolval($includeRelationshipsLinks);
     }
 
     /**
@@ -213,6 +219,40 @@ class JsonApiSerializer extends ArraySerializer
 
         if (!empty($relationships)) {
             $data = $this->fillRelationships($data, $relationships);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param ResourceInterface $resource
+     *
+     * @return array
+     */
+    public function injectRelationships($data, ResourceInterface $resource)
+    {
+        if (!$this->shouldIncludeRelationshipsLinks()) {
+            return $data;
+        }
+
+        $availableRelationships = $resource->getTransformer()->getAvailableIncludes();
+
+        if ($availableRelationships === []) {
+            return $data;
+        }
+
+        if (!array_key_exists('relationships', $data['data'])) {
+            $data['data']['relationships'] = [];
+        }
+
+        // Add relationships
+        foreach ($availableRelationships as $key) {
+            if (!array_key_exists($key, $data['data']['relationships'])) {
+                $data['data']['relationships'][$key] = [
+                    'links' => $this->createRelationshipLinks($data['data']['type'], $data['data']['id'], $key),
+                ];
+            }
         }
 
         return $data;
@@ -414,6 +454,16 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
+     * Whether or not the serializer should include `links` for relationships.
+     *
+     * @return bool
+     */
+    private function shouldIncludeRelationshipsLinks()
+    {
+        return $this->shouldIncludeLinks() and $this->includeRelationshipsLinks === true;
+    }
+
+    /**
      * Check if the objects are part of a collection or not
      *
      * @param $includeObject
@@ -464,17 +514,13 @@ class JsonApiSerializer extends ArraySerializer
 
             if ($this->shouldIncludeLinks()) {
                 $data['data'][$index]['relationships'][$key] = array_merge([
-                    'links' => [
-                        'self' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/relationships/$key",
-                        'related' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/$key",
-                    ],
+                    'links' => $this->createRelationshipLinks($data['data'][$index]['type'], $data['data'][$index]['id'], $key),
                 ], $data['data'][$index]['relationships'][$key]);
             }
         }
 
         return $data;
     }
-
 
     /**
      * @param $data
@@ -489,15 +535,27 @@ class JsonApiSerializer extends ArraySerializer
 
         if ($this->shouldIncludeLinks()) {
             $data['data']['relationships'][$key] = array_merge([
-                'links' => [
-                    'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
-                    'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
-                ],
+                'links' => $this->createRelationshipLinks($data['data']['type'], $data['data']['id'], $key),
             ], $data['data']['relationships'][$key]);
 
             return $data;
         }
         return $data;
+    }
+
+    /**
+     * @param $data
+     * @param $relationship
+     * @param $key
+     *
+     * @return array
+     */
+    private function createRelationshipLinks($type, $id, $key)
+    {
+        return [
+            'self' => "{$this->baseUrl}/{$type}/{$id}/relationships/$key",
+            'related' => "{$this->baseUrl}/{$type}/{$id}/$key",
+        ];
     }
 
     /**
