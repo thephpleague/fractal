@@ -34,7 +34,7 @@ class JsonApiSerializer extends ArraySerializer
     {
         $this->baseUrl = $baseUrl;
         $this->rootObjects = [];
-        $this->includeRelationshipsLinks = boolval($includeRelationshipsLinks);
+        $this->includeRelationshipsLinks = (bool) $includeRelationshipsLinks;
     }
 
     /**
