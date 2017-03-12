@@ -26,7 +26,8 @@
         "illuminate/contracts": "~5.0",
         "squizlabs/php_codesniffer": "~1.5",
         "pagerfanta/pagerfanta": "~1.0.0",
-        "zendframework/zend-paginator":"~2.3"
+        "zendframework/zend-paginator":"~2.3",
+        "doctrine/orm": "^2.5"
     },
     "suggest": {
         "illuminate/pagination": "The Illuminate Pagination component.",
