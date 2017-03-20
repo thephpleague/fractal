@@ -90,6 +90,50 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toJson());
     }
 
+    /**
+     * @covers League\Fractal\Scope::toJson
+     */
+    public function testToJson()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(array('foo' => 'bar'), function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
+        $json = json_encode(array('data' => array('foo' => 'bar')));
+        $this->assertEquals($json, $scope->toJson());
+    }
+
+    public function testToJsonWithoutOptions()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(array('foo' => 'bar'), function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertEquals(json_encode($scope->toArray()), $scope->toJson());
+    }
+
+    public function testToJsonWithOptions()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(array('foo' => 'bar'), function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+        $options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE;
+
+        $this->assertEquals(json_encode($scope->toArray(), $options), $scope->toJson($options));
+    }
+
     public function testGetCurrentScope()
     {
         $manager = new Manager();
