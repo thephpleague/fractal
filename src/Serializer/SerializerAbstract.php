@@ -140,4 +140,14 @@ abstract class SerializerAbstract
     {
         return $includedData;
     }
+
+    /**
+     * Get the mandatory fields for the serializer
+     *
+     * @return array
+     */
+    public function getMandatoryFields()
+    {
+        return [];
+    }
 }

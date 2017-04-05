@@ -77,6 +77,11 @@ class JsonApiSerializer extends ArraySerializer
             unset($resource['data']['attributes']['links']);
         }
 
+        if (isset($resource['data']['attributes']['meta'])){
+            $resource['data']['meta'] = $data['meta'];
+            unset($resource['data']['attributes']['meta']);
+        }
+
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = [
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
@@ -179,16 +184,7 @@ class JsonApiSerializer extends ArraySerializer
                 }
 
                 $includeObjects = $this->createIncludeObjects($includeObject);
-
-                foreach ($includeObjects as $object) {
-                    $includeType = $object['type'];
-                    $includeId = $object['id'];
-                    $cacheKey = "$includeType:$includeId";
-                    if (!array_key_exists($cacheKey, $linkedIds)) {
-                        $serializedData[] = $object;
-                        $linkedIds[$cacheKey] = $object;
-                    }
-                }
+                list($serializedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObjects, $linkedIds, $serializedData);
             }
         }
 
@@ -250,6 +246,16 @@ class JsonApiSerializer extends ArraySerializer
         $includedData['included'] = array_merge([], $filteredIncludes);
 
         return $includedData;
+    }
+
+    /**
+     * Get the mandatory fields for the serializer
+     *
+     * @return array
+     */
+    public function getMandatoryFields()
+    {
+        return ['id'];
     }
 
     /**
@@ -389,16 +395,7 @@ class JsonApiSerializer extends ArraySerializer
         foreach ($data as $value) {
             foreach ($value as $includeObject) {
                 if (isset($includeObject['included'])) {
-                    foreach ($includeObject['included'] as $object) {
-                        $includeType = $object['type'];
-                        $includeId = $object['id'];
-                        $cacheKey = "$includeType:$includeId";
-
-                        if (!array_key_exists($cacheKey, $linkedIds)) {
-                            $includedData[] = $object;
-                            $linkedIds[$cacheKey] = $object;
-                        }
-                    }
+                    list($includedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObject['included'], $linkedIds, $includedData);
                 }
             }
         }
@@ -602,5 +599,25 @@ class JsonApiSerializer extends ArraySerializer
         );
 
         return $resource;
+    }
+  
+     * @param $includeObjects
+     * @param $linkedIds
+     * @param $serializedData
+     *
+     * @return array
+     */
+    private function serializeIncludedObjectsWithCacheKey($includeObjects, $linkedIds, $serializedData)
+    {
+        foreach ($includeObjects as $object) {
+            $includeType = $object['type'];
+            $includeId = $object['id'];
+            $cacheKey = "$includeType:$includeId";
+            if (!array_key_exists($cacheKey, $linkedIds)) {
+                $serializedData[] = $object;
+                $linkedIds[$cacheKey] = $object;
+            }
+        }
+        return [$serializedData, $linkedIds];
     }
 }

@@ -18,6 +18,71 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->manager->setSerializer(new JsonApiSerializer());
     }
 
+    public function testSerializeCollectionWithExtraMeta()
+    {
+        $booksData = [
+            [
+                'id' => 1,
+                'title' => 'Foo',
+                'year' => '1991',
+                '_author' => [
+                    'id' => 1,
+                    'name' => 'Dave',
+                ],
+                'meta' => [
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bar',
+                'year' => '1997',
+                '_author' => [
+                    'id' => 2,
+                    'name' => 'Bob',
+                ],
+                'meta' => [
+                    'bar' => 'baz'
+                ]
+            ],
+        ];
+
+        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                [
+                    'type' => 'books',
+                    'id' => '1',
+                    'attributes' => [
+                        'title' => 'Foo',
+                        'year' => 1991,
+                    ],
+                    'meta' => [
+                        'foo' => 'bar'
+                    ]
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 1997,
+                    ],
+                    'meta' => [
+                        'bar' => 'baz'
+                    ]
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"meta":{"foo":"bar"}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"meta":{"bar":"baz"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemResourceWithHasOneInclude()
     {
         $this->manager->parseIncludes('author');
@@ -338,6 +403,49 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}},"meta":{"foo":"bar"}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithMetaInBody()
+    {
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            'meta' => [
+                'something' => 'something'
+            ]
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource->setMetaValue('foo', 'bar');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'meta' => [
+                    'something' => 'something'
+                ]
+            ],
+            'meta' => [
+                'foo' => 'bar'
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"meta":{"something":"something"}},"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -2294,6 +2402,157 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         ];
 
         $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    /**
+     * @dataProvider serializingWithFieldsetsProvider
+     */
+    public function testSerializingWithFieldsets($fieldsetsToParse, $expected)
+    {
+        $this->manager->parseIncludes(['author', 'author.published']);
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => [
+                    [
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                    ],
+                ],
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $this->manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function serializingWithFieldsetsProvider()
+    {
+        return [
+            [
+                //Single field
+                ['books' => 'title'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Multiple fields
+                ['books' => 'title,year'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo',
+                            'year' => 1991
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Include 1st level relationship
+                ['books' => 'title,author', 'people' => 'name'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'data' => [
+                                    'type' => 'people',
+                                    'id' => '1'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'included' => [
+                        [
+                            'type' => 'people',
+                            'id' => '1',
+                            'attributes' => [
+                                'name' => 'Dave'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                //Include 2nd level relationship
+                ['books' => 'title,author', 'people' => 'name,published'],
+                [
+                    'data' => [
+                        'type' => 'books',
+                        'id' => '1',
+                        'attributes' => [
+                            'title' => 'Foo'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'data' => [
+                                    'type' => 'people',
+                                    'id' => '1'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'included' => [
+                        [
+                            'type' => 'books',
+                            'id' => '2',
+                            'attributes' => [
+                                'title' => 'Bar'
+                            ]
+                        ],
+                        [
+                            'type' => 'people',
+                            'id' => '1',
+                            'attributes' => [
+                                'name' => 'Dave'
+                            ],
+                            'relationships' => [
+                                'published' => [
+                                    'data' => [
+                                        [
+                                            'type' => 'books',
+                                            'id' => '1'
+                                        ],
+                                        [
+                                            'type' => 'books',
+                                            'id' => '2'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
     public function tearDown()

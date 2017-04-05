@@ -240,6 +240,9 @@ class Scope
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
+            //Filter out any relation that wasn't requested
+            $rawIncludedData = array_map(array($this, 'filterFieldsets'), $rawIncludedData);
+
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
             // If the serializer wants to inject additional information
@@ -276,6 +279,14 @@ class Scope
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
+
+        // in case of returning NullResource we should return null and not to go with array_merge
+        if (is_null($data)) {
+            if (!empty($meta)) {
+                return $meta;
+            }
+            return null;
+        }
 
         return array_merge($data, $meta);
     }
@@ -374,6 +385,9 @@ class Scope
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
 
+        //Stick only with requested fields
+        $transformedData = $this->filterFieldsets($transformedData);
+
         return [$transformedData, $includedData];
     }
 
@@ -423,5 +437,68 @@ class Scope
     protected function isRootScope()
     {
         return empty($this->parentScopes);
+    }
+
+    /**
+     * Filter the provided data with the requested filter fieldset for
+     * the scope resource
+     *
+     * @internal
+     *
+     * @param array  $data
+     *
+     * @return array
+     */
+    protected function filterFieldsets(array $data)
+    {
+        if (!$this->hasFilterFieldset()) {
+            return $data;
+        }
+        $serializer = $this->manager->getSerializer();
+        $requestedFieldset = iterator_to_array($this->getFilterFieldset());
+        //Build the array of requested fieldsets with the mandatory serializer fields
+        $filterFieldset = array_flip(
+            array_merge(
+                $serializer->getMandatoryFields(),
+                $requestedFieldset
+            )
+        );
+        return array_intersect_key($data, $filterFieldset);
+    }
+
+    /**
+     * Return the requested filter fieldset for the scope resource
+     *
+     * @internal
+     *
+     * @return \League\Fractal\ParamBag|null
+     */
+    protected function getFilterFieldset()
+    {
+        return $this->manager->getFieldset($this->getResourceType());
+    }
+
+    /**
+     * Check if there are requested filter fieldsets for the scope resource.
+     *
+     * @internal
+     *
+     * @return bool
+     */
+    protected function hasFilterFieldset()
+    {
+        return $this->getFilterFieldset() !== null;
+    }
+
+    /**
+     * Return the scope resource type.
+     *
+     * @internal
+     *
+     * @return string
+     */
+    protected function getResourceType()
+    {
+        return $this->resource->getResourceKey();
     }
 }

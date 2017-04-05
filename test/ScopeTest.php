@@ -4,9 +4,12 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Test\Stub\ArraySerializerWithNull;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
+use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
@@ -50,7 +53,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::toArray
+     * @covers \League\Fractal\Scope::toArray
      */
     public function testToArray()
     {
@@ -299,7 +302,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::executeResourceTransformers
+     * @covers \League\Fractal\Scope::executeResourceTransformers
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
@@ -428,8 +431,222 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toArray());
     }
 
+    public function testNullResourceIncludeSuccess()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializerWithNull);
+
+        // Send this stub junk, it has a specific format anyhow
+        $resource = new Item([], new NullIncludeBookTransformer);
+
+        // Try without metadata
+        $scope = new Scope($manager, $resource);
+        $expected = [
+            'a' => 'b',
+            'author' => null,
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    /**
+     * @covers \League\Fractal\Scope::toArray
+     */
+    public function testNullResourceDataAndJustMeta()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializerWithNull);
+
+        $resource = new NullResource();
+        $resource->setMeta(['foo' => 'bar']);
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertSame(['meta' => ['foo' => 'bar']], $scope->toArray());
+    }
+
+    /**
+     * @covers League\Fractal\Scope::toArray
+     * @dataProvider fieldsetsProvider
+     */
+    public function testToArrayWithFieldsets($fieldsetsToParse, $expected)
+    {
+        $manager = new Manager();
+
+        $resource = new Item(
+            ['foo' => 'bar', 'baz' => 'qux'],
+            function ($data) {
+                return $data;
+            },
+            'resourceName'
+        );
+
+        $scope = new Scope($manager, $resource);
+
+        $manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function fieldsetsProvider()
+    {
+        return [
+            [
+                ['resourceName' => 'foo'],
+                ['data' => ['foo' => 'bar']]
+            ],
+            [
+                ['resourceName' => 'foo,baz'],
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
+            ],
+            [
+                ['resourceName' => 'inexistentField'],
+                ['data' => []]
+            ]
+        ];
+    }
+
+    /**
+     * @covers League\Fractal\Scope::toArray
+     * @dataProvider fieldsetsWithMandatorySerializerFieldsProvider
+     */
+    public function testToArrayWithFieldsetsAndMandatorySerializerFields($fieldsetsToParse, $expected)
+    {
+        $serializer = Mockery::mock('League\Fractal\Serializer\DataArraySerializer')->makePartial();
+        $serializer->shouldReceive('getMandatoryFields')->andReturn(['foo']);
+
+        $resource = new Item(
+            ['foo' => 'bar', 'baz' => 'qux'],
+            function ($data) {
+                return $data;
+            },
+            'resourceName'
+        );
+
+        $manager = new Manager();
+        $manager->setSerializer($serializer);
+        $scope = new Scope($manager, $resource);
+
+        $manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function fieldsetsWithMandatorySerializerFieldsProvider()
+    {
+        return [
+            //Don't request for mandatory field
+            [
+                ['resourceName' => 'baz'],
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
+            ],
+            //Request required field anyway
+            [
+                ['resourceName' => 'foo,baz'],
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider fieldsetsWithIncludesProvider
+     */
+    public function testToArrayWithIncludesAndFieldsets($fieldsetsToParse, $expected)
+    {
+        $transformer = $this->createTransformerWithIncludedResource('book', ['book' => ['yin' => 'yang']]);
+
+        $resource = new Item(
+            ['foo' => 'bar', 'baz' => 'qux'],
+            $transformer,
+            'resourceName'
+        );
+        $manager = new Manager();
+        $scope = new Scope($manager, $resource);
+
+        $manager->parseIncludes('book');
+
+        $manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function fieldsetsWithIncludesProvider()
+    {
+        return [
+            //Included relation was not requested
+            [
+                ['resourceName' => 'foo'],
+                ['data' => ['foo' => 'bar']]
+            ],
+            //Included relation was requested
+            [
+                ['resourceName' => 'foo,book', 'book' => 'yin'],
+                ['data' => ['foo' => 'bar', 'book' => ['yin' => 'yang']]]
+            ]
+        ];
+    }
+
+    /**
+     * @covers League\Fractal\Scope::toArray
+     * @dataProvider fieldsetsWithSideLoadIncludesProvider
+     */
+    public function testToArrayWithSideloadedIncludesAndFieldsets($fieldsetsToParse, $expected)
+    {
+        $serializer = Mockery::mock('League\Fractal\Serializer\DataArraySerializer')->makePartial();
+        $serializer->shouldReceive('sideloadIncludes')->andReturn(true);
+        $serializer->shouldReceive('item')->andReturnUsing(
+            function ($key, $data) {
+                return ['data' => $data];
+            }
+        );
+        $serializer->shouldReceive('includedData')->andReturnUsing(
+            function ($key, $data) {
+                $data = array_pop($data);
+                return empty($data) ? [] : ['sideloaded' => $data];
+            }
+        );
+
+        $manager = new Manager();
+        $manager->parseIncludes('book');
+        $manager->setSerializer($serializer);
+
+        $transformer = $this->createTransformerWithIncludedResource('book', ['book' => ['yin' => 'yang']]);
+
+        $resource = new Item(['foo' => 'bar'], $transformer, 'resourceName');
+        $scope = new Scope($manager, $resource);
+
+        $manager->parseFieldsets($fieldsetsToParse);
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function fieldsetsWithSideLoadIncludesProvider()
+    {
+        return [
+            //Included relation was not requested
+            [
+                ['resourceName' => 'foo'],
+                ['data' => ['foo' => 'bar']]
+            ],
+            //Included relation was requested
+            [
+                ['resourceName' => 'foo,book', 'book' => 'yin'],
+                ['data' => ['foo' => 'bar'], 'sideloaded' => ['book' => ['yin' => 'yang']]]
+            ]
+        ];
+    }
+
     public function tearDown()
     {
         Mockery::close();
+    }
+
+    protected function createTransformerWithIncludedResource($resourceName, $transformResult)
+    {
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
+        $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn([$resourceName]);
+        $transformer->shouldReceive('transform')->once()->andReturnUsing(
+            function (array $data) {
+                return $data;
+            }
+        );
+        $transformer->shouldReceive('processIncludedResources')->once()->andReturn($transformResult);
+        return $transformer;
     }
 }
