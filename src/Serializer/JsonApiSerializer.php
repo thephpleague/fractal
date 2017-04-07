@@ -586,6 +586,15 @@ class JsonApiSerializer extends ArraySerializer
             if (!array_key_exists($cacheKey, $linkedIds)) {
                 $serializedData[] = $object;
                 $linkedIds[$cacheKey] = $object;
+            } else {
+                // Merge any missing relationships that may have been requested from alternative instances of this include
+                if (isset($object['relationships'])) {
+                    foreach ($object['relationships'] as $relationName => $relation) {
+                        if (!isset($linkedIds[$cacheKey]['relationships'][$relationName])) {
+                            $serializedData[count($serializedData) - 1]['relationships'][$relationName] = $relation;
+                        }
+                    }
+                }
             }
         }
         return [$serializedData, $linkedIds];
