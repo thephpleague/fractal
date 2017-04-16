@@ -8,7 +8,7 @@ class DefaultIncludeBookTransformer extends TransformerAbstract
         'author',
     ];
 
-    public function transform()
+    public function transform($data)
     {
         return ['a' => 'b'];
     }
