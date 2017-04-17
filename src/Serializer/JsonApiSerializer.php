@@ -61,16 +61,18 @@ class JsonApiSerializer extends ArraySerializer
     public function item($resourceKey, array $data)
     {
         $id = $this->getIdFromData($data);
+        $type = $this->getTypeFromData($data);
 
         $resource = [
             'data' => [
-                'type' => $resourceKey,
+                'type' => "$type",
                 'id' => "$id",
                 'attributes' => $data,
             ],
         ];
 
         unset($resource['data']['attributes']['id']);
+        unset($resource['data']['attributes']['type']);
 
         if(isset($resource['data']['attributes']['links'])) {
             $custom_links = $data['links'];
@@ -84,7 +86,7 @@ class JsonApiSerializer extends ArraySerializer
 
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = [
-                'self' => "{$this->baseUrl}/$resourceKey/$id",
+                'self' => "{$this->baseUrl}/$type/$id",
             ];
             if(isset($custom_links)) {
                 $resource['data']['links'] = array_merge($custom_links, $resource['data']['links']);
@@ -255,7 +257,7 @@ class JsonApiSerializer extends ArraySerializer
      */
     public function getMandatoryFields()
     {
-        return ['id'];
+        return ['id', 'type'];
     }
 
     /**
@@ -378,6 +380,21 @@ class JsonApiSerializer extends ArraySerializer
             );
         }
         return $data['id'];
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    protected function getTypeFromData(array $data)
+    {
+        if (!array_key_exists('type', $data)) {
+            throw new InvalidArgumentException(
+                'JSON API resource objects MUST have a valid type'
+            );
+        }
+        return $data['type'];
     }
 
     /**

@@ -47,7 +47,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -97,7 +97,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -153,7 +153,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -202,7 +202,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             '_author' => null,
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -249,7 +249,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Item($authorData, new JsonApiAuthorTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -311,7 +311,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             '_published' => [],
         ];
 
-        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Item($authorData, new JsonApiAuthorTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -348,7 +348,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -381,7 +381,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
         $resource->setMetaValue('foo', 'bar');
 
         $scope = new Scope($this->manager, $resource);
@@ -421,7 +421,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
         $resource->setMetaValue('foo', 'bar');
 
         $scope = new Scope($this->manager, $resource);
@@ -472,7 +472,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -527,7 +527,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -611,7 +611,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -702,7 +702,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($authorsData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Collection($authorsData, new JsonApiAuthorTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -815,7 +815,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($authorsData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Collection($authorsData, new JsonApiAuthorTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -889,7 +889,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $resource->setMetaValue('foo', 'bar');
 
         $scope = new Scope($this->manager, $resource);
@@ -949,7 +949,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -1030,7 +1030,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1105,7 +1105,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1155,7 +1155,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $scope = new Scope($this->manager, $resource);
 
         $expected = [
@@ -1207,7 +1207,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1278,7 +1278,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Item($authorData, new JsonApiAuthorTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1370,7 +1370,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1484,7 +1484,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($authorData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Collection($authorData, new JsonApiAuthorTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1590,7 +1590,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             'year' => '1991',
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
         $scope->toArray();
@@ -1619,7 +1619,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($authorData, new JsonApiAuthorTransformer(), 'people');
+        $resource = new Item($authorData, new JsonApiAuthorTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1723,7 +1723,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
@@ -1835,7 +1835,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $resource->setPaginator($paginator);
         $scope = new Scope($this->manager, $resource);
 
@@ -1934,7 +1934,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $resource->setPaginator($paginator);
         $scope = new Scope($this->manager, $resource);
 
@@ -2032,7 +2032,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Collection($booksData, new JsonApiBookTransformer(), 'books');
+        $resource = new Collection($booksData, new JsonApiBookTransformer());
         $resource->setPaginator($paginator);
         $scope = new Scope($this->manager, $resource);
 
@@ -2102,7 +2102,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'));
 
         $scope = new Scope($manager, $resource);
 
@@ -2139,7 +2139,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($manager, $resource);
 
@@ -2189,7 +2189,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer());
 
         $scope = new Scope($this->manager, $resource);
 
