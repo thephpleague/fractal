@@ -103,7 +103,7 @@ $resource->setCursor($cursor);
 
 These examples are for Laravel's `illuminate\database` package, but you can do it however you like. The cursor
 also happens to be constructed from the `id` field, but it could just as easily be an offset number. Whatever
-is picked to represent a cursor, maybe consider using `base64_encode()` and `base64_decode()` on the values to make sure
+is picked to represent a cursor, maybe consider hashing the result with [hashids](https://packagist.org/packages/hashids/hashids) to make sure
 API users do not try and do anything too clever with them. They just need to pass the cursor to the new URL, not do any maths.
 
 ### Example Cursor Usage
