@@ -1,5 +1,3 @@
-### Development
-
 ## 0.16.0 - 2017-03-12
 
 ### Enhancements
