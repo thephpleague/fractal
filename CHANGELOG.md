@@ -34,15 +34,18 @@
 ## 0.13.0 - 2015-10-16
 
 ### Added
- - `->setData(...)` and `->setTransformer(...)` methods to resources
- - able to set url include parameters with no set variables, ie. `include=comments:limit(5|1):new`
+
+- `->setData(...)` and `->setTransformer(...)` methods to resources
+- able to set url include parameters with no set variables, ie. `include=comments:limit(5|1):new`
 
 ### Changed
- - Finally, much improved JSON-API support thanks to @felixkiss
+
+- Finally, much improved JSON-API support thanks to @felixkiss
 
 ### Enhancements
- - Short array syntax throughout
- - Test improvements
+
+- Short array syntax throughout
+- Test improvements
 
 ## 0.12.0 - 2015-03-19
 
@@ -140,9 +143,7 @@
 
 - Added Serializers with ArraySerializer, DataArraySerializer (default) and a provisional JsonApiSerializer. See [Issue #47]
 - Added `ResourceAbstract::setMeta('foo', mixed)` to allow custom meta data
-- Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can
-also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query
-param: `/foo?include=bars:limit(5|1):order(-something)`
+- Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query param: `/foo?include=bars:limit(5|1):order(-something)`
 - Made all pagination (paginators and cursors) use meta output logic, so it sits with your custom meta data
 - Moved `League\Fractal\Cursor\Cursor` and `League\Fractal\Cursor\CursorInterface` into `League\Fractal\Pagination`
 
