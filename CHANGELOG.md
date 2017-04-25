@@ -1,5 +1,36 @@
 ### Development
 
+## 0.16.0 - 2017-03-12
+
+### Enhancements
+
+- #358 Allow the ability to define meta on each object in collection
+- #362 Add DoctrinePaginatorAdapter to interface with Doctrine pagination
+- Implement sparse fieldset
+
+## 0.15.0 - 2016-12-28
+
+### Enhancements
+
+- Custom links in serializer
+- PhalconPHP Paginator
+- tested on 7.1
+
+## 0.14.0 - 2016-07-21
+
+### Added
+
+- `null()` method for serializing null resource.
+- Adds pagination to `JsonApiSerializer`
+- Added JSON-API serializer collection links
+
+### Enhancements
+
+- Fix issue including relationships on collections
+- `TransformerAbstract` now returns a `ResourceInterface`
+- `getIncludeParams` now always return `ParamBag`
+- cody styling, method naming and docs
+
 ## 0.13.0 - 2015-10-16
 
 ### Added
