@@ -1,4 +1,4 @@
-<?php namespace League\Fractal\Test;
+<?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Resource\Item;
 use Mockery;

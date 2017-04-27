@@ -1,4 +1,4 @@
-<?php
+<?php namespace League\Fractal\Test\Serializer;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -7,8 +7,9 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
+use Mockery;
 
-class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
+class JsonApiSerializerTest extends \PHPUnit_Framework_TestCase
 {
     private $manager;
 
