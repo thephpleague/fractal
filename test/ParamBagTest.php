@@ -32,7 +32,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testArrayAccessSetFails()
@@ -43,7 +43,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testArrayAccessUnsetFails()
@@ -64,7 +64,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testObjectAccessSetFails()
@@ -75,7 +75,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testObjectAccessUnsetFails()

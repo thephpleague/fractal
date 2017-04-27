@@ -17,7 +17,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
      */
     public function testInvalidParseInclude()
@@ -28,7 +28,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
      */
     public function testIceTParseInclude()
@@ -84,7 +84,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseExcludes() method expects a string or an array. NULL given
      */
     public function testInvalidParseExclude()
@@ -95,7 +95,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseExcludes() method expects a string or an array. integer given
      */
     public function testIceTParseExclude()

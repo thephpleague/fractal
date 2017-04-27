@@ -1580,7 +1580,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage JSON API resource objects MUST have a valid id
      */
     public function testExceptionThrownIfResourceHasNoId()
