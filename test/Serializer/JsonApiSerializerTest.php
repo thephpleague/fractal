@@ -136,6 +136,59 @@ class JsonApiSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingItemResourceWithMetaOnRelationship()
+    {
+        $this->manager->parseIncludes('author-with-meta');
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'relationships' => [
+                    'author-with-meta' => [
+                        'data' => [
+                            'type' => 'people',
+                            'id' => '1',
+                        ],
+                        'meta' => [ 'foo' => 'bar' ],
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author-with-meta":{"data":{"type":"people","id":"1"},"meta":{"foo":"bar"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemResourceWithHasOneDasherizedInclude()
     {
         $this->manager->parseIncludes('co-author');
