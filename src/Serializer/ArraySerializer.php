@@ -102,14 +102,14 @@ class ArraySerializer extends SerializerAbstract
             'total_pages' => $lastPage,
         ];
 
-        $pagination['links'] = [];
+        $pagination['links'] = new \stdClass();
 
         if ($currentPage > 1) {
-            $pagination['links']['previous'] = $paginator->getUrl($currentPage - 1);
+            $pagination['links']->previous = $paginator->getUrl($currentPage - 1);
         }
 
         if ($currentPage < $lastPage) {
-            $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
+            $pagination['links']->next = $paginator->getUrl($currentPage + 1);
         }
 
         return ['pagination' => $pagination];
