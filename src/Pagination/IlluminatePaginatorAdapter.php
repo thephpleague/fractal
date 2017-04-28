@@ -99,7 +99,7 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        return $this->paginator->url($page);
+        return rawurldecode($this->paginator->url($page));
     }
 
     /**
