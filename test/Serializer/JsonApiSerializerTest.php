@@ -2312,6 +2312,79 @@ class JsonApiSerializerTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testSerializingItemResourceWithRelationshipsLinks()
+    {
+        $baseUrl = 'http://example.com';
+        $includeRelationshipsLinks = true;
+        $serializer = new JsonApiSerializer($baseUrl, $includeRelationshipsLinks);
+
+        $this->manager->setSerializer($serializer);
+        $this->manager->parseIncludes('author');
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'links' => [
+                    'self' => 'http://example.com/books/1',
+                ],
+                'relationships' => [
+                    'author' => [
+                        'links' => [
+                            "self" => "http://example.com/books/1/relationships/author",
+                            "related" => "http://example.com/books/1/author",
+                        ],
+                        'data' => [
+                            'type' => 'people',
+                            'id' => '1',
+                        ],
+                    ],
+                    'co-author' => [
+                        'links' => [
+                            "self" => "http://example.com/books/1/relationships/co-author",
+                            "related" => "http://example.com/books/1/co-author",
+                        ],
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                    'links' => [
+                        'self' => 'http://example.com/people/1',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function tearDown()
     {
         Mockery::close();

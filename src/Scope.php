@@ -256,6 +256,10 @@ class Scope
                     $includedData,
                     $data
                 );
+
+                // If the serializer wants to inject additional information
+                // about the relationships, it can do so now.
+                $data = $serializer->injectRelationships($data, $this->resource);
             }
 
             $data = array_merge($data, $includedData);
