@@ -89,7 +89,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $scope->toJson());
     }
-    
+
     public function testToJsonWithOption()
     {
         $data = [
@@ -203,7 +203,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testScopeRequiresConcreteImplementation()
     {
@@ -324,7 +324,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \League\Fractal\Scope::executeResourceTransformers
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
     public function testCreateDataWithClassFuckKnows()
@@ -487,7 +487,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::toArray
+     * @covers \League\Fractal\Scope::toArray
      * @dataProvider fieldsetsProvider
      */
     public function testToArrayWithFieldsets($fieldsetsToParse, $expected)
@@ -527,7 +527,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::toArray
+     * @covers \League\Fractal\Scope::toArray
      * @dataProvider fieldsetsWithMandatorySerializerFieldsProvider
      */
     public function testToArrayWithFieldsetsAndMandatorySerializerFields($fieldsetsToParse, $expected)
@@ -605,7 +605,7 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Scope::toArray
+     * @covers \League\Fractal\Scope::toArray
      * @dataProvider fieldsetsWithSideLoadIncludesProvider
      */
     public function testToArrayWithSideloadedIncludesAndFieldsets($fieldsetsToParse, $expected)

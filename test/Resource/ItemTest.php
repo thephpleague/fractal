@@ -27,7 +27,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Item::setResourceKey
+     * @covers \League\Fractal\Resource\Item::setResourceKey
      */
     public function testSetResourceKey()
     {
@@ -37,7 +37,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Item::getResourceKey
+     * @covers \League\Fractal\Resource\Item::getResourceKey
      */
     public function testGetResourceKey()
     {
