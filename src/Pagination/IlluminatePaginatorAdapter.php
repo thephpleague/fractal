@@ -103,6 +103,16 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
     }
 
     /**
+     * Set page name variable
+     *
+     * @return void
+     */
+    public function setPageName($pageName)
+    {
+        return $this->paginator->setPageName($pageName);
+    }
+    
+    /**
      * Get the paginator instance.
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
