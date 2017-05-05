@@ -46,4 +46,20 @@ class ItemTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('foo', $item->getResourceKey());
     }
+
+    public function testCanSetAndGetMeta()
+    {
+        $meta = array(
+            'foo' => 'bar',
+            'bar' => [
+                'baz' => 'qux',
+            ],
+        );
+
+        $item = new Item();
+
+        $item->setMeta($meta);
+
+        $this->assertSame($meta, $item->getMeta());
+    }
 }
