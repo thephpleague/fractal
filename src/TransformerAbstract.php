@@ -14,6 +14,7 @@ namespace League\Fractal;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\ResourceInterface;
 
 /**
@@ -155,7 +156,11 @@ abstract class TransformerAbstract
         if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
             $childScope = $scope->embedChildScope($include, $resource);
 
-            $includedData[$include] = $childScope->toArray();
+            if ($childScope->getResource() instanceof Primitive) {
+                $includedData[$include] = $childScope->transformPrimitiveResource();
+            } else {
+                $includedData[$include] = $childScope->toArray();
+            }
         }
 
         return $includedData;
@@ -241,6 +246,20 @@ abstract class TransformerAbstract
         $this->currentScope = $currentScope;
 
         return $this;
+    }
+
+    /**
+     * Create a new primitive resource object.
+     *
+     * @param mixed                        $data
+     * @param callable|null                $transformer
+     * @param string                       $resourceKey
+     *
+     * @return Primitive
+     */
+    protected function primitive($data, $transformer = null, $resourceKey = null)
+    {
+        return new Primitive($data, $transformer, $resourceKey);
     }
 
     /**

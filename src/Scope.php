@@ -14,6 +14,7 @@ namespace League\Fractal;
 use InvalidArgumentException;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
@@ -297,6 +298,38 @@ class Scope
     public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Transformer a primitive resource
+     *
+     * @return mixed
+     */
+    public function transformPrimitiveResource()
+    {
+        if (! ($this->resource instanceof Primitive)) {
+            throw new InvalidArgumentException(
+                'Argument $resource should be an instance of League\Fractal\Resource\Primitive'
+            );
+        }
+
+        $transformer = $this->resource->getTransformer();
+        $data = $this->resource->getData();
+
+        if (null == $transformer) {
+            $transformer = function ($input) {
+                return $input;
+            };
+        }
+
+        if (is_callable($transformer)) {
+            $transformedData = call_user_func($transformer, $data);
+        } else {
+            $transformer->setCurrentScope($this);
+            $transformedData = $transformer->transform($data);
+        }
+
+        return $transformedData;
     }
 
     /**
