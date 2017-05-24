@@ -316,13 +316,9 @@ class Scope
         $transformer = $this->resource->getTransformer();
         $data = $this->resource->getData();
 
-        if (null == $transformer) {
-            $transformer = function ($input) {
-                return $input;
-            };
-        }
-
-        if (is_callable($transformer)) {
+        if (null === $transformer) {
+            $transformedData = $data;
+        } elseif (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
             $transformer->setCurrentScope($this);
