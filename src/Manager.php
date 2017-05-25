@@ -74,6 +74,13 @@ class Manager
     protected $serializer;
 
     /**
+     * metaAtFirst.
+     *
+     * @var Boolean
+     */
+    protected $metaAtFirst;
+
+    /**
      * Create Data.
      *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
@@ -81,13 +88,13 @@ class Manager
      * @param ResourceInterface $resource
      * @param string            $scopeIdentifier
      * @param Scope             $parentScopeInstance
+     * @param boolean           $metaAtFirst
      *
      * @return Scope
      */
-    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
+    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null, $metaAtFirst = null)
     {
-        $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
-
+        $scopeInstance = new Scope($this, $resource, $scopeIdentifier, $metaAtFirst);
         // Update scope history
         if ($parentScopeInstance !== null) {
             // This will be the new children list of parents (parents parents, plus the parent)
@@ -366,3 +373,5 @@ class Manager
         return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
     }
 }
+
+
