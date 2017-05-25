@@ -53,19 +53,26 @@ class Scope
     protected $parentScopes = [];
 
     /**
+     * @var boolean
+     */
+    protected $metaAtFirst;
+
+    /**
      * Create a new scope instance.
      *
      * @param Manager           $manager
      * @param ResourceInterface $resource
      * @param string            $scopeIdentifier
+     * @param boolean           $metaAtFirst
      *
      * @return void
      */
-    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null)
+    public function __construct(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null, $metaAtFirst = null)
     {
         $this->manager = $manager;
         $this->resource = $resource;
         $this->scopeIdentifier = $scopeIdentifier;
+        $this->metaAtFirst = $metaAtFirst;
     }
 
     /**
@@ -80,7 +87,7 @@ class Scope
      */
     public function embedChildScope($scopeIdentifier, $resource)
     {
-        return $this->manager->createData($resource, $scopeIdentifier, $this);
+        return $this->manager->createData($resource, $scopeIdentifier, $this, $this->metaAtFirst);
     }
 
     /**
@@ -283,7 +290,8 @@ class Scope
             }
             return null;
         }
-
+        if($this->metaAtFirst)
+            return array_merge($meta, $data);
         return array_merge($data, $meta);
     }
 
@@ -500,3 +508,5 @@ class Scope
         return $this->resource->getResourceKey();
     }
 }
+
+
