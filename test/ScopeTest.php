@@ -5,11 +5,13 @@ use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\ArraySerializerWithNull;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
+use League\Fractal\Test\Stub\Transformer\PrimitiveIncludeBookTransformer;
 use Mockery;
 
 class ScopeTest extends \PHPUnit_Framework_TestCase
@@ -222,20 +224,23 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
     public function testToArrayWithIncludes()
     {
         $manager = new Manager();
-        $manager->parseIncludes('book');
+        $manager->parseIncludes('book,price');
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
         $transformer->shouldReceive('getAvailableIncludes')->twice()->andReturn(['book']);
         $transformer->shouldReceive('transform')->once()->andReturnUsing(function (array $data) {
             return $data;
         });
-        $transformer->shouldReceive('processIncludedResources')->once()->andReturn(['book' => ['yin' => 'yang']]);
+        $transformer
+            ->shouldReceive('processIncludedResources')
+            ->once()
+            ->andReturn(['book' => ['yin' => 'yang'], 'price' => 99]);
 
         $resource = new Item(['bar' => 'baz'], $transformer);
 
         $scope = new Scope($manager, $resource);
 
-        $this->assertSame(['data' => ['bar' => 'baz', 'book' => ['yin' => 'yang']]], $scope->toArray());
+        $this->assertSame(['data' => ['bar' => 'baz', 'book' => ['yin' => 'yang'], 'price' => 99]], $scope->toArray());
     }
 
     public function testToArrayWithSideloadedIncludes()
@@ -287,6 +292,27 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
 
 
         $this->assertSame(['book', 'author', 'profile'], $scope->getParentScopes());
+    }
+
+    public function testRunAppropriateTransformerWithPrimitive()
+    {
+        $manager = new Manager();
+
+        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
+        $transformer->shouldReceive('transform')->once()->andReturn('simple string');
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldNotReceive('getAvailableIncludes');
+        $transformer->shouldNotReceive('getDefaultIncludes');
+
+        $resource = new Primitive('test', $transformer);
+        $scope = $manager->createData($resource);
+
+        $this->assertSame('simple string', $scope->transformPrimitiveResource());
+
+        $resource = new Primitive(10, function ($x) {return $x + 10;});
+        $scope = $manager->createData($resource);
+
+        $this->assertSame(20, $scope->transformPrimitiveResource());
     }
 
     public function testRunAppropriateTransformerWithItem()
@@ -447,6 +473,22 @@ class ScopeTest extends \PHPUnit_Framework_TestCase
             'author' => [
                 'c' => 'd',
             ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+    }
+
+    public function testPrimitiveResourceIncludeSuccess()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new ArraySerializer());
+
+        $resource = new Item(['price' => '49'], new PrimitiveIncludeBookTransformer);
+
+        $scope = new Scope($manager, $resource);
+        $expected = [
+            'a' => 'b',
+            'price' => 49,
         ];
 
         $this->assertSame($expected, $scope->toArray());
