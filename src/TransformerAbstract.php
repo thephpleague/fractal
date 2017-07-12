@@ -241,7 +241,7 @@ abstract class TransformerAbstract
      *
      * @return $this
      */
-    public function setCurrentScope($currentScope)
+    public function setCurrentScope(Scope $currentScope)
     {
         $this->currentScope = $currentScope;
 
