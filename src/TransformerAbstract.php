@@ -187,7 +187,11 @@ abstract class TransformerAbstract
         // Check if the method name actually exists
         $methodName = 'include'.str_replace(' ', '', ucwords(str_replace('_', ' ', str_replace('-', ' ', $includeName))));
 
-        $resource = call_user_func([$this, $methodName], $data, $params);
+        $resource = null;
+        // check if the method is callable (i.e., the method exists!)
+        if(is_callable([$this, $methodName])) {
+            $resource = call_user_func([$this, $methodName], $data, $params);
+        }
 
         if ($resource === null) {
             return false;
