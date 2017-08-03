@@ -223,8 +223,8 @@ class Manager
     /**
      * Parse field parameter.
      *
-     * @param array $fieldsets Array of fields to include. It must be an array
-     *                         whose keys are resource types and values a string
+     * @param array $fieldsets Array of fields to include. It must be an array whose keys 
+     *                         are resource types and values an array or a string
      *                         of the fields to return, separated by a comma
      *
      * @return $this
