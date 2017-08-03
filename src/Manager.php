@@ -233,8 +233,12 @@ class Manager
     {
         $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
+            if (is_string($fields)) {
+                $fields = explode(',', $fields);
+            }
+
             //Remove empty and repeated fields
-            $this->requestedFieldsets[$type] = array_unique(array_filter(explode(',', $fields)));
+            $this->requestedFieldsets[$type] = array_unique(array_filter($fields));
         }
         return $this;
     }
