@@ -600,7 +600,8 @@ class JsonApiSerializer extends ArraySerializer
 
         return $resource;
     }
-  
+
+    /**
      * @param $includeObjects
      * @param $linkedIds
      * @param $serializedData
