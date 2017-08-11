@@ -112,6 +112,10 @@ class ArraySerializer extends SerializerAbstract
             $pagination['links']['next'] = $paginator->getUrl($currentPage + 1);
         }
 
+        if (empty($pagination['links'])) {
+            $pagination['links'] = (object) [];
+        }
+
         return ['pagination' => $pagination];
     }
 
