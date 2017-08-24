@@ -223,8 +223,8 @@ class Manager
     /**
      * Parse field parameter.
      *
-     * @param array $fieldsets Array of fields to include. It must be an array
-     *                         whose keys are resource types and values a string
+     * @param array $fieldsets Array of fields to include. It must be an array whose keys 
+     *                         are resource types and values an array or a string
      *                         of the fields to return, separated by a comma
      *
      * @return $this
@@ -233,8 +233,12 @@ class Manager
     {
         $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
+            if (is_string($fields)) {
+                $fields = explode(',', $fields);
+            }
+
             //Remove empty and repeated fields
-            $this->requestedFieldsets[$type] = array_unique(array_filter(explode(',', $fields)));
+            $this->requestedFieldsets[$type] = array_unique(array_filter($fields));
         }
         return $this;
     }

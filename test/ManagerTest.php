@@ -224,6 +224,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager->parseFieldsets(['foo' => 'bar,']);
         $this->assertSame(['foo' => ['bar']], $manager->getRequestedFieldsets());
 
+        // Verify you can send in arrays directly
+        $manager->parseFieldsets(['foo' => ['bar', 'baz']]);
+        $this->assertSame(['foo' => ['bar', 'baz']], $manager->getRequestedFieldsets());
+
         $this->assertSame(null, $manager->getFieldset('inexistent'));
     }
 
