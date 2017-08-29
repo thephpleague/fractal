@@ -345,8 +345,9 @@ class Scope
         if ($this->resource instanceof Item) {
             list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
         } elseif ($this->resource instanceof Collection) {
+            $index = 0;
             foreach ($data as $value) {
-                list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
+                list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value, $index++);
             }
         } elseif ($this->resource instanceof NullResource) {
             $transformedData = null;
@@ -396,7 +397,7 @@ class Scope
      *
      * @return array
      */
-    protected function fireTransformer($transformer, $data)
+    protected function fireTransformer($transformer, $data, $index = 0)
     {
         $includedData = [];
 
@@ -404,7 +405,7 @@ class Scope
             $transformedData = call_user_func($transformer, $data);
         } else {
             $transformer->setCurrentScope($this);
-            $transformedData = $transformer->transform($data);
+            $transformedData = $transformer->transform($data, $index);
         }
 
         if ($this->transformerHasIncludes($transformer)) {
