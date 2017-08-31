@@ -259,7 +259,7 @@ class Scope
                 );
             }
 
-            $data = array_merge($data, $includedData);
+            $data = $data + $includedData;
         }
 
         if ($this->resource instanceof Collection) {
@@ -285,7 +285,7 @@ class Scope
             return null;
         }
 
-        return array_merge($data, $meta);
+        return $data + $meta;
     }
 
     /**
