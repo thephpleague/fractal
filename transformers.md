@@ -139,7 +139,7 @@ class BookTransformer extends TransformerAbstract
     /**
      * Include Author
      *
-     * @return League\Fractal\ItemResource
+     * @return \League\Fractal\Resource\Item
      */
     public function includeAuthor(Book $book)
     {
