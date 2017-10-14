@@ -5,8 +5,9 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
+class TransformerAbstractTest extends TestCase
 {
     /**
      * @covers \League\Fractal\TransformerAbstract::setAvailableIncludes

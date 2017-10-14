@@ -13,8 +13,9 @@ use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\PrimitiveIncludeBookTransformer;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ScopeTest extends \PHPUnit_Framework_TestCase
+class ScopeTest extends TestCase
 {
     protected $simpleItem = ['foo' => 'bar'];
     protected $simpleCollection = [['foo' => 'bar']];

@@ -5,8 +5,9 @@ use League\Fractal\ParamBag;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ManagerTest extends \PHPUnit_Framework_TestCase
+class ManagerTest extends TestCase
 {
     public function testParseIncludeSelfie()
     {

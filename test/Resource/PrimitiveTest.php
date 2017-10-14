@@ -2,8 +2,9 @@
 
 use League\Fractal\Resource\Primitive;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class PrimitiveTest extends \PHPUnit_Framework_TestCase
+class PrimitiveTest extends TestCase
 {
     protected $simplePrimitive = 'sample string';
 

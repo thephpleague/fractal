@@ -2,8 +2,9 @@
 
 use League\Fractal\Resource\Item;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends TestCase
 {
     protected $simpleItem = ['foo' => 'bar'];
 

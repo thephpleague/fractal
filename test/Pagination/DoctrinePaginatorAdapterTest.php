@@ -4,8 +4,9 @@ namespace League\Fractal\Test\Pagination;
 use Doctrine\ORM\Query;
 use League\Fractal\Pagination\DoctrinePaginatorAdapter;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class DoctrinePaginatorAdapterTest extends \PHPUnit_Framework_TestCase
+class DoctrinePaginatorAdapterTest extends TestCase
 {
     public function testPaginationAdapter()
     {
