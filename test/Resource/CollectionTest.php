@@ -3,8 +3,9 @@
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
     protected $simpleCollection = [
         ['foo' => 'bar'],

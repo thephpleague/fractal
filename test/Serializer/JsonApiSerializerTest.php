@@ -8,8 +8,9 @@ use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class JsonApiSerializerTest extends \PHPUnit_Framework_TestCase
+class JsonApiSerializerTest extends TestCase
 {
     private $manager;
 

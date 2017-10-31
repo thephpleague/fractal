@@ -4,8 +4,9 @@ namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class IlluminatePaginatorAdapterTest extends \PHPUnit_Framework_TestCase
+class IlluminatePaginatorAdapterTest extends TestCase
 {
     public function testPaginationAdapter()
     {
