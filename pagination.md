@@ -48,10 +48,30 @@ $resource = new Collection($books, new BookTransformer);
 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 ~~~
 
+### Symfony Pagination
+
+Below is an example of pagination using the Pagerfanter Paginator with a collection of objects obtained from Doctrine.
+
+~~~ php
+$doctrineAdapter = new DoctrineCollectionAdapter($allItems);
+$paginator = new Pagerfanta($doctrineAdapter);
+$filteredResults = $paginator->getCurrentPageResults();
+
+$paginatorAdapter = new PagerfantaPaginatorAdapter($paginator, function(int $page) use (Request $request, RouterInterface $router) {
+	$route = $request->attributes->get('_route');
+	$inputParams = $request->attributes->get('_route_params');
+	$newParams = array_merge($inputParams, $request->query->all());
+	$newParams['page'] = $page;
+	return $router->generate($route, $newParams, 0);
+});
+$resource = new Collection($filteredResults, new BookTransformer);
+$resource->setPaginator($paginatorAdapter);
+~~~
+
 #### Including existing query string values in pagination links
 
-In the example above, previous and next pages will be provided simply with `?page=#` ignoring all other 
-existing query strings. To include all query string values automatically in these links we can replace 
+In the example above, previous and next pages will be provided simply with `?page=#` ignoring all other
+existing query strings. To include all query string values automatically in these links we can replace
 the last line above with:
 
 ~~~ php
@@ -130,12 +150,12 @@ API users do not try and do anything too clever with them. They just need to pas
 }
 ~~~
 
-On the next request, we move the cursor forward. 
+On the next request, we move the cursor forward.
 
  * Set `cursor` to `next` from the last response
  * Set `previous` to `current` from the last response
  * `limit` is optional
- 	* You can set it to `count` from the previous request to maintain the same limit 
+ 	* You can set it to `count` from the previous request to maintain the same limit
 
 **GET /books?cursor=10&previous=5&limit=5**
 
@@ -159,5 +179,3 @@ On the next request, we move the cursor forward.
 }
 
 ~~~
-
-
