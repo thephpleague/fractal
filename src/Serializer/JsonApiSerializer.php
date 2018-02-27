@@ -84,7 +84,7 @@ class JsonApiSerializer extends ArraySerializer
 
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = [
-                'self' => "{$this->baseUrl}/$resourceKey/$id",
+                'self' => "{$this->baseUrl}/{$this->getTypePath($resourceKey)}/$id",
             ];
             if(isset($custom_links)) {
                 $resource['data']['links'] = array_merge($resource['data']['links'], $custom_links);
@@ -417,6 +417,17 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
+     * Maps a resource type to a URI path.
+     *
+     * @param string $type
+     * @return string
+     */
+    protected function getTypePath($type)
+    {
+       return $type;
+    }
+
+    /**
      * Check if the objects are part of a collection or not
      *
      * @param $includeObject
@@ -468,8 +479,8 @@ class JsonApiSerializer extends ArraySerializer
             if ($this->shouldIncludeLinks()) {
                 $data['data'][$index]['relationships'][$key] = array_merge([
                     'links' => [
-                        'self' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/relationships/$key",
-                        'related' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/$key",
+                        'self' => "{$this->baseUrl}/{$this->getTypePath($data['data'][$index]['type'])}/{$data['data'][$index]['id']}/relationships/$key",
+                        'related' => "{$this->baseUrl}/{$this->getTypePath($data['data'][$index]['type'])}/{$data['data'][$index]['id']}/$key",
                     ],
                 ], $data['data'][$index]['relationships'][$key]);
             }
@@ -493,8 +504,8 @@ class JsonApiSerializer extends ArraySerializer
         if ($this->shouldIncludeLinks()) {
             $data['data']['relationships'][$key] = array_merge([
                 'links' => [
-                    'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
-                    'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
+                    'self' => "{$this->baseUrl}/{$this->getTypePath($data['data']['type'])}/{$data['data']['id']}/relationships/$key",
+                    'related' => "{$this->baseUrl}/{$this->getTypePath($data['data']['type'])}/{$data['data']['id']}/$key",
                 ],
             ], $data['data']['relationships'][$key]);
 
