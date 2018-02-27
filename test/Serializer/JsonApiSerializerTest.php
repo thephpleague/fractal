@@ -1598,6 +1598,108 @@ class JsonApiSerializerTest extends TestCase
         $scope->toArray();
     }
 
+    public function testSerializingItemResourceWithMultipleReferencesToSameInclude()
+    {
+        $this->manager->parseIncludes(['author.published.author']);
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+                '_published' => [
+                    [
+                        'id' => 1,
+                        'title' => 'Foo',
+                        'year' => '1991',
+                        '_author' => [
+                            'id' => 1,
+                            'name' => 'Dave',
+                        ]
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Bar',
+                        'year' => '2015',
+                        '_author' => [
+                            'id' => 1,
+                            'name' => 'Dave',
+                        ]
+                    ],
+                ],
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'relationships' => [
+                    'author' => [
+                        'data' => [
+                            'type' => 'people',
+                            'id' => '1',
+                        ],
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                    'relationships' => [
+                        'published' => [
+                            'data' => [
+                                [
+                                    'type' => 'books',
+                                    'id' => '1',
+                                ],
+                                [
+                                    'type' => 'books',
+                                    'id' => '2',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'type' => 'books',
+                    'id' => '2',
+                    'attributes' => [
+                        'title' => 'Bar',
+                        'year' => 2015,
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'data' => [
+                                'type' => 'people',
+                                'id' => '1',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"relationships":{"published":{"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"relationships":{"author":{"data":{"type":"people","id":"1"}}}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemWithReferenceToRootObject()
     {
         $this->manager->parseIncludes('published.author');
