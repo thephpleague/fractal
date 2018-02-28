@@ -285,6 +285,10 @@ class Scope
             return null;
         }
 
+        if ($this->resource->getMetaPositionFirst()) {
+            return $meta + $data;
+        }
+
         return $data + $meta;
     }
 

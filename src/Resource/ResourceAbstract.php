@@ -30,6 +30,13 @@ abstract class ResourceAbstract implements ResourceInterface
     protected $meta = [];
 
     /**
+     * Meta data section position. True puts meta section first.
+     *
+     * @var boolean
+     */
+    protected $metaPositionFirst = false;
+
+    /**
      * The resource key.
      *
      * @var string
@@ -104,6 +111,16 @@ abstract class ResourceAbstract implements ResourceInterface
     }
 
     /**
+     * Get the meta data position.
+     *
+     * @return boolean
+     */
+    public function getMetaPositionFirst()
+    {
+        return $this->metaPositionFirst;
+    }
+
+    /**
      * Get the resource key.
      *
      * @return string
@@ -162,6 +179,20 @@ abstract class ResourceAbstract implements ResourceInterface
     public function setMetaValue($metaKey, $metaValue)
     {
         $this->meta[$metaKey] = $metaValue;
+
+        return $this;
+    }
+
+    /**
+     * Set the meta data section position.
+     *
+     * @param boolean $metaPositionFirst
+     *
+     * @return $this
+     */
+    public function setMetaPositionFirst($metaPositionFirst = false)
+    {
+        $this->metaPositionFirst = $metaPositionFirst;
 
         return $this;
     }
