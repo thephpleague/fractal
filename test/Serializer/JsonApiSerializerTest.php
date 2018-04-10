@@ -7,6 +7,7 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiEmptyTransformer;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -2252,6 +2253,22 @@ class JsonApiSerializerTest extends TestCase
         ];
 
         $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    public function testEmptyAttributesIsObject()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer());
+
+        $data = ['id' => 1];
+
+        $resource = new Item($data, new JsonApiEmptyTransformer(), 'resources');
+
+        $scope = new Scope($manager, $resource);
+
+        $expectedJson = '{"data":{"type":"resources","id":"1","attributes":{}}}';
+
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     /**
