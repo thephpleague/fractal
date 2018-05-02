@@ -1,0 +1,13 @@
+includes:
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+	excludes_analyse:
+		- %rootDir%/../../../src/Pagination/PhalconFrameworkPaginatorAdapter.php
+	ignoreErrors:
+		- '#Mockery#'
+		- '#Call to an undefined method League\\Fractal\\TransformerAbstract::transform\(\)#'
+		- '#Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator::count\(\)#' # not sure what to do here
+	universalObjectCratesClasses:
+		- League\Fractal\ParamBag

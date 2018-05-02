@@ -16,6 +16,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -153,7 +154,7 @@ class Scope
      */
     public function isRequested($checkScopeSegment)
     {
-        if ($this->parentScopes) {
+        if (count($this->parentScopes) > 0) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
@@ -162,7 +163,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        return in_array($scopeString, $this->manager->getRequestedIncludes());
+        return in_array($scopeString, $this->manager->getRequestedIncludes(), true);
     }
 
     /**
@@ -181,7 +182,7 @@ class Scope
      */
     public function isExcluded($checkScopeSegment)
     {
-        if ($this->parentScopes) {
+        if (count($this->parentScopes) > 0) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
@@ -190,7 +191,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        return in_array($scopeString, $this->manager->getRequestedExcludes());
+        return in_array($scopeString, $this->manager->getRequestedExcludes(), true);
     }
 
     /**
@@ -228,7 +229,7 @@ class Scope
     /**
      * Convert the current data for this scope to an array.
      *
-     * @return array
+     * @return array|null
      */
     public function toArray()
     {
@@ -275,7 +276,7 @@ class Scope
         }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
-        $meta = $serializer->meta($this->resource->getMeta());
+        $meta = $serializer->meta($this->resource instanceof ResourceAbstract ? $this->resource->getMeta(): []);
 
         // in case of returning NullResource we should return null and not to go with array_merge
         if (is_null($data)) {
