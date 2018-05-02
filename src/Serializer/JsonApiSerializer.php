@@ -296,7 +296,7 @@ class JsonApiSerializer extends ArraySerializer
     protected function isRootObject($object)
     {
         $objectKey = "{$object['type']}:{$object['id']}";
-        return in_array($objectKey, $this->rootObjects);
+        return in_array($objectKey, $this->rootObjects, true);
     }
 
     /**

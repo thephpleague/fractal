@@ -19,6 +19,7 @@ install:
 
 script:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; else vendor/bin/phpunit --no-coverage; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == "7.2" ]]; then vendor/bin/phpstan analyse -c phpstan.neon -l 0 src test; fi
 
 after_script:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

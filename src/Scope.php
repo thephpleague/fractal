@@ -153,7 +153,7 @@ class Scope
      */
     public function isRequested($checkScopeSegment)
     {
-        if ($this->parentScopes) {
+        if (count($this->parentScopes) > 0) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
@@ -162,7 +162,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        return in_array($scopeString, $this->manager->getRequestedIncludes());
+        return in_array($scopeString, $this->manager->getRequestedIncludes(), true);
     }
 
     /**
@@ -181,7 +181,7 @@ class Scope
      */
     public function isExcluded($checkScopeSegment)
     {
-        if ($this->parentScopes) {
+        if (count($this->parentScopes) > 0) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
@@ -190,7 +190,7 @@ class Scope
 
         $scopeString = implode('.', (array) $scopeArray);
 
-        return in_array($scopeString, $this->manager->getRequestedExcludes());
+        return in_array($scopeString, $this->manager->getRequestedExcludes(), true);
     }
 
     /**
