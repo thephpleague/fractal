@@ -69,7 +69,9 @@ class ScopeFactoryTest extends TestCase
      */
     private function createManager()
     {
-        return $this->createMock('League\\Fractal\\Manager');
+        /** @var Manager $manager */
+        $manager = $this->createMock('League\\Fractal\\Manager');
+        return $manager;
     }
 
     /**
@@ -77,6 +79,8 @@ class ScopeFactoryTest extends TestCase
      */
     private function createResource()
     {
-        return $this->createMock('League\\Fractal\\Resource\\ResourceInterface');
+        /** @var ResourceInterface $resource */
+        $resource = $this->createMock('League\\Fractal\\Resource\\ResourceInterface');
+        return $resource;
     }
 }
