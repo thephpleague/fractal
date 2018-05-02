@@ -16,6 +16,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 
@@ -275,7 +276,7 @@ class Scope
         }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
-        $meta = $serializer->meta($this->resource->getMeta());
+        $meta = $serializer->meta($this->resource instanceof ResourceAbstract ? $this->resource->getMeta(): []);
 
         // in case of returning NullResource we should return null and not to go with array_merge
         if (is_null($data)) {

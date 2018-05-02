@@ -423,7 +423,7 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Check if the objects are part of a collection or not
      *
-     * @param $includeObject
+     * @param array $includeObject
      *
      * @return array
      */
@@ -443,7 +443,7 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Sets the RootObjects, either as collection or not.
      *
-     * @param $data
+     * @param array $data
      */
     private function createRootObjects($data)
     {
@@ -458,9 +458,9 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Loops over the relationships of the provided data and formats it
      *
-     * @param $data
-     * @param $relationship
-     * @param $key
+     * @param array $data
+     * @param array $relationship
+     * @param mixed $key
      *
      * @return array
      */
@@ -484,9 +484,9 @@ class JsonApiSerializer extends ArraySerializer
 
 
     /**
-     * @param $data
-     * @param $relationship
-     * @param $key
+     * @param array $data
+     * @param array $relationship
+     * @param mixed $key
      *
      * @return array
      */
@@ -508,10 +508,10 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param $includeKey
-     * @param $relationships
-     * @param $includeObject
-     * @param $key
+     * @param mixed $includeKey
+     * @param array $relationships
+     * @param array $includeObject
+     * @param mixed $key
      *
      * @return array
      */
@@ -544,8 +544,8 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param $includeKey
-     * @param $relationships
+     * @param mixed $includeKey
+     * @param array $relationships
      *
      * @return array
      */
@@ -560,8 +560,8 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param $includeObject
-     * @param $relationship
+     * @param array $includeObject
+     * @param array $relationship
      *
      * @return array
      */
@@ -578,9 +578,9 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param $includeObjects
-     * @param $linkedIds
-     * @param $serializedData
+     * @param array $includeObjects
+     * @param array $linkedIds
+     * @param array $serializedData
      *
      * @return array
      */

@@ -5,5 +5,9 @@ includes:
 parameters:
 	excludes_analyse:
 		- %rootDir%/../../../src/Pagination/PhalconFrameworkPaginatorAdapter.php
+	ignoreErrors:
+		- '#Mockery#'
+		- '#Call to an undefined method League\\Fractal\\TransformerAbstract::transform\(\)#'
+		- '#Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator::count\(\)#' # not sure what to do here
 	universalObjectCratesClasses:
 		- League\Fractal\ParamBag
