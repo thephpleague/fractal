@@ -146,7 +146,7 @@ class Manager
      */
     public function getSerializer()
     {
-        if (! $this->serializer) {
+        if ($this->serializer === null) {
             $this->setSerializer(new DataArraySerializer());
         }
 
@@ -181,7 +181,7 @@ class Manager
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
 
-            if (in_array($includeName, $this->requestedIncludes)) {
+            if (in_array($includeName, $this->requestedIncludes, true)) {
                 continue;
             }
             $this->requestedIncludes[] = $includeName;
@@ -291,7 +291,7 @@ class Manager
         foreach ($excludes as $excludeName) {
             $excludeName = $this->trimToAcceptableRecursionLevel($excludeName);
 
-            if (in_array($excludeName, $this->requestedExcludes)) {
+            if (in_array($excludeName, $this->requestedExcludes, true)) {
                 continue;
             }
 

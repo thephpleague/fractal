@@ -11,14 +11,19 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
+    - php: 7.2
+      env: STATIC_ANALYSIS=true
     - php: hhvm
       dist: trusty
 
 install:
+  - if [[ "$STATIC_ANALYSIS" == "true" ]]; then composer require --dev phpunit/phpunit:^6.3 phpstan/phpstan phpstan/phpstan-phpunit phpstan/phpstan-strict-rules; fi
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
-  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; else vendor/bin/phpunit --no-coverage; fi
+  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; fi
+  - if [[ "$STATIC_ANALYSIS" != "true" ]]; then vendor/bin/phpunit --no-coverage; fi
+  - if [[ "$STATIC_ANALYSIS" == "true" ]]; then vendor/bin/phpstan analyse -c phpstan.neon -l 3 src test; fi
 
 after_script:
   - if [[ "$COLLECT_COVERAGE" == "true" ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

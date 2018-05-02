@@ -54,6 +54,7 @@ class TransformerAbstractTest extends TestCase
      */
     public function testSetCurrentScope()
     {
+        /** @var \League\Fractal\TransformerAbstract&\PHPUnit\Framework\MockObject\MockObject $transformer */
         $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
         $manager = new Manager();
         $scope = new Scope($manager, m::mock('League\Fractal\Resource\ResourceAbstract'));

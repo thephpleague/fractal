@@ -19,8 +19,8 @@ class ScopeFactoryTest extends TestCase
     {
         $sut = $this->createSut();
 
-        $manager = $this->createManager();
-        $resource = $this->createResource();
+        $manager = \Mockery::mock('League\\Fractal\\Manager');
+        $resource = \Mockery::mock('League\\Fractal\\Resource\\ResourceInterface');
         $scopeIdentifier = 'foo_identifier';
 
         $scope = $sut->createScopeFor($manager, $resource, $scopeIdentifier);
@@ -32,14 +32,14 @@ class ScopeFactoryTest extends TestCase
 
     public function testItCreatesScopesWithParent()
     {
-        $manager = $this->createManager();
+        $manager = \Mockery::mock('League\\Fractal\\Manager');
 
-        $scope = new Scope($manager, $this->createResource(), 'parent_identifier');
+        $scope = new Scope($manager, \Mockery::mock('League\\Fractal\\Resource\\ResourceInterface'), 'parent_identifier');
         $scope->setParentScopes([
             'parent_scope',
         ]);
 
-        $resource = $this->createResource();
+        $resource = \Mockery::mock('League\\Fractal\\Resource\\ResourceInterface');
         $scopeIdentifier = 'foo_identifier';
 
         $expectedParentScopes = [
@@ -62,21 +62,5 @@ class ScopeFactoryTest extends TestCase
     private function createSut()
     {
         return new ScopeFactory();
-    }
-
-    /**
-     * @return Manager
-     */
-    private function createManager()
-    {
-        return $this->getMock('League\\Fractal\\Manager');
-    }
-
-    /**
-     * @return ResourceInterface
-     */
-    private function createResource()
-    {
-        return $this->getMock('League\\Fractal\\Resource\\ResourceInterface');
     }
 }

@@ -115,7 +115,7 @@ abstract class TransformerAbstract
      * @param Scope $scope
      * @param mixed $data
      *
-     * @return array
+     * @return array|false
      */
     public function processIncludedResources(Scope $scope, $data)
     {
@@ -153,7 +153,8 @@ abstract class TransformerAbstract
         $includedData,
         $include
     ) {
-        if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
+        $resource = $this->callIncludeMethod($scope, $include, $data);
+        if ($resource !== false) {
             $childScope = $scope->embedChildScope($include, $resource);
 
             if ($childScope->getResource() instanceof Primitive) {
@@ -177,7 +178,7 @@ abstract class TransformerAbstract
      *
      * @throws \Exception
      *
-     * @return \League\Fractal\Resource\ResourceInterface
+     * @return \League\Fractal\Resource\ResourceInterface|false
      */
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
