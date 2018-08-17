@@ -11,7 +11,7 @@ class PhalconFrameworkPaginatorAdapterTest extends TestCase
     public function testPaginationAdapter()
     {
         $resultset = new \stdClass();
-        $resultset->items       = array_fill(1, 50, 'fractal');
+        $resultset->items       = array_fill(1, 10, 'fractal');
         $resultset->current     = 3;
         $resultset->first       = 1;
         $resultset->last        = 5;
