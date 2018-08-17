@@ -23,11 +23,15 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     /**
      * A slice of the result set to show in the pagination
      *
-     * @var stdClass
+     * @var \stdClass
      */
     private $paginator;
 
-    
+    /**
+     * PhalconFrameworkPaginatorAdapter constructor.
+     *
+     * @param stdClass $paginator
+     */
     public function __construct($paginator)
     {
         $this->paginator = $paginator;
