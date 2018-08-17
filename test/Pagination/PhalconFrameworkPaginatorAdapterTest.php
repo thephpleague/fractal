@@ -2,7 +2,6 @@
 
 namespace League\Fractal\Test\Pagination;
 
-use function array_fill;
 use League\Fractal\Pagination\PhalconFrameworkPaginatorAdapter;
 use PHPUnit\Framework\TestCase;
 
