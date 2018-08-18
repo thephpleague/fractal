@@ -29,6 +29,7 @@ Fractal currently ships with the following adapters:
 
 * Laravel's `illuminate/pagination` package as `League\Fractal\Pagination\IlluminatePaginatorAdapter`
 * The `pagerfanta/pagerfanta` package as `League\Fractal\Pagination\PagerfantaPaginatorAdapter`
+* The Phalcon Paginator (`phalcon/cphalcon`) as `League\Fractal\Pagination\PhalconFrameworkPaginatorAdapter`
 * Zend Framework's `zendframework/zend-paginator` package as `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter`
 
 ### Laravel Pagination
@@ -44,8 +45,37 @@ use Acme\Transformer\BookTransformer;
 $paginator = Book::paginate();
 $books = $paginator->getCollection();
 
-$resource = new Collection($books, new BookTransformer);
+$resource = new Collection($books, new BookTransformer());
 $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+~~~
+
+### Phalcon Pagination
+
+As an example, you can use the result of the `getPaginate()` method on a Phalcon Paginator object or one that implements the `Phalcon\Paginator\AdapterInterface`:
+
+~~~ php
+use League\Fractal\Resource\Collection;
+use League\Fractal\Pagination\PhalconFrameworkPaginatorAdapter;
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Paginator\Adapter\QueryBuilder;
+use Acme\Model\Book;
+use Acme\Transformer\BookTransformer;
+
+$builder = new Builder();
+$builder->addFrom(Book::class);
+
+$params = [
+    'builder' => $builder,
+    'limit'   => 10,
+    'page'    => 2,
+];
+
+$paginator = new QueryBuilder($params);
+$books     = $paginator->getPaginate();
+
+/** $books->items has the data */
+$resource = new Collection($books->items, new BookTransformer());
+$resource->setPaginator(new PhalconFrameworkPaginatorAdapter($books));
 ~~~
 
 ### Symfony Pagination
@@ -64,7 +94,7 @@ $paginatorAdapter = new PagerfantaPaginatorAdapter($paginator, function(int $pag
 	$newParams['page'] = $page;
 	return $router->generate($route, $newParams, 0);
 });
-$resource = new Collection($filteredResults, new BookTransformer);
+$resource = new Collection($filteredResults, new BookTransformer());
 $resource->setPaginator($paginatorAdapter);
 ~~~
 
