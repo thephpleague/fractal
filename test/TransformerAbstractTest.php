@@ -368,6 +368,17 @@ class TransformerAbstractTest extends TestCase
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }
 
+    /**
+     * @covers \League\Fractal\TransformerAbstract::exception
+     */
+    public function testException()
+    {
+        $mock = m::mock('League\Fractal\TransformerAbstract');
+        $collection = $mock->exception([], function () {
+        });
+        $this->assertInstanceOf('League\Fractal\Resource\ExceptionResource', $collection);
+    }
+
     public function tearDown()
     {
         m::close();

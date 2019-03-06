@@ -12,6 +12,7 @@
 namespace League\Fractal;
 
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ExceptionResource;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\Primitive;
@@ -288,6 +289,20 @@ abstract class TransformerAbstract
     protected function collection($data, $transformer, $resourceKey = null)
     {
         return new Collection($data, $transformer, $resourceKey);
+    }
+
+    /**
+     * Create a new exception resource object.
+     *
+     * @param mixed                        $data
+     * @param TransformerAbstract|callable $transformer
+     * @param string                       $resourceKey
+     *
+     * @return ExceptionResource
+     */
+    protected function exception($data, $transformer, $resourceKey = null)
+    {
+        return new ExceptionResource($data, $transformer, $resourceKey);
     }
 
     /**

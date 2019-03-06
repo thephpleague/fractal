@@ -366,7 +366,7 @@ class ScopeTest extends TestCase
     /**
      * @covers \League\Fractal\Scope::executeResourceTransformers
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
+     * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item, League\Fractal\Resource\Collection or League\Fractal\Exception
      */
     public function testCreateDataWithClassFuckKnows()
     {

@@ -13,6 +13,7 @@ namespace League\Fractal;
 
 use InvalidArgumentException;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ExceptionResource;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
@@ -348,13 +349,15 @@ class Scope
             foreach ($data as $value) {
                 list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
             }
+        } elseif ($this->resource instanceof ExceptionResource) {
+            list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
         } elseif ($this->resource instanceof NullResource) {
             $transformedData = null;
             $includedData = [];
         } else {
             throw new InvalidArgumentException(
                 'Argument $resource should be an instance of League\Fractal\Resource\Item'
-                .' or League\Fractal\Resource\Collection'
+                .', League\Fractal\Resource\Collection or League\Fractal\Exception'
             );
         }
 
