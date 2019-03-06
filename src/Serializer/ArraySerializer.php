@@ -44,6 +44,19 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
+     * Serialize a Exception.
+     *
+     * @param string $resourceKey
+     * @param array $data
+     *
+     * @return array
+     */
+    public function exception($resourceKey, array $data)
+    {
+        return $data;
+    }
+
+    /**
      * Serialize null resource.
      *
      * @return array

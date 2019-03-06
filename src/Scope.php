@@ -386,6 +386,10 @@ class Scope
             return $serializer->item($resourceKey, $data);
         }
 
+        if ($this->resource instanceof ExceptionResource) {
+            return $serializer->exception($resourceKey, $data);
+        }
+
         return $serializer->null();
     }
 

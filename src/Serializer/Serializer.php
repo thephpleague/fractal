@@ -28,6 +28,16 @@ interface Serializer
     public function item($resourceKey, array $data);
 
     /**
+     * Serialize a Exception.
+     *
+     * @param string $resourceKey
+     * @param array $data
+     *
+     * @return array
+     */
+    public function exception($resourceKey, array $data);
+
+    /**
      * Serialize null resource.
      *
      * @return array
