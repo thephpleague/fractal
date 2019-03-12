@@ -241,7 +241,7 @@ class Scope
         // If the serializer wants the includes to be side-loaded then we'll
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
-            //Filter out any relation that wasn't requested
+            // Filter out any relation that wasn't requested
             $rawIncludedData = array_map(array($this, 'filterFieldsets'), $rawIncludedData);
 
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
@@ -277,7 +277,7 @@ class Scope
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
 
-        // in case of returning NullResource we should return null and not to go with array_merge
+        // In case of returning NullResource we should return null and not to go with array_merge
         if (is_null($data)) {
             if (!empty($meta)) {
                 return $meta;
@@ -412,8 +412,10 @@ class Scope
             $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
         }
 
-        //Stick only with requested fields
-        $transformedData = $this->filterFieldsets($transformedData);
+        // Stick only with requested fields if we have more than one
+        if (is_array($transformedData)) {
+            $transformedData = $this->filterFieldsets($transformedData);
+        }
 
         return [$transformedData, $includedData];
     }
@@ -473,7 +475,7 @@ class Scope
      * @internal
      *
      * @param array  $data
-     *
+     *g
      * @return array
      */
     protected function filterFieldsets(array $data)
@@ -483,7 +485,7 @@ class Scope
         }
         $serializer = $this->manager->getSerializer();
         $requestedFieldset = iterator_to_array($this->getFilterFieldset());
-        //Build the array of requested fieldsets with the mandatory serializer fields
+        // Build the array of requested fieldsets with the mandatory serializer fields
         $filterFieldset = array_flip(
             array_merge(
                 $serializer->getMandatoryFields(),

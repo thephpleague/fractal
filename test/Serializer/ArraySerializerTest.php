@@ -331,6 +331,16 @@ class ArraySerializerTest extends TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingPrimitiveValueCollection()
+    {
+        $manager = new Manager();
+        $resource = new Collection(['foo', 'bar', 'baz'], function($string) {
+            return $string;
+        });
+
+        $this->assertSame('{"data":["foo","bar","baz"]}', $manager->createData($resource)->toJson());
+    }
+
     public function tearDown()
     {
         Mockery::close();
