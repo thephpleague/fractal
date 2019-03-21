@@ -4,3 +4,5 @@ build
 vendor
 Gemfile.lock
 coverage
+.idea/
+.ds_store
