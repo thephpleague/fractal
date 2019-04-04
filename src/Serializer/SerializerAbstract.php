@@ -22,10 +22,11 @@ abstract class SerializerAbstract implements Serializer
      *
      * @param string $resourceKey
      * @param array  $data
+     * @param string|null $identifier
      *
      * @return array
      */
-    abstract public function collection($resourceKey, array $data);
+    abstract public function collection($resourceKey, array $data, ?string $identifier);
 
     /**
      * Serialize an item.

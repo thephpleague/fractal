@@ -374,9 +374,10 @@ class Scope
     protected function serializeResource(SerializerAbstract $serializer, $data)
     {
         $resourceKey = $this->resource->getResourceKey();
+        $identifier = $this->getIdentifier();
 
         if ($this->resource instanceof Collection) {
-            return $serializer->collection($resourceKey, $data);
+            return $serializer->collection($resourceKey, $data, $identifier);
         }
 
         if ($this->resource instanceof Item) {

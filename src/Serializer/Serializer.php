@@ -12,10 +12,11 @@ interface Serializer
      *
      * @param string $resourceKey
      * @param array $data
+     * @param string|null $identifier
      *
      * @return array
      */
-    public function collection($resourceKey, array $data);
+    public function collection($resourceKey, array $data, ?string $identifier);
 
     /**
      * Serialize an item.
