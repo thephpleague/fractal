@@ -381,7 +381,7 @@ class Scope
         }
 
         if ($this->resource instanceof Item) {
-            return $serializer->item($resourceKey, $data);
+            return $serializer->item($resourceKey, $data, $identifier);
         }
 
         return $serializer->null();

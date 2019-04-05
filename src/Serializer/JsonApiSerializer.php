@@ -56,10 +56,11 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @param string $resourceKey
      * @param array $data
+     * @param string|null $identifier
      *
      * @return array
      */
-    public function item($resourceKey, array $data)
+    public function item($resourceKey, array $data, $identifier = null)
     {
         $id = $this->getIdFromData($data);
 
