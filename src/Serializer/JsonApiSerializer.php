@@ -40,7 +40,7 @@ class JsonApiSerializer extends ArraySerializer
      *
      * @return array
      */
-    public function collection($resourceKey, array $data, ?string $identifier)
+    public function collection($resourceKey, array $data, $identifier = null)
     {
         $resources = [];
 

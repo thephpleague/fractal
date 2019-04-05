@@ -26,7 +26,7 @@ abstract class SerializerAbstract implements Serializer
      *
      * @return array
      */
-    abstract public function collection($resourceKey, array $data, ?string $identifier);
+    abstract public function collection($resourceKey, array $data, $identifier = null);
 
     /**
      * Serialize an item.

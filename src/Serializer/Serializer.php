@@ -16,7 +16,7 @@ interface Serializer
      *
      * @return array
      */
-    public function collection($resourceKey, array $data, ?string $identifier);
+    public function collection($resourceKey, array $data, $identifier = null);
 
     /**
      * Serialize an item.
