@@ -273,6 +273,14 @@ class Scope
                 $this->resource->setMetaValue(key($pagination), current($pagination));
             }
         }
+        // Daves monkey patch to allow Items to have pagination
+        elseif ($this->resource instanceof Item && empty($this->getIdentifier()) && method_exists($this->resource, 'getPaginator')) {
+            $pagination = $serializer->paginator($this->resource->getPaginator());
+
+            if (! empty($pagination)) {
+                $this->resource->setMetaValue(key($pagination), current($pagination));
+            }
+        }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
         $meta = $serializer->meta($this->resource->getMeta());
