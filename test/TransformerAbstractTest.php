@@ -300,7 +300,8 @@ class TransformerAbstractTest extends TestCase
 
         $transformer->setAvailableIncludes(['book']);
         $scope = new Scope($manager, new Item([], $transformer));
-        $included = $transformer->processIncludedResources($scope, []);
+
+        $this->assertFalse($transformer->processIncludedResources($scope, []));
     }
 
     /**
