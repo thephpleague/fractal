@@ -1,3 +1,28 @@
+## 0.18.0 - 2019-05-09
+
+### Enhancements
+- Allow PHPUnit 7+ where available - Thanks @ramsey
+- Changed the paginator to not call `$paginator->getPaginate()` in `PhalconFrameworkPaginatorAdapter` constructor - Thanks @niden
+- Output an object for `attributes` when none are provided instead of an array in `JsonApiSerializer` - Thanks @BastianHofmann
+- Include `meta` key for relationships in `JsonApiSerializer` - Thanks @rawaludin
+- Allow `self` link to override defaults in `JsonApiSerializer` - Thanks @biggator
+- Preserve numeric keys when converting `Scope`s to arrays by using array union instead of array_merge - Thanks @andrewtweber
+- Output an object for `links` when none are provided instead of an array in `ArraySerializer` pagination - Thanks @basavind
+- Allow arrays for field lists in `$fractal->parseFieldsets()` - Thanks @flugger
+
+
+## 0.17.0 - 2017-08-18
+
+### Enhancements
+
+- Add ScopeFactoryInterface and ScopeFactory
+- Add $options parameter to toJson
+- Added Serializer interface to SerializerAbstract
+- Add Primitive resource type, allows to use primitives
+- optimized primitive transformation when transformer is not given
+
+
+
 ## 0.16.0 - 2017-03-12
 
 ### Enhancements
