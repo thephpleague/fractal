@@ -1189,13 +1189,19 @@ class JsonApiSerializerTest extends TestCase
                             'related' => 'http://example.com/books/1/co-author',
                         ],
                     ],
+                    'author-with-meta' => [
+                        'links' => [
+                            'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                            'related' => 'http://example.com/books/1/author-with-meta',
+                        ],
+                    ],
                 ],
             ],
         ];
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}}}';
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1253,6 +1259,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta',
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -1278,6 +1290,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -1285,7 +1303,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}]}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1334,6 +1352,12 @@ class JsonApiSerializerTest extends TestCase
                             'related' => 'http://example.com/books/1/co-author'
                         ],
                     ],
+                    'author-with-meta' => [
+                        'links' => [
+                            'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                            'related' => 'http://example.com/books/1/author-with-meta'
+                        ],
+                    ],
                 ],
                 'links' => [
                     'self' => 'http://example.com/books/1',
@@ -1363,7 +1387,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"}}}}]}';
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"}}}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1447,6 +1471,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -1472,6 +1502,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -1479,7 +1515,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}]}';
+        $expectedJson = '{"data":{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1540,6 +1576,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                     'links' => [
                         'self' => 'http://example.com/books/1',
@@ -1567,6 +1609,12 @@ class JsonApiSerializerTest extends TestCase
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
                                 'related' => 'http://example.com/books/2/co-author'
+                            ],
+                        ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
                             ],
                         ],
                     ],
@@ -1599,7 +1647,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1991},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"}}}}]}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1991},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"},"data":{"type":"people","id":"1"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}],"included":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"}}}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1731,6 +1779,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -1756,6 +1810,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -1763,7 +1823,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertEquals($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"people","id":"2","attributes":{"name":"Bill"},"links":{"self":"http:\/\/example.com\/people\/2"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/2\/relationships\/published","related":"http:\/\/example.com\/people\/2\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}],"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}]}';
+        $expectedJson = '{"data":[{"type":"people","id":"1","attributes":{"name":"Dave"},"links":{"self":"http:\/\/example.com\/people\/1"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/1\/relationships\/published","related":"http:\/\/example.com\/people\/1\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}},{"type":"people","id":"2","attributes":{"name":"Bill"},"links":{"self":"http:\/\/example.com\/people\/2"},"relationships":{"published":{"links":{"self":"http:\/\/example.com\/people\/2\/relationships\/published","related":"http:\/\/example.com\/people\/2\/published"},"data":[{"type":"books","id":"1"},{"type":"books","id":"2"}]}}}],"included":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":2015},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -2052,6 +2112,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -2077,6 +2143,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -2100,7 +2172,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":2,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=2","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=3","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":2,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=2","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=3","last":"http:\/\/example.com\/books\/?page=5"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -2179,6 +2251,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -2204,6 +2282,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -2226,7 +2310,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":1,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=1","first":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=2","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":1,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=1","first":"http:\/\/example.com\/books\/?page=1","next":"http:\/\/example.com\/books\/?page=2","last":"http:\/\/example.com\/books\/?page=5"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -2305,6 +2389,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/1/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/1/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/1/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
                 [
@@ -2330,6 +2420,12 @@ class JsonApiSerializerTest extends TestCase
                                 'related' => 'http://example.com/books/2/co-author'
                             ],
                         ],
+                        'author-with-meta' => [
+                            'links' => [
+                                'self' => 'http://example.com/books/2/relationships/author-with-meta',
+                                'related' => 'http://example.com/books/2/author-with-meta'
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -2352,7 +2448,7 @@ class JsonApiSerializerTest extends TestCase
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":5,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=5","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=4","last":"http:\/\/example.com\/books\/?page=5"}}';
+        $expectedJson = '{"data":[{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"links":{"self":"http:\/\/example.com\/books\/1"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author","related":"http:\/\/example.com\/books\/1\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/co-author","related":"http:\/\/example.com\/books\/1\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/1\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/1\/author-with-meta"}}}},{"type":"books","id":"2","attributes":{"title":"Bar","year":1997},"links":{"self":"http:\/\/example.com\/books\/2"},"relationships":{"author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author","related":"http:\/\/example.com\/books\/2\/author"}},"co-author":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/co-author","related":"http:\/\/example.com\/books\/2\/co-author"}},"author-with-meta":{"links":{"self":"http:\/\/example.com\/books\/2\/relationships\/author-with-meta","related":"http:\/\/example.com\/books\/2\/author-with-meta"}}}}],"meta":{"pagination":{"total":10,"count":2,"per_page":2,"current_page":5,"total_pages":5}},"links":{"self":"http:\/\/example.com\/books\/?page=5","first":"http:\/\/example.com\/books\/?page=1","prev":"http:\/\/example.com\/books\/?page=4","last":"http:\/\/example.com\/books\/?page=5"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -2401,6 +2497,12 @@ class JsonApiSerializerTest extends TestCase
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/co-author',
                             'related' => 'http://test.de/books/1/co-author'
+                        ],
+                    ],
+                    'author-with-meta' => [
+                        'links' => [
+                            'self' => 'http://test.de/books/1/relationships/author-with-meta',
+                            'related' => 'http://test.de/books/1/author-with-meta'
                         ],
                     ],
                 ],
@@ -2453,6 +2555,12 @@ class JsonApiSerializerTest extends TestCase
                             'related' => 'http://test.de/books/1/co-author'
                         ],
                     ],
+                    'author-with-meta' => [
+                        'links' => [
+                            'self' => 'http://test.de/books/1/relationships/author-with-meta',
+                            'related' => 'http://test.de/books/1/author-with-meta'
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -2492,7 +2600,27 @@ class JsonApiSerializerTest extends TestCase
                 ],
                 'links' => [
                     'self' => '/custom/link',
-                ]
+                ],
+                'relationships' => [
+                    'author' => [
+                        'links' => [
+                            'self' => 'http://test.de/books/1/relationships/author',
+                            'related' => 'http://test.de/books/1/author',
+                        ],
+                    ],
+                    'co-author' => [
+                        'links' => [
+                            'self' => 'http://test.de/books/1/relationships/co-author',
+                            'related' => 'http://test.de/books/1/co-author'
+                        ],
+                    ],
+                    'author-with-meta' => [
+                        'links' => [
+                            'self' => 'http://test.de/books/1/relationships/author-with-meta',
+                            'related' => 'http://test.de/books/1/author-with-meta'
+                        ],
+                    ],
+                ],
             ],
         ];
 
