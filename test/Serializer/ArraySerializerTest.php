@@ -1,4 +1,4 @@
-<?php
+<?php namespace League\Fractal\Test\Serializer;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -7,8 +7,10 @@ use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ArraySerializerTest extends PHPUnit_Framework_TestCase
+class ArraySerializerTest extends TestCase
 {
     private $bookItemInput = [
         'title' => 'Foo',

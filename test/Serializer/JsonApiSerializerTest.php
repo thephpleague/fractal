@@ -1,4 +1,4 @@
-<?php
+<?php namespace League\Fractal\Test\Serializer;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -7,8 +7,11 @@ use League\Fractal\Scope;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
+use League\Fractal\Test\Stub\Transformer\JsonApiEmptyTransformer;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
+class JsonApiSerializerTest extends TestCase
 {
     private $manager;
 
@@ -132,6 +135,59 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $scope->toArray());
 
         $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author":{"data":{"type":"people","id":"1"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
+    public function testSerializingItemResourceWithMetaOnRelationship()
+    {
+        $this->manager->parseIncludes('author-with-meta');
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
+
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'relationships' => [
+                    'author-with-meta' => [
+                        'data' => [
+                            'type' => 'people',
+                            'id' => '1',
+                        ],
+                        'meta' => [ 'foo' => 'bar' ],
+                    ],
+                ],
+            ],
+            'included' => [
+                [
+                    'type' => 'people',
+                    'id' => '1',
+                    'attributes' => [
+                        'name' => 'Dave',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991},"relationships":{"author-with-meta":{"data":{"type":"people","id":"1"},"meta":{"foo":"bar"}}}},"included":[{"type":"people","id":"1","attributes":{"name":"Dave"}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
@@ -1712,7 +1768,7 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage JSON API resource objects MUST have a valid id
      */
     public function testExceptionThrownIfResourceHasNoId()
@@ -2331,8 +2387,8 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
                     'year' => 1991,
                 ],
                 'links' => [
-                    'custom_link' => '/custom/link',
                     'self' => 'http://test.de/books/1',
+                    'custom_link' => '/custom/link',
                 ],
                 'relationships' => [
                     'author' => [
@@ -2402,6 +2458,61 @@ class JsonApiSerializerTest extends PHPUnit_Framework_TestCase
         ];
 
         $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    public function testCustomSelfLinkMerge()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer('http://test.de'));
+
+        $bookData = [
+            'id' => 1,
+            'title' => 'Foo',
+            'year' => '1991',
+            '_author' => [
+                'id' => 1,
+                'name' => 'Dave',
+            ],
+            'links' => [
+                'self' => '/custom/link',
+            ],
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
+
+        $scope = new Scope($manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+                'links' => [
+                    'self' => '/custom/link',
+                ]
+            ],
+        ];
+
+        $this->assertSame(json_encode($expected), $scope->toJson());
+    }
+
+    public function testEmptyAttributesIsObject()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer());
+
+        $data = ['id' => 1];
+
+        $resource = new Item($data, new JsonApiEmptyTransformer(), 'resources');
+
+        $scope = new Scope($manager, $resource);
+
+        $expectedJson = '{"data":{"type":"resources","id":"1","attributes":{}}}';
+
+        $this->assertSame($expectedJson, $scope->toJson());
     }
 
     /**

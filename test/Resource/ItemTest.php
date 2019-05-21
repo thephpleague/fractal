@@ -1,9 +1,10 @@
-<?php namespace League\Fractal\Test;
+<?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Resource\Item;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends TestCase
 {
     protected $simpleItem = ['foo' => 'bar'];
 
@@ -27,7 +28,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Item::setResourceKey
+     * @covers \League\Fractal\Resource\Item::setResourceKey
      */
     public function testSetResourceKey()
     {
@@ -37,7 +38,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Item::getResourceKey
+     * @covers \League\Fractal\Resource\Item::getResourceKey
      */
     public function testGetResourceKey()
     {

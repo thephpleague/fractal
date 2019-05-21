@@ -1,4 +1,4 @@
-<?php
+<?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -7,8 +7,10 @@ use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class DataArraySerializerTest extends PHPUnit_Framework_TestCase
+class DataArraySerializerTest extends TestCase
 {
     public function testSerializingItemResource()
     {

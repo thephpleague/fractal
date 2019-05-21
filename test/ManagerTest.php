@@ -5,8 +5,9 @@ use League\Fractal\ParamBag;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ManagerTest extends \PHPUnit_Framework_TestCase
+class ManagerTest extends TestCase
 {
     public function testParseIncludeSelfie()
     {
@@ -17,7 +18,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
      */
     public function testInvalidParseInclude()
@@ -28,7 +29,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
      */
     public function testIceTParseInclude()
@@ -84,7 +85,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseExcludes() method expects a string or an array. NULL given
      */
     public function testInvalidParseExclude()
@@ -95,7 +96,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The parseExcludes() method expects a string or an array. integer given
      */
     public function testIceTParseExclude()
@@ -223,6 +224,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         // Are empty fields stripped
         $manager->parseFieldsets(['foo' => 'bar,']);
         $this->assertSame(['foo' => ['bar']], $manager->getRequestedFieldsets());
+
+        // Verify you can send in arrays directly
+        $manager->parseFieldsets(['foo' => ['bar', 'baz']]);
+        $this->assertSame(['foo' => ['bar', 'baz']], $manager->getRequestedFieldsets());
 
         $this->assertSame(null, $manager->getFieldset('inexistent'));
     }

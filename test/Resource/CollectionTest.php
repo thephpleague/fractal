@@ -1,10 +1,11 @@
-<?php namespace League\Fractal\Test;
+<?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
     protected $simpleCollection = [
         ['foo' => 'bar'],
@@ -21,7 +22,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setData
+     * @covers \League\Fractal\Resource\Collection::setData
      */
     public function testSetData()
     {
@@ -41,7 +42,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setTransformer
+     * @covers \League\Fractal\Resource\Collection::setTransformer
      */
     public function testSetTransformer()
     {
@@ -51,7 +52,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setCursor
+     * @covers \League\Fractal\Resource\Collection::setCursor
      */
     public function testSetCursor()
     {
@@ -61,7 +62,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::getCursor
+     * @covers \League\Fractal\Resource\Collection::getCursor
      */
     public function testGetCursor()
     {
@@ -72,8 +73,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setPaginator
-     * @covers League\Fractal\Resource\Collection::getPaginator
+     * @covers \League\Fractal\Resource\Collection::setPaginator
+     * @covers \League\Fractal\Resource\Collection::getPaginator
      */
     public function testGetSetPaginator()
     {
@@ -84,8 +85,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setMetaValue
-     * @covers League\Fractal\Resource\Collection::getMetaValue
+     * @covers \League\Fractal\Resource\Collection::setMetaValue
+     * @covers \League\Fractal\Resource\Collection::getMetaValue
      */
     public function testGetSetMeta()
     {
@@ -99,7 +100,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::setResourceKey
+     * @covers \League\Fractal\Resource\Collection::setResourceKey
      */
     public function testSetResourceKey()
     {
@@ -108,7 +109,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\Resource\Collection::getResourceKey
+     * @covers \League\Fractal\Resource\Collection::getResourceKey
      */
     public function testGetResourceKey()
     {

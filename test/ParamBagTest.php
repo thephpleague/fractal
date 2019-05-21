@@ -1,8 +1,9 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\ParamBag;
+use PHPUnit\Framework\TestCase;
 
-class ParamBagTest extends \PHPUnit_Framework_TestCase
+class ParamBagTest extends TestCase
 {
     public function testOldFashionedGet()
     {
@@ -32,7 +33,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testArrayAccessSetFails()
@@ -43,7 +44,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testArrayAccessUnsetFails()
@@ -64,7 +65,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testObjectAccessSetFails()
@@ -75,7 +76,7 @@ class ParamBagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Modifying parameters is not permitted
      */
     public function testObjectAccessUnsetFails()

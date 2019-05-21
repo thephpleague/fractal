@@ -15,7 +15,7 @@ use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\ResourceInterface;
 
-abstract class SerializerAbstract
+abstract class SerializerAbstract implements Serializer
 {
     /**
      * Serialize a collection.

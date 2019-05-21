@@ -1,17 +1,74 @@
-### Development
+## 0.18.0 - 2019-05-09
+
+### Enhancements
+- Allow PHPUnit 7+ where available - Thanks @ramsey
+- Changed the paginator to not call `$paginator->getPaginate()` in `PhalconFrameworkPaginatorAdapter` constructor - Thanks @niden
+- Output an object for `attributes` when none are provided instead of an array in `JsonApiSerializer` - Thanks @BastianHofmann
+- Include `meta` key for relationships in `JsonApiSerializer` - Thanks @rawaludin
+- Allow `self` link to override defaults in `JsonApiSerializer` - Thanks @biggator
+- Preserve numeric keys when converting `Scope`s to arrays by using array union instead of array_merge - Thanks @andrewtweber
+- Output an object for `links` when none are provided instead of an array in `ArraySerializer` pagination - Thanks @basavind
+- Allow arrays for field lists in `$fractal->parseFieldsets()` - Thanks @flugger
+
+
+## 0.17.0 - 2017-08-18
+
+### Enhancements
+
+- Add ScopeFactoryInterface and ScopeFactory
+- Add $options parameter to toJson
+- Added Serializer interface to SerializerAbstract
+- Add Primitive resource type, allows to use primitives
+- optimized primitive transformation when transformer is not given
+
+
+
+## 0.16.0 - 2017-03-12
+
+### Enhancements
+
+- #358 Allow the ability to define meta on each object in collection
+- #362 Add DoctrinePaginatorAdapter to interface with Doctrine pagination
+- Implement sparse fieldset
+
+## 0.15.0 - 2016-12-28
+
+### Enhancements
+
+- Custom links in serializer
+- PhalconPHP Paginator
+- tested on 7.1
+
+## 0.14.0 - 2016-07-21
+
+### Added
+
+- `null()` method for serializing null resource.
+- Adds pagination to `JsonApiSerializer`
+- Added JSON-API serializer collection links
+
+### Enhancements
+
+- Fix issue including relationships on collections
+- `TransformerAbstract` now returns a `ResourceInterface`
+- `getIncludeParams` now always return `ParamBag`
+- cody styling, method naming and docs
 
 ## 0.13.0 - 2015-10-16
 
 ### Added
- - `->setData(...)` and `->setTransformer(...)` methods to resources
- - able to set url include parameters with no set variables, ie. `include=comments:limit(5|1):new`
+
+- `->setData(...)` and `->setTransformer(...)` methods to resources
+- able to set url include parameters with no set variables, ie. `include=comments:limit(5|1):new`
 
 ### Changed
- - Finally, much improved JSON-API support thanks to @felixkiss
+
+- Finally, much improved JSON-API support thanks to @felixkiss
 
 ### Enhancements
- - Short array syntax throughout
- - Test improvements
+
+- Short array syntax throughout
+- Test improvements
 
 ## 0.12.0 - 2015-03-19
 
@@ -109,9 +166,7 @@
 
 - Added Serializers with ArraySerializer, DataArraySerializer (default) and a provisional JsonApiSerializer. See [Issue #47]
 - Added `ResourceAbstract::setMeta('foo', mixed)` to allow custom meta data
-- Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can
-also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query
-param: `/foo?include=bars:limit(5|1):order(-something)`
+- Replaced `Manager::setRequestedScopes()` with `Manager::parseIncludes('foo,bar')` which can be an array or CSV string. It can also take "Smart Syntax" such as `Manager::parseIncludes('bars:limit(5|1):order(-something)')`, which can come from a URL query param: `/foo?include=bars:limit(5|1):order(-something)`
 - Made all pagination (paginators and cursors) use meta output logic, so it sits with your custom meta data
 - Moved `League\Fractal\Cursor\Cursor` and `League\Fractal\Cursor\CursorInterface` into `League\Fractal\Pagination`
 

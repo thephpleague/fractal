@@ -5,11 +5,12 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
+class TransformerAbstractTest extends TestCase
 {
     /**
-     * @covers League\Fractal\TransformerAbstract::setAvailableIncludes
+     * @covers \League\Fractal\TransformerAbstract::setAvailableIncludes
      */
     public function testSetAvailableIncludes()
     {
@@ -18,7 +19,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::getAvailableIncludes
+     * @covers \League\Fractal\TransformerAbstract::getAvailableIncludes
      */
     public function testGetAvailableIncludes()
     {
@@ -29,7 +30,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::setDefaultIncludes
+     * @covers \League\Fractal\TransformerAbstract::setDefaultIncludes
      */
     public function testSetDefaultIncludes()
     {
@@ -38,7 +39,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::getDefaultIncludes
+     * @covers \League\Fractal\TransformerAbstract::getDefaultIncludes
      */
     public function testGetDefaultIncludes()
     {
@@ -49,7 +50,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::setCurrentScope
+     * @covers \League\Fractal\TransformerAbstract::setCurrentScope
      */
     public function testSetCurrentScope()
     {
@@ -60,7 +61,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::getCurrentScope
+     * @covers \League\Fractal\TransformerAbstract::getCurrentScope
      */
     public function testGetCurrentScope()
     {
@@ -94,9 +95,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
-     * @expectedException BadMethodCallException
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
+     * @expectedException \BadMethodCallException
      */
     public function testProcessEmbeddedResourcesInvalidAvailableEmbed()
     {
@@ -113,9 +114,9 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
-     * @expectedException BadMethodCallException
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
+     * @expectedException \BadMethodCallException
      */
     public function testProcessEmbeddedResourcesInvalidDefaultEmbed()
     {
@@ -130,8 +131,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessIncludedAvailableResources()
     {
@@ -152,8 +153,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::figureOutWhichIncludes
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::figureOutWhichIncludes
      */
     public function testProcessExcludedAvailableResources()
     {
@@ -180,8 +181,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::figureOutWhichIncludes
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::figureOutWhichIncludes
      */
     public function testProcessExcludedDefaultResources()
     {
@@ -207,8 +208,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessIncludedAvailableResourcesEmptyEmbed()
     {
@@ -226,8 +227,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
-     * @expectedException Exception
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
+     * @expectedException \Exception
      * @expectedExceptionMessage Invalid return value from League\Fractal\TransformerAbstract::includeBook().
      */
     public function testCallEmbedMethodReturnsCrap()
@@ -244,8 +245,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedDefaultResources()
     {
@@ -265,8 +266,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testIncludedItem()
     {
@@ -299,12 +300,13 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
 
         $transformer->setAvailableIncludes(['book']);
         $scope = new Scope($manager, new Item([], $transformer));
-        $included = $transformer->processIncludedResources($scope, []);
+
+        $this->assertFalse($transformer->processIncludedResources($scope, []));
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testIncludedCollection()
     {
@@ -330,8 +332,8 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::processIncludedResources
-     * @covers League\Fractal\TransformerAbstract::callIncludeMethod
+     * @covers \League\Fractal\TransformerAbstract::processIncludedResources
+     * @covers \League\Fractal\TransformerAbstract::callIncludeMethod
      */
     public function testProcessEmbeddedDefaultResourcesEmptyEmbed()
     {
@@ -346,7 +348,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::item
+     * @covers \League\Fractal\TransformerAbstract::item
      */
     public function testItem()
     {
@@ -357,7 +359,7 @@ class TransformerAbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers League\Fractal\TransformerAbstract::collection
+     * @covers \League\Fractal\TransformerAbstract::collection
      */
     public function testCollection()
     {

@@ -74,6 +74,18 @@ class Manager
     protected $serializer;
 
     /**
+     * Factory used to create new configured scopes.
+     *
+     * @var ScopeFactoryInterface
+     */
+    private $scopeFactory;
+
+    public function __construct(ScopeFactoryInterface $scopeFactory = null)
+    {
+        $this->scopeFactory = $scopeFactory ?: new ScopeFactory();
+    }
+
+    /**
      * Create Data.
      *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
@@ -86,18 +98,11 @@ class Manager
      */
     public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
     {
-        $scopeInstance = new Scope($this, $resource, $scopeIdentifier);
-
-        // Update scope history
         if ($parentScopeInstance !== null) {
-            // This will be the new children list of parents (parents parents, plus the parent)
-            $scopeArray = $parentScopeInstance->getParentScopes();
-            $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
-
-            $scopeInstance->setParentScopes($scopeArray);
+            return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
         }
 
-        return $scopeInstance;
+        return $this->scopeFactory->createScopeFor($this, $resource, $scopeIdentifier);
     }
 
     /**
@@ -218,8 +223,8 @@ class Manager
     /**
      * Parse field parameter.
      *
-     * @param array $fieldsets Array of fields to include. It must be an array
-     *                         whose keys are resource types and values a string
+     * @param array $fieldsets Array of fields to include. It must be an array whose keys 
+     *                         are resource types and values an array or a string
      *                         of the fields to return, separated by a comma
      *
      * @return $this
@@ -228,8 +233,12 @@ class Manager
     {
         $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
+            if (is_string($fields)) {
+                $fields = explode(',', $fields);
+            }
+
             //Remove empty and repeated fields
-            $this->requestedFieldsets[$type] = array_unique(array_filter(explode(',', $fields)));
+            $this->requestedFieldsets[$type] = array_unique(array_filter($fields));
         }
         return $this;
     }

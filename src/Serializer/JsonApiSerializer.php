@@ -82,12 +82,16 @@ class JsonApiSerializer extends ArraySerializer
             unset($resource['data']['attributes']['meta']);
         }
 
+        if(empty($resource['data']['attributes'])) {
+            $resource['data']['attributes'] = (object) [];
+        }
+
         if ($this->shouldIncludeLinks()) {
             $resource['data']['links'] = [
                 'self' => "{$this->baseUrl}/$resourceKey/$id",
             ];
             if(isset($custom_links)) {
-                $resource['data']['links'] = array_merge($custom_links, $resource['data']['links']);
+                $resource['data']['links'] = array_merge($resource['data']['links'], $custom_links);
             }
         }
 
@@ -359,6 +363,9 @@ class JsonApiSerializer extends ArraySerializer
         foreach ($includedData as $key => $inclusion) {
             foreach ($inclusion as $includeKey => $includeObject) {
                 $relationships = $this->buildRelationships($includeKey, $relationships, $includeObject, $key);
+                if (isset($includedData[0][$includeKey]['meta'])) {
+                    $relationships[$includeKey][0]['meta'] = $includedData[0][$includeKey]['meta'];
+                }
             }
         }
 

@@ -3,8 +3,9 @@ namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\ZendFrameworkPaginatorAdapter;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class ZendFrameworkPaginatorAdapterTest extends \PHPUnit_Framework_TestCase
+class ZendFrameworkPaginatorAdapterTest extends TestCase
 {
     public function testPaginationAdapter()
     {
