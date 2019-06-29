@@ -85,7 +85,13 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
      */
     public function getCount()
     {
-        return count($this->paginator->getCurrentPageResults());
+        $page = $this->paginator->getCurrentPageResults();
+
+        if (is_countable($page)) {
+            return count($page);
+        }
+
+        return 0;
     }
 
     /**

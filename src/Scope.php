@@ -271,7 +271,7 @@ class Scope
             }
 
             if (! empty($pagination)) {
-                $this->resource->setMetaValue(key($pagination), current($pagination));
+                $this->resource->setMetaValue((string) key($pagination), current($pagination));
             }
         }
 
@@ -301,7 +301,8 @@ class Scope
      */
     public function toJson($options = 0)
     {
-        return json_encode($this->toArray(), $options);
+        $result = json_encode($this->toArray(), $options);
+        return $result ?: '';
     }
 
     /**
@@ -409,11 +410,11 @@ class Scope
         } else {
             $transformer->setCurrentScope($this);
             $transformedData = $transformer->transform($data);
-        }
 
-        if ($this->transformerHasIncludes($transformer)) {
-            $includedData = $this->fireIncludedTransformers($transformer, $data);
-            $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
+            if ($this->transformerHasIncludes($transformer)) {
+                $includedData = $this->fireIncludedTransformers($transformer, $data);
+                $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
+            }
         }
 
         //Stick only with requested fields

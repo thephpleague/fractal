@@ -117,7 +117,7 @@ abstract class TransformerAbstract
      * @param Scope $scope
      * @param mixed $data
      *
-     * @return array
+     * @return array|false
      */
     public function processIncludedResources(Scope $scope, $data)
     {
@@ -188,8 +188,7 @@ abstract class TransformerAbstract
 
         // Check if the method name actually exists
         $methodName = 'include'.str_replace(' ', '', ucwords(str_replace('_', ' ', str_replace('-', ' ', $includeName))));
-
-        $resource = call_user_func([$this, $methodName], $data, $params);
+        $resource = $this->{$methodName}($data, $params);
 
         if ($resource === null) {
             return false;
