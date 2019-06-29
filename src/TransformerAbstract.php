@@ -24,6 +24,8 @@ use League\Fractal\Resource\ResourceInterface;
  * collection() and item(), and make the self::$availableIncludes property available.
  * Extend it and add a `transform()` method to transform any default or included data
  * into a basic array.
+ *
+ * @method mixed transform(...$args)
  */
 abstract class TransformerAbstract
 {

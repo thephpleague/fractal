@@ -77,7 +77,11 @@ class IlluminatePaginatorAdapter implements PaginatorInterface
      */
     public function getCount()
     {
-        return $this->paginator->count();
+        if (method_exists($this->paginator, 'count')) {
+            return $this->paginator->count();
+        }
+
+        return count($this->paginator->items());
     }
 
     /**

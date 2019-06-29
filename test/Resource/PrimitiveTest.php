@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test\Resource;
+<?php
+namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Test\TestCase;

@@ -13,7 +13,7 @@ namespace League\Fractal\Resource;
 
 use League\Fractal\TransformerAbstract;
 
-abstract class ResourceAbstract implements ResourceInterface
+abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
 {
     /**
      * Any item to process.

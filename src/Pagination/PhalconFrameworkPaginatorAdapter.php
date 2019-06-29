@@ -30,7 +30,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     /**
      * PhalconFrameworkPaginatorAdapter constructor.
      *
-     * @param stdClass $paginator
+     * @param \stdClass $paginator
      */
     public function __construct($paginator)
     {

@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test\Resource;
+<?php
+namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;

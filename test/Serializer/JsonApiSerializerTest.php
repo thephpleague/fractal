@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test\Serializer;
+<?php
+namespace League\Fractal\Test\Serializer;
 
 use InvalidArgumentException;
 use League\Fractal\Manager;
@@ -2157,7 +2158,7 @@ class JsonApiSerializerTest extends TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
 
         $scope = new Scope($manager, $resource);
 
@@ -2233,7 +2234,7 @@ class JsonApiSerializerTest extends TestCase
             ],
         ];
 
-        $resource = new Item($bookData, new JsonApiBookTransformer('test.de'), 'books');
+        $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
 
         $scope = new Scope($manager, $resource);
 

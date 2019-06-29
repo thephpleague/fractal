@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test\Resource;
+<?php
+namespace League\Fractal\Test\Serializer;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;

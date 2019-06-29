@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test;
+<?php
+namespace League\Fractal\Test;
 
 use League\Fractal\ParamBag;
 use LogicException;

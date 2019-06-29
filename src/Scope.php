@@ -14,6 +14,7 @@ namespace League\Fractal;
 use InvalidArgumentException;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\MetaDataInterface;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
@@ -275,7 +276,10 @@ class Scope
         }
 
         // Pull out all of OUR metadata and any custom meta data to merge with the main level data
-        $meta = $serializer->meta($this->resource->getMeta());
+        $meta = [];
+        if ($this->resource instanceof MetaDataInterface) {
+            $meta = $serializer->meta($this->resource->getMeta());
+        }
 
         // in case of returning NullResource we should return null and not to go with array_merge
         if (is_null($data)) {

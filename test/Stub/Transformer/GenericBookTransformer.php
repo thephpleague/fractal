@@ -1,4 +1,5 @@
-<?php namespace League\Fractal\Test\Stub\Transformer;
+<?php
+namespace League\Fractal\Test\Stub\Transformer;
 
 use League\Fractal\TransformerAbstract;
 
