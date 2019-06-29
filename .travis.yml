@@ -5,7 +5,7 @@ sudo: false
 matrix:
   include:
     - php: 7.2
-        env: COLLECT_COVERAGE=true
+      env: COLLECT_COVERAGE=true
     - php: 7.3
     - php: hhvm
       dist: trusty
