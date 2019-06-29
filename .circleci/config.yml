@@ -39,10 +39,6 @@ jobs:
           paths:
             - ./vendor
 
-      # prepare the database
-      - run: touch storage/testing.sqlite
-      - run: php artisan migrate --env=testing --database=sqlite_testing --force
-
       # Run PHPStan
       - run: ./vendor/bin/phpstan analyze src --level 7
       - run: ./vendor/bin/phpstan analyze test --level 1
