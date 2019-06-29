@@ -1,3 +1,10 @@
+## Next
+
+### Enhancements
+- Add links for all available includes to `JsonApiSerializer` #331 - Thanks @matt-allan
+
+
+
 ## 0.18.0 - 2019-05-09
 
 ### Enhancements
