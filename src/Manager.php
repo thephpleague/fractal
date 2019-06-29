@@ -146,7 +146,7 @@ class Manager
      */
     public function getSerializer()
     {
-        if (! $this->serializer) {
+        if ($this->serializer === null) {
             $this->setSerializer(new DataArraySerializer());
         }
 

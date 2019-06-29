@@ -40,7 +40,7 @@ abstract class SerializerAbstract implements Serializer
     /**
      * Serialize null resource.
      *
-     * @return array
+     * @return array|null
      */
     abstract public function null();
 

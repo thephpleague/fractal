@@ -373,7 +373,7 @@ class Scope
      * @param SerializerAbstract $serializer
      * @param mixed              $data
      *
-     * @return array
+     * @return array|null
      */
     protected function serializeResource(SerializerAbstract $serializer, $data)
     {
