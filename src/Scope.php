@@ -35,7 +35,7 @@ class Scope
     protected $availableIncludes = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $scopeIdentifier;
 
@@ -92,7 +92,7 @@ class Scope
      */
     public function getScopeIdentifier()
     {
-        return $this->scopeIdentifier;
+        return (string) $this->scopeIdentifier;
     }
 
     /**
@@ -249,7 +249,7 @@ class Scope
 
             // If the serializer wants to inject additional information
             // about the included resources, it can do so now.
-            $data = $serializer->injectData($data, $rawIncludedData);
+            $data = $serializer->injectData($data ?: [], $rawIncludedData);
 
             if ($this->isRootScope()) {
                 // If the serializer wants to have a final word about all
@@ -396,7 +396,7 @@ class Scope
      *
      * @internal
      *
-     * @param TransformerAbstract|callable $transformer
+     * @param TransformerAbstract|callable|null $transformer
      * @param mixed                        $data
      *
      * @return array
@@ -404,6 +404,10 @@ class Scope
     protected function fireTransformer($transformer, $data)
     {
         $includedData = [];
+
+        if (is_null($transformer)) {
+            return [$data, $includedData];
+        }
 
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
@@ -487,7 +491,8 @@ class Scope
             return $data;
         }
         $serializer = $this->manager->getSerializer();
-        $requestedFieldset = iterator_to_array($this->getFilterFieldset());
+        $bag = $this->getFilterFieldset();
+        $requestedFieldset = $bag ? iterator_to_array($bag) : [];
         //Build the array of requested fieldsets with the mandatory serializer fields
         $filterFieldset = array_flip(
             array_merge(

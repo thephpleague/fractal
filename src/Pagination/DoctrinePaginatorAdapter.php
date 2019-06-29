@@ -91,7 +91,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getPerPage()
     {
-        return $this->paginator->getQuery()->getMaxResults();
+        return (int) $this->paginator->getQuery()->getMaxResults();
     }
 
     /**

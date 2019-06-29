@@ -43,7 +43,7 @@ class Cursor implements CursorInterface
     /**
      * Items being held for the current cursor position.
      *
-     * @var int
+     * @var int|null
      */
     protected $count;
 
@@ -144,7 +144,7 @@ class Cursor implements CursorInterface
      */
     public function getCount()
     {
-        return $this->count;
+        return (int) $this->count;
     }
 
     /**

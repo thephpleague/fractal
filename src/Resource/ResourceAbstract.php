@@ -32,7 +32,7 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
     /**
      * The resource key.
      *
-     * @var string
+     * @var string|null
      */
     protected $resourceKey;
 
@@ -110,7 +110,7 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
      */
     public function getResourceKey()
     {
-        return $this->resourceKey;
+        return (string) $this->resourceKey;
     }
 
     /**

@@ -300,33 +300,45 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param array $data
+     * @param array|null $data
      *
      * @return bool
      */
     protected function isCollection($data)
     {
+        if ($data === null) {
+            return false;
+        }
+
         return array_key_exists('data', $data) &&
         array_key_exists(0, $data['data']);
     }
 
     /**
-     * @param array $data
+     * @param array|null $data
      *
      * @return bool
      */
     protected function isNull($data)
     {
+        if ($data === null) {
+            return true;
+        }
+
         return array_key_exists('data', $data) && $data['data'] === null;
     }
 
     /**
-     * @param array $data
+     * @param array|null $data
      *
      * @return bool
      */
     protected function isEmpty($data)
     {
+        if ($data === null) {
+            return true;
+        }
+
         return array_key_exists('data', $data) && $data['data'] === [];
     }
 
@@ -525,9 +537,8 @@ class JsonApiSerializer extends ArraySerializer
             $relationship = [
                 'data' => [],
             ];
-        } elseif ($this->isCollection($includeObject)) {
+        } elseif ($includeObject && $this->isCollection($includeObject)) {
             $relationship = ['data' => []];
-
             $relationship = $this->addIncludedDataToRelationship($includeObject, $relationship);
         } else {
             $relationship = [
