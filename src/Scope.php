@@ -359,7 +359,7 @@ class Scope
         } else {
             throw new InvalidArgumentException(
                 'Argument $resource should be an instance of League\Fractal\Resource\Item'
-                .' or League\Fractal\Resource\Collection'
+                . ' or League\Fractal\Resource\Collection'
             );
         }
 

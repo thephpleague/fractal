@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="fractal">
+  <description>Fractal Coding Standards</description>
+  <arg value="p" />
+
+  <config name="ignore_warnings_on_exit" value="1" />
+  <config name="ignore_errors_on_exit" value="1" />
+
+  <arg name="colors" />
+  <arg value="s" />
+
+  <!-- Use the PSR2 Standard-->
+  <rule ref="PSR12" />
+
+  <rule ref="Generic.Files.LineLength">
+    <properties>
+      <property name="lineLimit" value="1000"/>
+      <property name="absoluteLineLimit" value="0"/>
+    </properties>
+  </rule>
+</ruleset>

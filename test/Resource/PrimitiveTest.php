@@ -18,7 +18,8 @@ class PrimitiveTest extends TestCase
 
     public function testGetTransformer()
     {
-        $primitive = new Primitive($this->simplePrimitive, function () {});
+        $primitive = new Primitive($this->simplePrimitive, function () {
+        });
 
         $this->assertTrue(is_callable($primitive->getTransformer()));
 

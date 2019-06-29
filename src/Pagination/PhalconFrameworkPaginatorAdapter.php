@@ -93,7 +93,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      * Get the next.
      *
      * @return int
-     */ 
+     */
     public function getNext()
     {
         return $this->paginator->next;

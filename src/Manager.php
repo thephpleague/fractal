@@ -171,7 +171,7 @@ class Manager
 
         if (! is_array($includes)) {
             throw new \InvalidArgumentException(
-                'The parseIncludes() method expects a string or an array. '.gettype($includes).' given'
+                'The parseIncludes() method expects a string or an array. ' . gettype($includes) . ' given'
             );
         }
 
@@ -223,7 +223,7 @@ class Manager
     /**
      * Parse field parameter.
      *
-     * @param array $fieldsets Array of fields to include. It must be an array whose keys 
+     * @param array $fieldsets Array of fields to include. It must be an array whose keys
      *                         are resource types and values an array or a string
      *                         of the fields to return, separated by a comma
      *
@@ -284,7 +284,7 @@ class Manager
 
         if (! is_array($excludes)) {
             throw new \InvalidArgumentException(
-                'The parseExcludes() method expects a string or an array. '.gettype($excludes).' given'
+                'The parseExcludes() method expects a string or an array. ' . gettype($excludes) . ' given'
             );
         }
 
@@ -350,7 +350,7 @@ class Manager
             $parsed[] = $part;
 
             while (count($nested) > 0) {
-                $part .= '.'.array_shift($nested);
+                $part .= '.' . array_shift($nested);
                 $parsed[] = $part;
             }
         }

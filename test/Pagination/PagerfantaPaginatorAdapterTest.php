@@ -32,7 +32,7 @@ class PagerfantaPaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getMaxPerPage')->andReturn($perPage);
 
         $adapter = new PagerfantaPaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf(

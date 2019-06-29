@@ -16,6 +16,8 @@ class PrimitiveIncludeBookTransformer extends TransformerAbstract
 
     public function includePrice(array $book)
     {
-        return $this->primitive($book['price'], function ($price) {return (int) $price;});
+        return $this->primitive($book['price'], function ($price) {
+            return (int) $price;
+        });
     }
 }

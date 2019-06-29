@@ -187,7 +187,6 @@ class ManagerTest extends TestCase
 
         $this->assertSame(['data' => [['foo' => 'bar']]], $rootScope->toArray());
         $this->assertSame('{"data":[{"foo":"bar"}]}', $rootScope->toJson());
-
     }
 
     public function testParseFieldsets()

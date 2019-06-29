@@ -215,7 +215,8 @@ class ScopeTest extends TestCase
 
         $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', [
             ['bar' => 'baz'],
-            function () {},
+            function () {
+            },
         ])->makePartial();
 
         $scope = new Scope($manager, $resource);
@@ -324,7 +325,9 @@ class ScopeTest extends TestCase
 
         $this->assertSame('simple string', $scope->transformPrimitiveResource());
 
-        $resource = new Primitive(10, function ($x) {return $x + 10;});
+        $resource = new Primitive(10, function ($x) {
+            return $x + 10;
+        });
         $scope = $manager->createData($resource);
 
         $this->assertSame(20, $scope->transformPrimitiveResource());
@@ -360,7 +363,6 @@ class ScopeTest extends TestCase
         $scope = $manager->createData($resource);
 
         $this->assertSame(['data' => [['foo' => 'bar']]], $scope->toArray());
-
     }
 
     /**
@@ -400,7 +402,7 @@ class ScopeTest extends TestCase
         $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
         $paginator->shouldReceive('getUrl')->times(2)->andReturnUsing(function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $collection->setPaginator($paginator);
@@ -498,7 +500,7 @@ class ScopeTest extends TestCase
         $manager = new Manager();
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new Item(['price' => '49'], new PrimitiveIncludeBookTransformer);
+        $resource = new Item(['price' => '49'], new PrimitiveIncludeBookTransformer());
 
         $scope = new Scope($manager, $resource);
         $expected = [
@@ -512,10 +514,10 @@ class ScopeTest extends TestCase
     public function testNullResourceIncludeSuccess()
     {
         $manager = new Manager();
-        $manager->setSerializer(new ArraySerializerWithNull);
+        $manager->setSerializer(new ArraySerializerWithNull());
 
         // Send this stub junk, it has a specific format anyhow
-        $resource = new Item([], new NullIncludeBookTransformer);
+        $resource = new Item([], new NullIncludeBookTransformer());
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -533,7 +535,7 @@ class ScopeTest extends TestCase
     public function testNullResourceDataAndJustMeta()
     {
         $manager = new Manager();
-        $manager->setSerializer(new ArraySerializerWithNull);
+        $manager->setSerializer(new ArraySerializerWithNull());
 
         $resource = new NullResource();
         $resource->setMeta(['foo' => 'bar']);

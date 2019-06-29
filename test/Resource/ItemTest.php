@@ -11,14 +11,16 @@ class ItemTest extends TestCase
 
     public function testGetData()
     {
-        $item = new Item($this->simpleItem, function () {});
+        $item = new Item($this->simpleItem, function () {
+        });
 
         $this->assertSame($item->getData(), $this->simpleItem);
     }
 
     public function testGetTransformer()
     {
-        $item = new Item($this->simpleItem, function () {});
+        $item = new Item($this->simpleItem, function () {
+        });
 
         $this->assertTrue(is_callable($item->getTransformer()));
 

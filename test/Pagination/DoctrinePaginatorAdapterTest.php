@@ -33,7 +33,7 @@ class DoctrinePaginatorAdapterTest extends TestCase
 
 
         $adapter = new DoctrinePaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf(
