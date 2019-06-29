@@ -620,10 +620,9 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param $includeObjects
-     * @param $linkedIds
-     * @param $serializedData
->>>>>>> origin/master
+     * @param array $includeObjects
+     * @param array $linkedIds
+     * @param array $serializedData
      *
      * @return array
      */

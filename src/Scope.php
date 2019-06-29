@@ -264,7 +264,7 @@ class Scope
         }
 
         if (!empty($this->availableIncludes)) {
-            $data = $serializer->injectAvailableIncludeData($data, $this->availableIncludes);
+            $data = $serializer->injectAvailableIncludeData($data ?: [], $this->availableIncludes);
         }
 
         if ($this->resource instanceof Collection) {
