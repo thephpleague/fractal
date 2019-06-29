@@ -179,7 +179,7 @@ abstract class TransformerAbstract
      *
      * @throws \Exception
      *
-     * @return \League\Fractal\Resource\ResourceInterface
+     * @return \League\Fractal\Resource\ResourceInterface|false
      */
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {

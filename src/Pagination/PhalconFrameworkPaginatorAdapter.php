@@ -108,6 +108,6 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        return $page;
+        return (string) $page;
     }
 }

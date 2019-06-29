@@ -20,7 +20,7 @@ class IlluminatePaginatorAdapterTest extends TestCase
         $paginator = Mockery::mock('Illuminate\Contracts\Pagination\LengthAwarePaginator');
         $paginator->shouldReceive('currentPage')->andReturn($currentPage);
         $paginator->shouldReceive('lastPage')->andReturn($lastPage);
-        $paginator->shouldReceive('count')->andReturn($count);
+        $paginator->shouldReceive('items')->andReturn(array_fill(0, $count, ''));
         $paginator->shouldReceive('total')->andReturn($total);
         $paginator->shouldReceive('perPage')->andReturn($perPage);
         $paginator->shouldReceive('url')->with(1)->andReturn($url);
