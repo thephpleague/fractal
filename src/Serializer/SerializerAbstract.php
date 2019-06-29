@@ -116,6 +116,19 @@ abstract class SerializerAbstract implements Serializer
     }
 
     /**
+     * Hook for the serializer to inject custom data based on the available includes of the resource.
+     *
+     * @param array $data
+     * @param array $availableIncludes
+     *
+     * @return array
+     */
+    public function injectAvailableIncludeData($data, $availableIncludes)
+    {
+        return $data;
+    }
+
+    /**
      * Hook for the serializer to modify the final list of includes.
      *
      * @param array             $includedData

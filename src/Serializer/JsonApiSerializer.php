@@ -480,15 +480,6 @@ class JsonApiSerializer extends ArraySerializer
     {
         foreach ($relationship as $index => $relationshipData) {
             $data['data'][$index]['relationships'][$key] = $relationshipData;
-
-            if ($this->shouldIncludeLinks()) {
-                $data['data'][$index]['relationships'][$key] = array_merge([
-                    'links' => [
-                        'self' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/relationships/$key",
-                        'related' => "{$this->baseUrl}/{$data['data'][$index]['type']}/{$data['data'][$index]['id']}/$key",
-                    ],
-                ], $data['data'][$index]['relationships'][$key]);
-            }
         }
 
         return $data;
@@ -506,16 +497,6 @@ class JsonApiSerializer extends ArraySerializer
     {
         $data['data']['relationships'][$key] = $relationship[0];
 
-        if ($this->shouldIncludeLinks()) {
-            $data['data']['relationships'][$key] = array_merge([
-                'links' => [
-                    'self' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/relationships/$key",
-                    'related' => "{$this->baseUrl}/{$data['data']['type']}/{$data['data']['id']}/$key",
-                ],
-            ], $data['data']['relationships'][$key]);
-
-            return $data;
-        }
         return $data;
     }
 
@@ -589,9 +570,60 @@ class JsonApiSerializer extends ArraySerializer
     }
 
     /**
-     * @param array $includeObjects
-     * @param array $linkedIds
-     * @param array $serializedData
+     * {@inheritdoc}
+     */
+    public function injectAvailableIncludeData($data, $availableIncludes)
+    {
+        if (!$this->shouldIncludeLinks()) {
+            return $data;
+        }
+
+        if ($this->isCollection($data)) {
+            $data['data'] = array_map(function ($resource) use ($availableIncludes) {
+                foreach ($availableIncludes as $relationshipKey) {
+                    $resource = $this->addRelationshipLinks($resource, $relationshipKey);
+                }
+                return $resource;
+            }, $data['data']);
+        } else {
+            foreach ($availableIncludes as $relationshipKey) {
+                $data['data'] = $this->addRelationshipLinks($data['data'], $relationshipKey);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Adds links for all available includes to a single resource.
+     *
+     * @param array $resource         The resource to add relationship links to
+     * @param string $relationshipKey The resource key of the relationship
+     */
+    private function addRelationshipLinks($resource, $relationshipKey)
+    {
+        if (!isset($resource['relationships']) || !isset($resource['relationships'][$relationshipKey])) {
+            $resource['relationships'][$relationshipKey] = [];
+        }
+
+        $resource['relationships'][$relationshipKey] = array_merge(
+            [
+                'links' => [
+                    'self'   => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
+                    'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
+                ]
+            ],
+            $resource['relationships'][$relationshipKey]
+        );
+
+        return $resource;
+    }
+
+    /**
+     * @param $includeObjects
+     * @param $linkedIds
+     * @param $serializedData
+>>>>>>> origin/master
      *
      * @return array
      */
