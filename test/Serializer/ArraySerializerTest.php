@@ -7,8 +7,7 @@ use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
-use Mockery;
-use PHPUnit\Framework\TestCase;
+use League\Fractal\Test\TestCase;
 
 class ArraySerializerTest extends TestCase
 {
@@ -329,10 +328,5 @@ class ArraySerializerTest extends TestCase
 
         $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

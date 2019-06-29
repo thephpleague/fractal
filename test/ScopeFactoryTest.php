@@ -6,7 +6,6 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
 use League\Fractal\ScopeFactory;
-use PHPUnit\Framework\TestCase;
 
 class ScopeFactoryTest extends TestCase
 {

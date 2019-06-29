@@ -2,8 +2,8 @@
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class PagerfantaPaginatorAdapterTest extends TestCase
 {
@@ -53,10 +53,5 @@ class PagerfantaPaginatorAdapterTest extends TestCase
             'http://example.com/foo?page=3',
             $adapter->getUrl(3)
         );
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

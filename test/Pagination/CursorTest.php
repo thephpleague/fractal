@@ -3,7 +3,7 @@
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\Cursor;
-use PHPUnit\Framework\TestCase;
+use League\Fractal\Test\TestCase;
 
 class CursorTest extends TestCase
 {

@@ -1,8 +1,8 @@
 <?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Resource\Primitive;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class PrimitiveTest extends TestCase
 {

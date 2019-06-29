@@ -2,8 +2,8 @@
 
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
@@ -116,10 +116,5 @@ class CollectionTest extends TestCase
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $collection->setResourceKey('foo');
         $this->assertSame('foo', $collection->getResourceKey());
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

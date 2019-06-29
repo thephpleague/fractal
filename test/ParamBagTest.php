@@ -1,7 +1,7 @@
 <?php namespace League\Fractal\Test;
 
 use League\Fractal\ParamBag;
-use PHPUnit\Framework\TestCase;
+use LogicException;
 
 class ParamBagTest extends TestCase
 {
@@ -32,23 +32,18 @@ class ParamBagTest extends TestCase
         $this->assertNull($params['totallymadeup']);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Modifying parameters is not permitted
-     */
     public function testArrayAccessSetFails()
     {
+        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
+
         $params = new ParamBag(['foo' => 'bar']);
 
         $params['foo'] = 'someothervalue';
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Modifying parameters is not permitted
-     */
     public function testArrayAccessUnsetFails()
     {
+        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
         $params = new ParamBag(['foo' => 'bar']);
 
         unset($params['foo']);
@@ -64,23 +59,17 @@ class ParamBagTest extends TestCase
         $this->assertTrue(isset($params->foo));
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Modifying parameters is not permitted
-     */
     public function testObjectAccessSetFails()
     {
+        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
         $params = new ParamBag(['foo' => 'bar']);
 
         $params->foo = 'someothervalue';
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Modifying parameters is not permitted
-     */
     public function testObjectAccessUnsetFails()
     {
+        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
         $params = new ParamBag(['foo' => 'bar']);
 
         unset($params->foo);

@@ -1,3 +1,5 @@
+.idea
+.phpunit.result.cache
 .ruby-version
 composer.lock
 build

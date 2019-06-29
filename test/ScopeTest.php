@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test;
 
+use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
@@ -13,7 +14,6 @@ use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\PrimitiveIncludeBookTransformer;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class ScopeTest extends TestCase
 {
@@ -205,11 +205,10 @@ class ScopeTest extends TestCase
         $this->assertTrue($scope->isExcluded('baz.bart'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testScopeRequiresConcreteImplementation()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $manager = new Manager();
         $manager->parseIncludes('book');
 
@@ -365,11 +364,11 @@ class ScopeTest extends TestCase
 
     /**
      * @covers \League\Fractal\Scope::executeResourceTransformers
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection
      */
     public function testCreateDataWithClassFuckKnows()
     {
+        $this->expectException(InvalidArgumentException::class, '$resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection');
+
         $manager = new Manager();
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract')->makePartial();
@@ -708,11 +707,6 @@ class ScopeTest extends TestCase
                 ['data' => ['foo' => 'bar'], 'sideloaded' => ['book' => ['yin' => 'yang']]]
             ]
         ];
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 
     protected function createTransformerWithIncludedResource($resourceName, $transformResult)

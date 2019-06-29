@@ -2,8 +2,8 @@
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\ZendFrameworkPaginatorAdapter;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class ZendFrameworkPaginatorAdapterTest extends TestCase
 {
@@ -44,10 +44,5 @@ class ZendFrameworkPaginatorAdapterTest extends TestCase
         $this->assertSame($perPage, $adapter->getPerPage());
         $this->assertSame('http://example.com/foo?page=1', $adapter->getUrl(1));
         $this->assertSame('http://example.com/foo?page=3', $adapter->getUrl(3));
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

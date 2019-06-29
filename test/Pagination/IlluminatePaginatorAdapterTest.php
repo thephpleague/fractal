@@ -3,8 +3,8 @@
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class IlluminatePaginatorAdapterTest extends TestCase
 {
@@ -36,10 +36,5 @@ class IlluminatePaginatorAdapterTest extends TestCase
         $this->assertSame($total, $adapter->getTotal());
         $this->assertSame($perPage, $adapter->getPerPage());
         $this->assertSame('http://example.com/foo?page=1', $adapter->getUrl(1));
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

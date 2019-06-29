@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test\Serializer;
 
+use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -8,14 +9,14 @@ use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Test\Stub\Transformer\JsonApiAuthorTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiBookTransformer;
 use League\Fractal\Test\Stub\Transformer\JsonApiEmptyTransformer;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class JsonApiSerializerTest extends TestCase
 {
     private $manager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->manager = new Manager();
         $this->manager->setSerializer(new JsonApiSerializer());
@@ -1635,12 +1636,10 @@ class JsonApiSerializerTest extends TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage JSON API resource objects MUST have a valid id
-     */
     public function testExceptionThrownIfResourceHasNoId()
     {
+        $this->expectException(InvalidArgumentException::class, 'JSON API resource objects MUST have a valid id');
+
         $bookData = [
             'title' => 'Foo',
             'year' => '1991',
@@ -2420,10 +2419,5 @@ class JsonApiSerializerTest extends TestCase
                 ]
             ]
         ];
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

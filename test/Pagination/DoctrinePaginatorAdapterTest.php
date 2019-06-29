@@ -1,10 +1,9 @@
 <?php
 namespace League\Fractal\Test\Pagination;
 
-use Doctrine\ORM\Query;
 use League\Fractal\Pagination\DoctrinePaginatorAdapter;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class DoctrinePaginatorAdapterTest extends TestCase
 {
@@ -55,10 +54,5 @@ class DoctrinePaginatorAdapterTest extends TestCase
             'http://example.com/foo?page=3',
             $adapter->getUrl(3)
         );
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }

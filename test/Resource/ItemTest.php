@@ -1,8 +1,8 @@
 <?php namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Resource\Item;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class ItemTest extends TestCase
 {

@@ -7,8 +7,8 @@ use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
+use League\Fractal\Test\TestCase;
 use Mockery;
-use PHPUnit\Framework\TestCase;
 
 class DataArraySerializerTest extends TestCase
 {
@@ -353,10 +353,5 @@ class DataArraySerializerTest extends TestCase
         //Test with relationship
         $manager->parseFieldsets(['book' => 'title,author', 'author' => 'name']);
         $this->assertSame($expected, $scope->toArray());
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 }
