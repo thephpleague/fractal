@@ -15,6 +15,7 @@ use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\PrimitiveIncludeBookTransformer;
 use Mockery;
+use League\Fractal\Pagination\PaginatorInterface;
 
 class ScopeTest extends TestCase
 {
@@ -389,7 +390,7 @@ class ScopeTest extends TestCase
             return $data;
         });
 
-        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter')->makePartial();
+        $paginator = Mockery::mock(PaginatorInterface::class);
 
         $total = 100;
         $perPage = $count = 5;
