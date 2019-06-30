@@ -10,7 +10,7 @@ class SimplePaginationAdapterTest extends TestCase
 
     public function testBasicFunctionality()
     {
-        $pagination = new SimplePaginationAdapter(1, 10, 10, 50, function($page) {
+        $pagination = new SimplePaginationAdapter(1, 10, 10, 50, function ($page) {
             return "FOO{$page}";
         });
 
@@ -22,5 +22,4 @@ class SimplePaginationAdapterTest extends TestCase
         $this->assertEquals('FOO10', $pagination->getUrl(10));
         $this->assertEquals('FOO20', $pagination->getUrl(20));
     }
-
 }
