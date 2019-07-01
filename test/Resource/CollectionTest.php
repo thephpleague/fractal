@@ -2,6 +2,7 @@
 namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Pagination\Cursor;
+use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Test\TestCase;
 use Mockery;
@@ -79,7 +80,7 @@ class CollectionTest extends TestCase
      */
     public function testGetSetPaginator()
     {
-        $paginator = Mockery::mock('League\Fractal\Pagination\IlluminatePaginatorAdapter');
+        $paginator = Mockery::mock(PaginatorInterface::class);
         $collection = Mockery::mock('League\Fractal\Resource\Collection')->makePartial();
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection->setPaginator($paginator));
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $collection->getPaginator());
