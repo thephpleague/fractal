@@ -71,6 +71,12 @@ $ phpunit
 
 Please see [CONTRIBUTING](https://github.com/thephpleague/fractal/blob/master/CONTRIBUTING.md) and [CONDUCT](https://github.com/thephpleague/fractal/blob/master/CONDUCT.md) for details.
 
+
+## Maintainers
+
+- [Korvin Szanto](https://github.com/korvinszanto)
+- [Matt Trask](https://github.com/matthewtrask)
+
 ## Credits
 
 - [Graham Daniels](https://github.com/greydnls)
