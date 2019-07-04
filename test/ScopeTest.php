@@ -72,6 +72,23 @@ class ScopeTest extends TestCase
         $this->assertSame(['data' => ['foo' => 'bar']], $scope->toArray());
     }
 
+    /**
+     * @covers \League\Fractal\Scope::jsonSerialize()
+     */
+    public function testJsonSerializable()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(['foo' => 'bar'], function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertInstanceOf('\JsonSerializable', $scope);
+        $this->assertEquals($scope->jsonSerialize(), $scope->toArray());
+    }
+
     public function testToJson()
     {
         $data = [
