@@ -503,7 +503,7 @@ class ScopeTest extends TestCase
         $expected = [
             'a' => 'b',
             'author' => [
-                'c' => 'd',
+                'name' => 'Robert Cecil Martin',
             ],
         ];
 
