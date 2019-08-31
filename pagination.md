@@ -80,7 +80,7 @@ $resource->setPaginator(new PhalconFrameworkPaginatorAdapter($books));
 
 ### Symfony Pagination
 
-Below is an example of pagination using the Pagerfanter Paginator with a collection of objects obtained from Doctrine.
+Below is an example of pagination using the Pagerfanta Paginator with a collection of objects obtained from Doctrine.
 
 ~~~ php
 $doctrineAdapter = new DoctrineCollectionAdapter($allItems);
