@@ -188,10 +188,10 @@ This is a representation of the [JSON-API] standard (v1.0). It implements the mo
  - Links
  - Relationships
  - Inclusion of Related Resources
+ - Sparse Fieldsets
 
 Features that are not yet included
 
- - Sparse Fieldsets
  - Sorting
  - Pagination
  - Filtering

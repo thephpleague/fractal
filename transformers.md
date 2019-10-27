@@ -307,3 +307,48 @@ huge number of SQL requests.
 Eager-Loading could easily be used by inspecting the value of `$_GET['include']`, and using that to produce a
 list of relationships to eager-load with an ORM.
 
+## Sparse Fieldsets
+[Sparse fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets) is part of the [JSON API specification](http://jsonapi.org/format). It allows a request to define which fields should be returned in the response. Borrowing its definition from JSON API specification, Fractal allows any serializer to use this feature.
+
+The sparse fieldsets feature is very similar to what was explained above for including data, since we would need to call a method for sparse fieldset treatment parseFieldsets()`.
+
+~~~ php
+<?php
+use League\Fractal;
+
+$fractal = new Fractal\Manager();
+
+if (isset($_GET['fields'])) {
+    $fractal->parseFieldsets($_GET['fields']);
+}
+
+~~~
+
+Besides calling this method, we also need to specify the resource name when you call `collection()` or `item()` methods:
+
+~~~ php
+$resource = new Fractal\Resource\Collection($books, new BookTransformer, 'book');
+...
+class BookTransformer extends TransformerAbstract
+{
+    ...
+
+    /**
+     * Include Author
+     *
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeAuthor(Book $book)
+    {
+        $author = $book->author;
+
+        return $this->item($author, new AuthorTransformer, 'people');
+    }
+    ...
+~~~
+
+With this, you can now filter the fields returned by the API using `/books?fields[book]=title,year`.
+
+If you want to filter out relation fields that were included in the request, you need to specify the relation as an attribute of the resource [as defined by the spec](https://jsonapi.org/examples/#sparse-fieldsets).
+
+**E.g:** `/books?included=authorf&ields[book]=title,year,author&fields[people]=name`
