@@ -74,7 +74,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getCount()
     {
-        return $this->paginator->total_pages;
+        return (isset($this->paginator->total_pages)) ? $this->paginator->total_pages : $this->paginator->total_items;
     }
 
     /**
