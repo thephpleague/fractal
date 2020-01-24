@@ -5,7 +5,9 @@ sudo: false
 matrix:
   include:
     - php: 5.4
+      dist: trusty
     - php: 5.5
+      dist: trusty
     - php: 5.6
       env: COLLECT_COVERAGE=true
     - php: 7.0
@@ -17,8 +19,6 @@ matrix:
 
   allow_failures:
     - php: hhvm
-    - php: 5.4
-    - php: 5.5
 
 
 install:
