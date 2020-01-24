@@ -164,6 +164,7 @@ class Manager
     {
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = [];
+        $subRelations = '';
 
         if (is_string($includes)) {
             $includes = explode(',', $includes);
@@ -177,6 +178,7 @@ class Manager
 
         foreach ($includes as $include) {
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
+            list($allModifiersStr, $subRelations) = array_pad(explode('.', $allModifiersStr, 2), 2, null);
 
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
@@ -212,6 +214,10 @@ class Manager
             }
 
             $this->includeParams[$includeName] = $modifierArr;
+
+            if ($subRelations) {
+                $this->requestedIncludes[] = $this->trimToAcceptableRecursionLevel($includeName . '.' . $subRelations);
+            }
         }
 
         // This should be optional and public someday, but without it includes would never show up
