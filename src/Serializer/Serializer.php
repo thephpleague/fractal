@@ -10,8 +10,8 @@ interface Serializer
     /**
      * Serialize a collection.
      *
-     * @param string $resourceKey
-     * @param array $data
+     * @param string|null $resourceKey
+     * @param array       $data
      *
      * @return array
      */

@@ -534,7 +534,7 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @return string
+     * @return string|null
      */
     protected function getResourceType()
     {

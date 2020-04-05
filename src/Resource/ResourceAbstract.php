@@ -32,7 +32,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * The resource key.
      *
-     * @var string
+     * @var string|null
      */
     protected $resourceKey;
 
@@ -48,7 +48,7 @@ abstract class ResourceAbstract implements ResourceInterface
      *
      * @param mixed                             $data
      * @param callable|TransformerAbstract|null $transformer
-     * @param string                            $resourceKey
+     * @param string|null                       $resourceKey
      */
     public function __construct($data = null, $transformer = null, $resourceKey = null)
     {
@@ -106,7 +106,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Get the resource key.
      *
-     * @return string
+     * @return string|null
      */
     public function getResourceKey()
     {
@@ -169,7 +169,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Set the resource key.
      *
-     * @param string $resourceKey
+     * @param string|null $resourceKey
      *
      * @return $this
      */
