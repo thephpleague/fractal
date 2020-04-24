@@ -17,7 +17,7 @@ class PhalconFrameworkPaginatorAdapterTest extends TestCase
         $resultset->next        = 4;
         $resultset->previous    = 2;
         $resultset->total_items = 50;
-        $resultset->total_pages = 10;
+        $resultset->last = 10;
 
         $adapter = new PhalconFrameworkPaginatorAdapter($resultset);
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);
@@ -25,7 +25,7 @@ class PhalconFrameworkPaginatorAdapterTest extends TestCase
         $this->assertSame(10, $adapter->getCount());
         $this->assertSame(50, $adapter->getTotal());
         $this->assertSame(10, $adapter->getPerPage());
-        $this->assertSame(5, $adapter->getLastPage());
+        $this->assertSame(5, $adapter->getLast());
         $this->assertSame(4, $adapter->getNext());
     }
 }
