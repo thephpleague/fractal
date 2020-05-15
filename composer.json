@@ -21,21 +21,19 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "league/fractal-serializer-jsonapi": "^1.0|^1.0dev",
+        "league/fractal-paginator-doctrine": "^1.0|^1.0dev",
+        "league/fractal-paginator-illuminate": "^1.0|^1.0dev",
+        "league/fractal-paginator-pagerfanta": "^1.0|^1.0dev",
+        "league/fractal-paginator-phalcon": "^1.0|^1.0dev",
+        "league/fractal-paginator-zend": "^1.0|^1.0dev"
     },
     "require-dev": {
         "mockery/mockery": "~1.0",
         "phpstan/phpstan": "^0.11.8",
         "phpunit/phpunit": "~8.0",
         "squizlabs/php_codesniffer": "~3.4"
-    },
-    "suggest": {
-        "league/fractal-serializer-jsonapi": "JSON:API Serialization Support",
-        "league/fractal-adapter-doctrine": "Doctrine Pagination Adapter",
-        "league/fractal-adapter-illuminate": "Illuminate Pagination Adapter",
-        "league/fractal-adapter-pagerfanta": "Pagerfanta Pagination Adapter",
-        "league/fractal-adapter-phalcon": "Phalcon Pagination Adapter",
-        "league/fractal-adapter-zend": "Zend Pagination Adapter"
     },
     "autoload": {
         "psr-4": {
