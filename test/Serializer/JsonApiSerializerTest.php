@@ -2643,6 +2643,95 @@ class JsonApiSerializerTest extends TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+
+    public function testParseRelationshipCollection()
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new JsonApiSerializer());
+
+        $data = [
+            'data' => [
+                0 => [
+                    [
+                        'id' => 1,
+                        'type' => 'book',
+                        'meta' => []
+                    ],
+                ],
+                1 => [
+                    [
+                        'id' => 2,
+                        'type' => 'book',
+                        'meta' => []
+                    ],
+                ],
+                2 => [
+                    [
+                        'id' => 3,
+                        'type' => 'book',
+                        'meta' => []
+                    ]
+                ]
+            ]
+        ];
+
+        $includedData = [
+            0 => [
+                'inclusionKey' => [
+                    'data' => [
+                        0 => [
+                            'id' => 1,
+                            'type' => 'book',
+                            'meta' => []
+                        ]
+                    ],
+                    'meta' => [
+                        'entry' => 'entry1'
+                    ]
+                ]
+            ],
+            1 => [
+                'inclusionKey' => [
+                    'data' => [
+                        0 => [
+                            'id' => 2,
+                            'type' => 'book',
+                            'meta' => []
+                        ]
+                    ],
+                    'meta' => [
+                        'entry' => 'entry2'
+                    ]
+                ]
+            ],
+            2 => [
+                'inclusionKey' => [
+                    'data' => [
+                        0 => [
+                            'id' => 3,
+                            'type' => 'book',
+                            'meta' => []
+                        ]
+                    ],
+                    'meta' => [
+                        'entry' => 'entry3'
+                    ]
+                ]
+            ]
+        ];
+
+        $parsedRelationships = $manager->getSerializer()->injectData($data, $includedData);
+
+        $relationshipOneMeta = $parsedRelationships['data'][0]['relationships']['inclusionKey']['meta']['entry'];
+        $relationshipTwoMeta = $parsedRelationships['data'][1]['relationships']['inclusionKey']['meta']['entry'];
+        $relationshipThreeMeta = $parsedRelationships['data'][2]['relationships']['inclusionKey']['meta']['entry'];
+
+        $this->assertSame("entry1", $relationshipOneMeta);
+        $this->assertSame("entry2", $relationshipTwoMeta);
+        $this->assertSame("entry3", $relationshipThreeMeta);
+    }
+
+
     /**
      * @dataProvider serializingWithFieldsetsProvider
      */
