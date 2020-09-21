@@ -47,6 +47,11 @@
             "League\\Fractal\\Test\\": "test"
         }
     },
+    "scripts": {
+        "check": "vendor/bin/phpcs src/",
+        "test": "vendor/bin/phpunit --testdox --colors=always",
+        "test:coverage": "vendor/bin/phpunit --coverage-html build/coverage"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.20.x-dev"
