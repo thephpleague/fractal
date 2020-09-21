@@ -1,0 +1,50 @@
+name: League CI checks
+
+on: [push, pull_request]
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        on: [windows-latest, ubuntu-latest]
+        php: [7.2, 7.3, 7.4]
+
+    name: League - PHP ${{ matrix.php }} on ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extentions: mbstring, intl
+          ini-values: post_max_size=256M, short_open_tag=On
+          coverage: pcov
+          tools: phpcs, phpunit
+
+      - name: Validate Composer
+        run: composer validate
+
+      - name: Cache Dependencies
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ matrix.os }}-composer-cache-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ matrix.os }}-php-${{ matrix.php }}
+
+      - name: Install Dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Check Coding Style
+        run: vendor/bin/phpcs src/
+
+      - name: Execute Tests
+        run: vendor/bin/phpunit --testdox
+
