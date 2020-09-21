@@ -43,5 +43,8 @@ jobs:
         run: vendor/bin/phpcs src/
 
       - name: Execute Tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+      - name: Send Coverage to Scrutinizer
+        run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
