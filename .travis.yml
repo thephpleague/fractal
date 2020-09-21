@@ -1,0 +1,31 @@
+language: php
+
+sudo: false
+
+matrix:
+  include:
+    - php: 5.4
+      dist: trusty
+    - php: 5.5
+      dist: trusty
+    - php: 5.6
+      env: COLLECT_COVERAGE=true
+    - php: 7.0
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+    - php: hhvm
+      dist: trusty
+
+  allow_failures:
+    - php: hhvm
+
+
+install:
+  - travis_retry composer install --no-interaction --prefer-source
+
+script:
+  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; else vendor/bin/phpunit --no-coverage; fi
+
+after_script:
+  - if [[ "$COLLECT_COVERAGE" == "true" ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
