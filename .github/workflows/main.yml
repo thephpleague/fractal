@@ -22,9 +22,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extentions: mbstring, intl
-          ini-values: post_max_size=256M, short_open_tag=On
-          coverage: pcov
           tools: phpcs, phpunit
 
       - name: Validate Composer
@@ -46,5 +43,5 @@ jobs:
         run: vendor/bin/phpcs src/
 
       - name: Execute Tests
-        run: vendor/bin/phpunit --testdox
+        run: vendor/bin/phpunit
 
