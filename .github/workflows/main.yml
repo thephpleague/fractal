@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        on: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest]
         php: [7.2, 7.3, 7.4]
 
     name: League - PHP ${{ matrix.php }} on ${{ matrix.os }}
