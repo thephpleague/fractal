@@ -1,4 +1,4 @@
-name: League CI checks
+name: The PHP League Tests
 
 on: [push, pull_request]
 
