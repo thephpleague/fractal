@@ -39,8 +39,5 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Check Coding Style
-        run: vendor/bin/phpcs src/
-
       - name: Execute Tests
         run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
