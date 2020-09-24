@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/thephpleague/fractal.svg?style=flat-square)](https://github.com/thephpleague/fractal/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/travis/thephpleague/fractal/master.svg?style=flat-square)](https://travis-ci.org/thephpleague/fractal)
+![The PHP League Tests](https://github.com/thephpleague/fractal/workflows/The%20PHP%20League%20Tests/badge.svg)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/fractal.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/fractal/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/fractal.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/fractal)
 [![Total Downloads](https://img.shields.io/packagist/dt/league/fractal.svg?style=flat-square)](https://packagist.org/packages/league/fractal)
