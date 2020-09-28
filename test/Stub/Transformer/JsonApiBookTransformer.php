@@ -12,6 +12,7 @@ class JsonApiBookTransformer extends TransformerAbstract
 
     public function transform(array $book)
     {
+        $book['type'] = 'books';
         $book['year'] = (int) $book['year'];
         unset($book['_author']);
         unset($book['_co_author']);
@@ -29,7 +30,7 @@ class JsonApiBookTransformer extends TransformerAbstract
             return $this->null();
         }
 
-        return $this->item($book['_author'], new JsonApiAuthorTransformer(), 'people');
+        return $this->item($book['_author'], new JsonApiAuthorTransformer());
     }
 
     public function includeAuthorWithMeta(array $book)
@@ -56,6 +57,6 @@ class JsonApiBookTransformer extends TransformerAbstract
             return $this->null();
         }
 
-        return $this->item($book['_co_author'], new JsonApiAuthorTransformer(), 'people');
+        return $this->item($book['_co_author'], new JsonApiAuthorTransformer());
     }
 }

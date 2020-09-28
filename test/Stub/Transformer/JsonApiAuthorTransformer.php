@@ -10,6 +10,7 @@ class JsonApiAuthorTransformer extends TransformerAbstract
 
     public function transform(array $author)
     {
+        $author['type'] = 'people';
         unset($author['_published']);
 
         return $author;
@@ -23,8 +24,7 @@ class JsonApiAuthorTransformer extends TransformerAbstract
 
         return $this->collection(
             $author['_published'],
-            new JsonApiBookTransformer(),
-            'books'
+            new JsonApiBookTransformer()
         );
     }
 }
