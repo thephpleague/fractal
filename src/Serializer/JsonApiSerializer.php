@@ -192,7 +192,7 @@ class JsonApiSerializer extends ArraySerializer
             }
         }
 
-        return empty($serializedData) ? [] : ['included' => $serializedData];
+        return empty($serializedData) ? [] : ['included' => array_values($serializedData)];
     }
 
     /**
@@ -622,10 +622,19 @@ class JsonApiSerializer extends ArraySerializer
             $includeId = $object['id'];
             $cacheKey = "$includeType:$includeId";
             if (!array_key_exists($cacheKey, $linkedIds)) {
-                $serializedData[] = $object;
+                $serializedData[$cacheKey] = $object;
                 $linkedIds[$cacheKey] = $object;
+            } elseif (isset($object['relationships'])) {
+                // Preserve nested relationships
+                if (isset($serializedData[$cacheKey]['relationships'])) {
+                    $serializedData[$cacheKey]['relationships'] = array_merge($serializedData[$cacheKey]['relationships'],
+                        $object['relationships']);
+                } else {
+                    $serializedData[$cacheKey]['relationships'] = $object['relationships'];
+                }
             }
         }
+
         return [$serializedData, $linkedIds];
     }
 }
