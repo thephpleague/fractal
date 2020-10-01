@@ -20,8 +20,8 @@ abstract class SerializerAbstract implements Serializer
     /**
      * Serialize a collection.
      *
-     * @param string $resourceKey
-     * @param array  $data
+     * @param string|null $resourceKey
+     * @param array       $data
      *
      * @return array
      */
@@ -30,8 +30,8 @@ abstract class SerializerAbstract implements Serializer
     /**
      * Serialize an item.
      *
-     * @param string $resourceKey
-     * @param array  $data
+     * @param string|null $resourceKey
+     * @param array       $data
      *
      * @return array
      */

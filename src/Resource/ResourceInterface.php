@@ -16,7 +16,7 @@ interface ResourceInterface
     /**
      * Get the resource key.
      *
-     * @return string
+     * @return string|null
      */
     public function getResourceKey();
 
