@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test\Stub\Transformer;
 
+use League\Fractal\Test\Dto\Person;
 use League\Fractal\TransformerAbstract;
 
 class DefaultIncludeBookTransformer extends TransformerAbstract
@@ -15,6 +16,6 @@ class DefaultIncludeBookTransformer extends TransformerAbstract
 
     public function includeAuthor()
     {
-        return $this->item(['c' => 'd'], new GenericAuthorTransformer());
+        return $this->item(Person::make('Robert Cecil Martin'), new GenericAuthorTransformer());
     }
 }

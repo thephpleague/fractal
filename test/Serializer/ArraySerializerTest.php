@@ -6,36 +6,31 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Scope;
 use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Test\Dto\Person;
+use League\Fractal\Test\Dto\Book;
 use League\Fractal\Test\Stub\Transformer\GenericBookTransformer;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
 class ArraySerializerTest extends TestCase
 {
-    private $bookItemInput = [
-        'title' => 'Foo',
-        'year' => '1991',
-        '_author' => [
-            'name' => 'Dave',
-        ],
-    ];
+    private function bookItemInput()
+    {
+        $author = Person::make('Miguel de Cervantes');
 
-    private $bookCollectionInput = [
-        [
-            'title' => 'Foo',
-            'year' => '1991',
-            '_author' => [
-                'name' => 'Dave',
-            ],
-        ],
-        [
-            'title' => 'Bar',
-            'year' => '1997',
-            '_author' => [
-                'name' => 'Bob',
-            ],
-        ],
-    ];
+        return Book::make('Don Quixote', '1605', $author);
+    }
+
+    private function bookCollectionInput()
+    {
+        $phil = Person::make('Miguel de Cervantes');
+        $taylor = Person::make('J. K. Rowling');
+
+        return [
+            Book::make('Don Quixote', '1605', $phil),
+            Book::make('Harry Potter', '1997', $taylor)
+        ];
+    }
 
     public function testSerializingItemResource()
     {
@@ -43,16 +38,16 @@ class ArraySerializerTest extends TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new Item($this->bookItemInput, new GenericBookTransformer(), 'book');
+        $resource = new Item($this->bookItemInput(), new GenericBookTransformer(), 'book');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
         $expected = [
-            'title' => 'Foo',
-            'year' => 1991,
+            'title' => 'Don Quixote',
+            'year' => 1605,
             'author' => [
-                'name' => 'Dave',
+                'name' => 'Miguel de Cervantes',
             ],
         ];
 
@@ -60,23 +55,23 @@ class ArraySerializerTest extends TestCase
 
         //Test single field
         $manager->parseFieldsets(['book' => 'title']);
-        $expected = ['title' => 'Foo'];
+        $expected = ['title' => 'Don Quixote'];
         $this->assertSame($expected, $scope->toArray());
 
         //Test multiple field
         $manager->parseFieldsets(['book' => 'title,year']);
         $expected = [
-            'title' => 'Foo',
-            'year' => 1991
+            'title' => 'Don Quixote',
+            'year' => 1605
         ];
         $this->assertSame($expected, $scope->toArray());
 
         //Test with relationship field
         $manager->parseFieldsets(['book' => 'title,author', 'author' => 'name']);
         $expected = [
-            'title' => 'Foo',
+            'title' => 'Don Quixote',
             'author' => [
-                'name' => 'Dave'
+                'name' => 'Miguel de Cervantes'
             ],
         ];
         $this->assertSame($expected, $scope->toArray());
@@ -89,10 +84,10 @@ class ArraySerializerTest extends TestCase
         $scope = new Scope($manager, $resource);
 
         $expected = [
-            'title' => 'Foo',
-            'year' => 1991,
+            'title' => 'Don Quixote',
+            'year' => 1605,
             'author' => [
-                'name' => 'Dave'
+                'name' => 'Miguel de Cervantes'
             ],
             'meta' => [
                 'foo' => 'bar'
@@ -104,9 +99,9 @@ class ArraySerializerTest extends TestCase
         //Test with relationship field
         $manager->parseFieldsets(['book' => 'title,author', 'author' => 'name']);
         $expected = [
-            'title' => 'Foo',
+            'title' => 'Don Quixote',
             'author' => [
-                'name' => 'Dave',
+                'name' => 'Miguel de Cervantes',
             ],
             'meta' => [
                 'foo' => 'bar',
@@ -121,7 +116,7 @@ class ArraySerializerTest extends TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new Collection($this->bookCollectionInput, new GenericBookTransformer(), 'books');
+        $resource = new Collection($this->bookCollectionInput(), new GenericBookTransformer(), 'books');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -129,17 +124,17 @@ class ArraySerializerTest extends TestCase
         $expected = [
             'books' => [
                 [
-                    'title' => 'Foo',
-                    'year' => 1991,
+                    'title' => 'Don Quixote',
+                    'year' => 1605,
                     'author' => [
-                        'name' => 'Dave',
+                        'name' => 'Miguel de Cervantes',
                     ],
                 ],
                 [
-                    'title' => 'Bar',
+                    'title' => 'Harry Potter',
                     'year' => 1997,
                     'author' => [
-                        'name' => 'Bob',
+                        'name' => 'J. K. Rowling',
                     ],
                 ],
             ],
@@ -148,15 +143,15 @@ class ArraySerializerTest extends TestCase
         $this->assertSame($expected, $scope->toArray());
 
         // JSON array of JSON objects
-        $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
+        $expectedJson = '{"books":[{"title":"Don Quixote","year":1605,"author":{"name":"Miguel de Cervantes"}},{"title":"Harry Potter","year":1997,"author":{"name":"J. K. Rowling"}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
 
         //Test single field
         $manager->parseFieldsets(['books' => 'title']);
         $expected = [
             'books' => [
-                ['title' => 'Foo'],
-                ['title' => 'Bar']
+                ['title' => 'Don Quixote'],
+                ['title' => 'Harry Potter']
             ]
         ];
         $this->assertSame($expected, $scope->toArray());
@@ -166,11 +161,11 @@ class ArraySerializerTest extends TestCase
         $expected = [
             'books' => [
                 [
-                    'title' => 'Foo',
-                    'year' => 1991
+                    'title' => 'Don Quixote',
+                    'year' => 1605
                 ],
                 [
-                    'title' => 'Bar',
+                    'title' => 'Harry Potter',
                     'year' => 1997
                 ]
             ]
@@ -182,15 +177,15 @@ class ArraySerializerTest extends TestCase
         $expected = [
             'books' => [
                 [
-                    'title' => 'Foo',
+                    'title' => 'Don Quixote',
                     'author' => [
-                        'name' => 'Dave'
+                        'name' => 'Miguel de Cervantes'
                     ]
                 ],
                 [
-                    'title' => 'Bar',
+                    'title' => 'Harry Potter',
                     'author' => [
-                        'name' => 'Bob'
+                        'name' => 'J. K. Rowling'
                     ]
                 ]
             ]
@@ -208,17 +203,17 @@ class ArraySerializerTest extends TestCase
         $expected = [
             'books' => [
                 [
-                    'title' => 'Foo',
-                    'year' => 1991,
+                    'title' => 'Don Quixote',
+                    'year' => 1605,
                     'author' => [
-                        'name' => 'Dave',
+                        'name' => 'Miguel de Cervantes',
                     ],
                 ],
                 [
-                    'title' => 'Bar',
+                    'title' => 'Harry Potter',
                     'year' => 1997,
                     'author' => [
-                        'name' => 'Bob',
+                        'name' => 'J. K. Rowling',
                     ],
                 ],
             ],
@@ -229,22 +224,22 @@ class ArraySerializerTest extends TestCase
 
         $this->assertSame($expected, $scope->toArray());
 
-        $expectedJson = '{"books":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
+        $expectedJson = '{"books":[{"title":"Don Quixote","year":1605,"author":{"name":"Miguel de Cervantes"}},{"title":"Harry Potter","year":1997,"author":{"name":"J. K. Rowling"}}],"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
 
         $manager->parseFieldsets(['books' => 'title,author', 'author' => 'name']);
         $expected = [
             'books' => [
                 [
-                    'title' => 'Foo',
+                    'title' => 'Don Quixote',
                     'author' => [
-                        'name' => 'Dave'
+                        'name' => 'Miguel de Cervantes'
                     ]
                 ],
                 [
-                    'title' => 'Bar',
+                    'title' => 'Harry Potter',
                     'author' => [
-                        'name' => 'Bob'
+                        'name' => 'J. K. Rowling'
                     ]
                 ]
             ],
@@ -261,7 +256,7 @@ class ArraySerializerTest extends TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new NullResource($this->bookCollectionInput, new GenericBookTransformer(), 'books');
+        $resource = new NullResource($this->bookCollectionInput(), new GenericBookTransformer(), 'books');
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -313,13 +308,13 @@ class ArraySerializerTest extends TestCase
         $manager->parseIncludes('author');
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new Collection($this->bookCollectionInput, new GenericBookTransformer());
+        $resource = new Collection($this->bookCollectionInput(), new GenericBookTransformer());
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
 
         // JSON array of JSON objects
-        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}]}';
+        $expectedJson = '{"data":[{"title":"Don Quixote","year":1605,"author":{"name":"Miguel de Cervantes"}},{"title":"Harry Potter","year":1997,"author":{"name":"J. K. Rowling"}}]}';
         $this->assertSame($expectedJson, $scope->toJson());
 
         // Same again with metadata
@@ -327,7 +322,7 @@ class ArraySerializerTest extends TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expectedJson = '{"data":[{"title":"Foo","year":1991,"author":{"name":"Dave"}},{"title":"Bar","year":1997,"author":{"name":"Bob"}}],"meta":{"foo":"bar"}}';
+        $expectedJson = '{"data":[{"title":"Don Quixote","year":1605,"author":{"name":"Miguel de Cervantes"}},{"title":"Harry Potter","year":1997,"author":{"name":"J. K. Rowling"}}],"meta":{"foo":"bar"}}';
         $this->assertSame($expectedJson, $scope->toJson());
     }
 

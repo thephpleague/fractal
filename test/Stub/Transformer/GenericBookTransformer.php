@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test\Stub\Transformer;
 
+use League\Fractal\Test\Dto\Book;
 use League\Fractal\TransformerAbstract;
 
 class GenericBookTransformer extends TransformerAbstract
@@ -8,20 +9,26 @@ class GenericBookTransformer extends TransformerAbstract
         'author',
     ];
 
-    public function transform(array $book)
+    public function transform(Book $book)
     {
-        $book['year'] = (int) $book['year'];
-        unset($book['_author']);
+        $data = [
+            'title' => $book->title,
+            'year' => (int) $book->year,
+        ];
 
-        return $book;
+        if (! is_null($book->meta)) {
+            $data['meta'] = $book->meta;
+        }
+
+        return $data;
     }
 
-    public function includeAuthor(array $book)
+    public function includeAuthor(Book $book)
     {
-        if (! isset($book['_author'])) {
+        if (is_null($book->author)) {
             return;
         }
 
-        return $this->item($book['_author'], new GenericAuthorTransformer(), 'author');
+        return $this->item($book->author, new GenericAuthorTransformer(), 'author');
     }
 }
