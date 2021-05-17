@@ -262,33 +262,33 @@ use League\Fractal\ParamBag;
      *
      * @param Book $book
      * @param \League\Fractal\ParamBag|null
-     * @return \League\Fractal\Resource\Item
+     * @return \League\Fractal\Resource\Collection
      */
     public function includeComments(Book $book, ParamBag $params = null)
     {
         if ($params === null) {
-            return $book->comments;
+            $comments = $book->comments;
+        } else {
+            // Optional params validation
+            $usedParams = array_keys(iterator_to_array($params));
+            if ($invalidParams = array_diff($usedParams, $this->validParams)) {
+                throw new \Exception(sprintf(
+                    'Invalid param(s): "%s". Valid param(s): "%s"',
+                    implode(',', $usedParams),
+                    implode(',', $this->validParams)
+                ));
+            }
+
+            // Processing
+            list($limit, $offset) = $params->get('limit');
+            list($orderCol, $orderBy) = $params->get('order');
+
+            $comments = $book->comments
+                ->take($limit)
+                ->skip($offset)
+                ->orderBy($orderCol, $orderBy)
+                ->get();
         }
-
-    	// Optional params validation
-        $usedParams = array_keys(iterator_to_array($params));
-        if ($invalidParams = array_diff($usedParams, $this->validParams)) {
-            throw new \Exception(sprintf(
-                'Invalid param(s): "%s". Valid param(s): "%s"', 
-                implode(',', $usedParams), 
-                implode(',', $this->validParams)
-            ));
-        }
-
-    	// Processing
-        list($limit, $offset) = $params->get('limit');
-        list($orderCol, $orderBy) = $params->get('order');
-
-        $comments = $book->comments
-            ->take($limit)
-            ->skip($offset)
-            ->orderBy($orderCol, $orderBy)
-            ->get();
 
         return $this->collection($comments, new CommentTransformer);
     }
