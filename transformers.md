@@ -262,7 +262,7 @@ use League\Fractal\ParamBag;
      *
      * @param Book $book
      * @param \League\Fractal\ParamBag|null
-     * @return \League\Fractal\Resource\Item
+     * @return \League\Fractal\Resource\Collection
      */
     public function includeComments(Book $book, ParamBag $params = null)
     {
