@@ -105,6 +105,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return $this->__isset($key);
@@ -117,6 +118,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->__get($key);
@@ -132,6 +134,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         throw new \LogicException('Modifying parameters is not permitted');
@@ -146,6 +149,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         throw new \LogicException('Modifying parameters is not permitted');
@@ -156,6 +160,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return \ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->params);
