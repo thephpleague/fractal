@@ -43,12 +43,11 @@ $ composer require league/fractal
 
 The following versions of PHP are supported by this version.
 
-* PHP 5.4
-* PHP 5.5
-* PHP 5.6
 * PHP 7.0
 * PHP 7.1
 * PHP 7.2
+* PHP 8.0
+* PHP 8.1
 * HHVM
 
 ## Documentation

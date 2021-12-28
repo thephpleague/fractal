@@ -21,12 +21,12 @@ use League\Fractal\Resource\ResourceInterface;
 interface ScopeFactoryInterface
 {
     /**
-     * @param Manager $manager
+     * @param Manager           $manager
      * @param ResourceInterface $resource
-     * @param string|null $scopeIdentifier
+     * @param string|null       $scopeIdentifier
      * @return Scope
      */
-    public function createScopeFor(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null);
+    public function createScopeFor(Manager $manager, ResourceInterface $resource, string $scopeIdentifier = null): Scope;
 
     /**
      * @param Manager $manager
@@ -35,5 +35,5 @@ interface ScopeFactoryInterface
      * @param string|null $scopeIdentifier
      * @return Scope
      */
-    public function createChildScopeFor(Manager $manager, Scope $parentScope, ResourceInterface $resource, $scopeIdentifier = null);
+    public function createChildScopeFor(Manager $manager, Scope $parentScope, ResourceInterface $resource, $scopeIdentifier = null): Scope;
 }

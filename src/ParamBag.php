@@ -19,7 +19,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * @var array
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Create a new parameter bag instance.
@@ -40,7 +40,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
-    public function get($key)
+    public function get(string $key): mixed
     {
         return $this->__get($key);
     }
@@ -52,9 +52,9 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
-    public function __get($key)
+    public function __get(string $key)
     {
-        return isset($this->params[$key]) ? $this->params[$key] : null;
+        return $this->params[$key] ?? null;
     }
 
     /**
@@ -64,7 +64,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return bool
      */
-    public function __isset($key)
+    public function __isset(string $key)
     {
         return isset($this->params[$key]);
     }
@@ -75,11 +75,11 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      * @param string $key
      * @param mixed  $value
      *
-     * @throws \LogicException
-     *
      * @return void
+     *@throws \LogicException
+     *
      */
-    public function __set($key, $value)
+    public function __set(string $key, mixed $value)
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -89,11 +89,11 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @param string $key
      *
-     * @throws \LogicException
-     *
      * @return void
+     *@throws \LogicException
+     *
      */
-    public function __unset($key)
+    public function __unset(string $key)
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -101,38 +101,38 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Check if a param exists in the bag via an isset() and array access.
      *
-     * @param string $key
+     * @param string $offset
      *
      * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($offset): bool
     {
-        return $this->__isset($key);
+        return $this->__isset($offset);
     }
 
     /**
      * Get parameter values out of the bag via array access.
      *
-     * @param string $key
+     * @param string $offset
      *
      * @return mixed
      */
-    public function offsetGet($key)
+    public function offsetGet($offset): mixed
     {
-        return $this->__get($key);
+        return $this->__get($offset);
     }
 
     /**
      * Disallow changing the value of params in the data bag via array access.
      *
-     * @param string $key
+     * @param string $offset
      * @param mixed  $value
      *
      * @throws \LogicException
      *
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($offset, mixed $value): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -140,13 +140,13 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Disallow unsetting params in the data bag via array access.
      *
-     * @param string $key
+     * @param string $offset
      *
      * @throws \LogicException
      *
      * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($offset): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -156,7 +156,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->params);
     }

@@ -4,7 +4,7 @@ use League\Fractal\TransformerAbstract;
 
 class JsonApiAuthorTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         'published',
     ];
 

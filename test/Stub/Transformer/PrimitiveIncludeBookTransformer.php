@@ -4,7 +4,7 @@ use League\Fractal\TransformerAbstract;
 
 class PrimitiveIncludeBookTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         'price'
     ];
 

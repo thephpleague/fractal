@@ -11,6 +11,7 @@
 
 namespace League\Fractal;
 
+use JetBrains\PhpStorm\Pure;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\SerializerAbstract;
@@ -29,56 +30,56 @@ class Manager
      *
      * @var array
      */
-    protected $requestedIncludes = [];
+    protected array $requestedIncludes = [];
 
     /**
      * Array of scope identifiers for resources to exclude.
      *
      * @var array
      */
-    protected $requestedExcludes = [];
+    protected array $requestedExcludes = [];
 
     /**
      * Array of requested fieldsets.
      *
      * @var array
      */
-    protected $requestedFieldsets = [];
+    protected array $requestedFieldsets = [];
 
     /**
      * Array containing modifiers as keys and an array value of params.
      *
      * @var array
      */
-    protected $includeParams = [];
+    protected array $includeParams = [];
 
     /**
      * The character used to separate modifier parameters.
      *
      * @var string
      */
-    protected $paramDelimiter = '|';
+    protected string $paramDelimiter = '|';
 
     /**
      * Upper limit to how many levels of included data are allowed.
      *
      * @var int
      */
-    protected $recursionLimit = 10;
+    protected int $recursionLimit = 10;
 
     /**
      * Serializer.
      *
      * @var SerializerAbstract
      */
-    protected $serializer;
+    protected SerializerAbstract $serializer;
 
     /**
      * Factory used to create new configured scopes.
      *
      * @var ScopeFactoryInterface
      */
-    private $scopeFactory;
+    private ScopeFactoryInterface|ScopeFactory $scopeFactory;
 
     public function __construct(ScopeFactoryInterface $scopeFactory = null)
     {
@@ -91,12 +92,12 @@ class Manager
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
      *
      * @param ResourceInterface $resource
-     * @param string            $scopeIdentifier
+     * @param string|null       $scopeIdentifier
      * @param Scope             $parentScopeInstance
      *
      * @return Scope
      */
-    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
+    public function createData(ResourceInterface $resource, string $scopeIdentifier = null, Scope $parentScopeInstance = null): Scope
     {
         if ($parentScopeInstance !== null) {
             return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
@@ -112,9 +113,9 @@ class Manager
      *
      * @return \League\Fractal\ParamBag
      */
-    public function getIncludeParams($include)
+    #[Pure] public function getIncludeParams(string $include): ParamBag
     {
-        $params = isset($this->includeParams[$include]) ? $this->includeParams[$include] : [];
+        $params = $this->includeParams[$include] ?? [];
 
         return new ParamBag($params);
     }
@@ -124,7 +125,7 @@ class Manager
      *
      * @return array
      */
-    public function getRequestedIncludes()
+    public function getRequestedIncludes(): array
     {
         return $this->requestedIncludes;
     }
@@ -134,7 +135,7 @@ class Manager
      *
      * @return array
      */
-    public function getRequestedExcludes()
+    public function getRequestedExcludes(): array
     {
         return $this->requestedExcludes;
     }
@@ -144,7 +145,7 @@ class Manager
      *
      * @return SerializerAbstract
      */
-    public function getSerializer()
+    public function getSerializer(): SerializerAbstract
     {
         if (! $this->serializer) {
             $this->setSerializer(new DataArraySerializer());
@@ -160,7 +161,7 @@ class Manager
      *
      * @return $this
      */
-    public function parseIncludes($includes)
+    public function parseIncludes(array|string $includes): static
     {
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = [];
@@ -177,8 +178,8 @@ class Manager
         }
 
         foreach ($includes as $include) {
-            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
-            list($allModifiersStr, $subRelations) = array_pad(explode('.', $allModifiersStr, 2), 2, null);
+            [$includeName, $allModifiersStr] = array_pad(explode(':', $include, 2), 2, null);
+            [$allModifiersStr, $subRelations] = array_pad(explode('.', $allModifiersStr, 2), 2, null);
 
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
@@ -235,7 +236,7 @@ class Manager
      *
      * @return $this
      */
-    public function parseFieldsets(array $fieldsets)
+    public function parseFieldsets(array $fieldsets): static
     {
         $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
@@ -254,7 +255,7 @@ class Manager
      *
      * @return array
      */
-    public function getRequestedFieldsets()
+    public function getRequestedFieldsets(): array
     {
         return $this->requestedFieldsets;
     }
@@ -266,7 +267,7 @@ class Manager
      *
      * @return \League\Fractal\ParamBag|null
      */
-    public function getFieldset($type)
+    #[Pure] public function getFieldset(string $type): ?ParamBag
     {
         return !isset($this->requestedFieldsets[$type]) ?
             null :
@@ -280,7 +281,7 @@ class Manager
      *
      * @return $this
      */
-    public function parseExcludes($excludes)
+    public function parseExcludes(array|string $excludes): static
     {
         $this->requestedExcludes = [];
 
@@ -314,7 +315,7 @@ class Manager
      *
      * @return $this
      */
-    public function setRecursionLimit($recursionLimit)
+    public function setRecursionLimit(int $recursionLimit): static
     {
         $this->recursionLimit = $recursionLimit;
 
@@ -328,7 +329,7 @@ class Manager
      *
      * @return $this
      */
-    public function setSerializer(SerializerAbstract $serializer)
+    public function setSerializer(SerializerAbstract $serializer): static
     {
         $this->serializer = $serializer;
 
@@ -345,7 +346,7 @@ class Manager
      *
      * @return void
      */
-    protected function autoIncludeParents()
+    protected function autoIncludeParents(): void
     {
         $parsed = [];
 
@@ -370,13 +371,13 @@ class Manager
      * Strip off any requested resources that are too many levels deep, to avoid DiCaprio being chased
      * by trains or whatever the hell that movie was about.
      *
-     * @internal
-     *
      * @param string $includeName
      *
      * @return string
+     *@internal
+     *
      */
-    protected function trimToAcceptableRecursionLevel($includeName)
+    protected function trimToAcceptableRecursionLevel(string $includeName): string
     {
         return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
     }

@@ -21,7 +21,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">=5.4"
+        "php": ">= 8.0"
     },
     "require-dev": {
         "doctrine/orm": "^2.5",

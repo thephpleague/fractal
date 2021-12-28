@@ -4,7 +4,7 @@ use League\Fractal\TransformerAbstract;
 
 class DefaultIncludeBookTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         'author',
     ];
 
