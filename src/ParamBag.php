@@ -11,6 +11,8 @@
 
 namespace League\Fractal;
 
+use ReturnTypeWillChange;
+
 /**
  * A handy interface for getting at include parameters.
  */
@@ -105,7 +107,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->__isset($key);
     }
@@ -117,6 +119,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
+	#[ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->__get($key);
@@ -132,7 +135,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -146,7 +149,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -156,7 +159,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->params);
     }

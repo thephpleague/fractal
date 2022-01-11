@@ -38,7 +38,7 @@ class IlluminatePaginatorAdapterTest extends TestCase
         $this->assertSame('http://example.com/foo?page=1', $adapter->getUrl(1));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

@@ -1,5 +1,6 @@
 <?php namespace League\Fractal\Test;
 
+use InvalidArgumentException;
 use League\Fractal\Manager;
 use League\Fractal\ParamBag;
 use League\Fractal\Resource\Collection;
@@ -17,23 +18,19 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(get_class($manager), $manager->parseIncludes(['foo']));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. NULL given
-     */
     public function testInvalidParseInclude()
     {
+		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. NULL given'));
+
         $manager = new Manager();
 
         $manager->parseIncludes(null);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The parseIncludes() method expects a string or an array. integer given
-     */
     public function testIceTParseInclude()
     {
+		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. integer given'));
+
         $manager = new Manager();
 
         $manager->parseIncludes(99);
@@ -99,23 +96,19 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(get_class($manager), $manager->parseExcludes(['foo']));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The parseExcludes() method expects a string or an array. NULL given
-     */
     public function testInvalidParseExclude()
     {
+		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. NULL given'));
+
         $manager = new Manager();
 
         $manager->parseExcludes(null);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The parseExcludes() method expects a string or an array. integer given
-     */
     public function testIceTParseExclude()
     {
+		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. integer given'));
+
         $manager = new Manager();
 
         $manager->parseExcludes(99);
@@ -276,7 +269,7 @@ class ManagerTest extends TestCase
         $this->assertSame(null, $manager->getFieldset('inexistent'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

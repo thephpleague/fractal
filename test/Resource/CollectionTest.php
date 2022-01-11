@@ -118,7 +118,7 @@ class CollectionTest extends TestCase
         $this->assertSame('foo', $collection->getResourceKey());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
