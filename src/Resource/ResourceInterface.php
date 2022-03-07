@@ -16,7 +16,7 @@ interface ResourceInterface
     /**
      * Get the resource key.
      */
-    public function getResourceKey(): ?string;
+    public function getResourceKey(): string;
 
     /**
      * Get the data.

@@ -92,9 +92,9 @@ abstract class ResourceAbstract implements ResourceInterface
         return $this->meta[$metaKey];
     }
 
-    public function getResourceKey(): ?string
+    public function getResourceKey(): string
     {
-        return $this->resourceKey;
+        return $this->resourceKey ?? '';
     }
 
     /**
