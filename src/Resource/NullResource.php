@@ -29,5 +29,6 @@ class NullResource extends ResourceAbstract
     public function getData()
     {
         // Null has no data associated with it.
+        return null;
     }
 }

@@ -30,7 +30,7 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     /**
      * PhalconFrameworkPaginatorAdapter constructor.
      *
-     * @param stdClass $paginator
+     * @param \stdClass $paginator
      */
     public function __construct($paginator)
     {
@@ -108,6 +108,6 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
      */
     public function getUrl($page)
     {
-        return $page;
+        return (string) $page;
     }
 }
