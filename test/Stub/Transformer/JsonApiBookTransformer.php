@@ -4,13 +4,13 @@ use League\Fractal\TransformerAbstract;
 
 class JsonApiBookTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         'author',
         'co-author',
         'author-with-meta',
     ];
 
-    public function transform(array $book)
+    public function transform(array $book): array
     {
         $book['year'] = (int) $book['year'];
         unset($book['_author']);

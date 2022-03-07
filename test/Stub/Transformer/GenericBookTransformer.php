@@ -4,11 +4,11 @@ use League\Fractal\TransformerAbstract;
 
 class GenericBookTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         'author',
     ];
 
-    public function transform(array $book)
+    public function transform(array $book): array
     {
         $book['year'] = (int) $book['year'];
         unset($book['_author']);

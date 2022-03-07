@@ -332,7 +332,7 @@ class ScopeTest extends TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn('simple string');
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
         $transformer->shouldNotReceive('getAvailableIncludes');
         $transformer->shouldNotReceive('getDefaultIncludes');
 
@@ -355,7 +355,7 @@ class ScopeTest extends TestCase
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -371,7 +371,7 @@ class ScopeTest extends TestCase
         $transformer->shouldReceive('transform')->once()->andReturn(['foo' => 'bar']);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
 
         $resource = new Collection([['foo' => 'bar']], $transformer);
         $scope = $manager->createData($resource);

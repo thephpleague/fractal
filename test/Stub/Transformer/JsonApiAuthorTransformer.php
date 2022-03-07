@@ -4,11 +4,11 @@ use League\Fractal\TransformerAbstract;
 
 class JsonApiAuthorTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         'published',
     ];
 
-    public function transform(array $author)
+    public function transform(array $author): array
     {
         unset($author['_published']);
 

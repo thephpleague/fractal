@@ -45,73 +45,57 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the current page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return (int) ($this->paginator->getQuery()->getFirstResult() / $this->paginator->getQuery()->getMaxResults()) + 1;
     }
 
     /**
-     * Get the last page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getLastPage()
+    public function getLastPage(): int
     {
         return (int) ceil($this->getTotal() / $this->paginator->getQuery()->getMaxResults());
     }
 
     /**
-     * Get the total.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getTotal()
+    public function getTotal(): int
     {
         return count($this->paginator);
     }
 
     /**
-     * Get the count.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->paginator->getIterator()->count();
     }
 
     /**
-     * Get the number per page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->paginator->getQuery()->getMaxResults();
     }
 
     /**
-     * Get the url for the given page.
-     *
-     * @param int $page
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUrl($page)
+    public function getUrl(int $page): string
     {
         return call_user_func($this->getRouteGenerator(), $page);
     }
 
     /**
      * Get the the route generator.
-     *
-     * @return callable
      */
-    private function getRouteGenerator()
+    private function getRouteGenerator(): callable
     {
         return $this->routeGenerator;
     }
