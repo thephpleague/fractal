@@ -21,7 +21,7 @@ class ScopeFactory implements ScopeFactoryInterface
      * @param string|null $scopeIdentifier
      * @return Scope
      */
-    public function createScopeFor(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null)
+    public function createScopeFor(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null): Scope
     {
         return new Scope($manager, $resource, $scopeIdentifier);
     }

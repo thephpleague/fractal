@@ -30,7 +30,7 @@ interface ScopeFactoryInterface
         Manager $manager,
         ResourceInterface $resource,
         $scopeIdentifier = null
-    );
+    ): Scope;
 
     /**
      * @param Manager $manager
@@ -44,5 +44,5 @@ interface ScopeFactoryInterface
         Scope $parentScope,
         ResourceInterface $resource,
         $scopeIdentifier = null
-    );
+    ): Scope;
 }
