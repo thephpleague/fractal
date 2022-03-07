@@ -484,9 +484,9 @@ class JsonApiSerializer extends ArraySerializer
 
 
     /**
-     * @param $data
-     * @param $relationship
-     * @param $key
+     * @param array $data
+     * @param array $relationship
+     * @param string $key
      *
      * @return array
      */
