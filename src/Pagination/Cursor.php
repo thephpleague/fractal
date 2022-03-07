@@ -126,7 +126,7 @@ class Cursor implements CursorInterface
     /**
      * {@inheritDoc}
      */
-    public function getCount(): int
+    public function getCount(): ?int
     {
         return $this->count;
     }

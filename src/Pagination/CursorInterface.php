@@ -45,5 +45,5 @@ interface CursorInterface
     /**
      * Returns the total items in the current cursor.
      */
-    public function getCount(): int;
+    public function getCount(): ?int;
 }

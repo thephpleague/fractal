@@ -44,6 +44,8 @@ interface Serializer
 
     public function mergeIncludes(array $transformedData, array $includedData): array;
 
+    public function injectAvailableIncludeData(array $data, array $availableIncludes): array;
+
     /**
      * Indicates if includes should be side-loaded.
      */
