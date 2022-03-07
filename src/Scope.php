@@ -314,7 +314,7 @@ class Scope implements \JsonSerializable
      *
      * @param mixed $data
      */
-    protected function serializeResource(Serializer $serializer, $data): array
+    protected function serializeResource(Serializer $serializer, $data): ?array
     {
         $resourceKey = $this->resource->getResourceKey();
 

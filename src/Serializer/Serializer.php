@@ -20,7 +20,7 @@ interface Serializer
     /**
      * Serialize null resource.
      */
-    public function null(): array;
+    public function null(): ?array;
 
     /**
      * Serialize the included data.

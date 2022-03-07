@@ -32,7 +32,7 @@ class DataArraySerializer extends ArraySerializer
     /**
      * {@inheritDoc}
      */
-    public function null(): array
+    public function null(): ?array
     {
         return ['data' => []];
     }

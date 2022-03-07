@@ -36,7 +36,7 @@ class ArraySerializer extends SerializerAbstract
     /**
      * {@inheritDoc}
      */
-    public function null(): array
+    public function null(): ?array
     {
         return [];
     }
