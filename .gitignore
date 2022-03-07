@@ -1,7 +1,4 @@
-.idea
-.ruby-version
 composer.lock
 build
 vendor
-Gemfile.lock
-coverage
+.phpunit.result.cache

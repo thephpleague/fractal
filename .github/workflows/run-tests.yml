@@ -44,6 +44,3 @@ jobs:
 
       - name: Download Scrutinizer phar
         run: wget https://scrutinizer-ci.com/ocular.phar
-
-      - name: Send Coverage Report to Scrutinizer
-        run: php ocular.phar code-coverage:upload --format=php-clover coverage.clover
