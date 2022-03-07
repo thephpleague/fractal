@@ -145,10 +145,10 @@ class Manager
     public function getSerializer()
     {
         if (! $this->serializer) {
-            $this->setSerializer(new DataArraySerializer());
+            $this->setSerializer($serializer = new DataArraySerializer());
         }
 
-        return $this->serializer;
+        return $serializer;
     }
 
     /**

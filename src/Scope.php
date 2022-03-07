@@ -228,7 +228,7 @@ class Scope implements \JsonSerializable
     /**
      * Convert the current data for this scope to an array.
      *
-     * @return array
+     * @return array|null
      */
     public function toArray()
     {
@@ -286,7 +286,7 @@ class Scope implements \JsonSerializable
             if (!empty($meta)) {
                 return $meta;
             }
-            return [];
+            return null;
         }
 
         return $data + $meta;
