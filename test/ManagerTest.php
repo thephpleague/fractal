@@ -276,7 +276,7 @@ class ManagerTest extends TestCase
         $this->assertSame(null, $manager->getFieldset('inexistent'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

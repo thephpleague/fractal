@@ -9,9 +9,9 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-20.04]
-        php: [5.4, 5.5, 5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0]
+        php: [7.2, 7.3, 7.4, 8.0]
 
-    name: "League - PHP ${{ matrix.php }} on ${{ matrix.os }}"
+    name: League - PHP ${{ matrix.php }} on ${{ matrix.os }}
 
     steps:
 

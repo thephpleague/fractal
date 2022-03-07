@@ -369,7 +369,7 @@ class TransformerAbstractTest extends TestCase
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

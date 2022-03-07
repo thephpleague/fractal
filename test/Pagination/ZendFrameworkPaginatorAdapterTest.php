@@ -46,7 +46,7 @@ class ZendFrameworkPaginatorAdapterTest extends TestCase
         $this->assertSame('http://example.com/foo?page=3', $adapter->getUrl(3));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
