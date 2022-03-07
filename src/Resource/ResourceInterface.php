@@ -51,4 +51,11 @@ interface ResourceInterface
      * @return $this
      */
     public function setTransformer($transformer);
+
+    /**
+     * Get the meta data.
+     *
+     * @return array
+     */
+    public function getMeta();
 }
