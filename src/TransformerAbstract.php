@@ -182,10 +182,23 @@ abstract class TransformerAbstract
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {
         $scopeIdentifier = $scope->getIdentifier($includeName);
+
         $params = $scope->getManager()->getIncludeParams($scopeIdentifier);
 
         // Check if the method name actually exists
-        $methodName = 'include'.str_replace(' ', '', ucwords(str_replace('_', ' ', str_replace('-', ' ', $includeName))));
+        $methodName = 'include'.str_replace(
+            ' ',
+            '',
+            ucwords(str_replace(
+                '_',
+                ' ',
+                str_replace(
+                    '-',
+                    ' ',
+                    $includeName
+                )
+            ))
+        );
 
         $resource = call_user_func([$this, $methodName], $data, $params);
 
