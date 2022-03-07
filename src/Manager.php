@@ -177,13 +177,9 @@ class Manager
         }
 
         foreach ($includes as $include) {
-<<<<<<< HEAD
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, '');
-            list($allModifiersStr, $subRelations) = array_pad(explode('.', $allModifiersStr, 2), 2, null);
-=======
-            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
-            list($allModifiersStr, $subRelations) = array_pad($allModifiersStr ? explode('.', $allModifiersStr, 2) : [''], 2, null);
->>>>>>> 36a1949... fix: PHP 8.1 support (#1)
+            $a = $allModifiersStr ? explode('.', $allModifiersStr, 2) : [''];
+            list($allModifiersStr, $subRelations) = array_pad($a, 2, null);
 
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);

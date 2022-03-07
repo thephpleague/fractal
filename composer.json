@@ -18,10 +18,7 @@
         }
     ],
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true
-        }
+        "sort-packages": true
     },
     "require": {
         "php": ">=7.2"
@@ -37,7 +34,8 @@
     },
     "suggest": {
         "illuminate/pagination": "The Illuminate Pagination component.",
-        "pagerfanta/pagerfanta": "Pagerfanta Paginator"
+        "pagerfanta/pagerfanta": "Pagerfanta Paginator",
+        "zendframework/zend-paginator": "Zend Framework Paginator"
     },
     "autoload": {
         "psr-4": {

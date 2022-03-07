@@ -11,8 +11,6 @@
 
 namespace League\Fractal;
 
-use ReturnTypeWillChange;
-
 /**
  * A handy interface for getting at include parameters.
  */
