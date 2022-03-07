@@ -7,13 +7,8 @@ use League\Fractal\Serializer\ArraySerializer;
 
 class ArraySerializerWithNull extends ArraySerializer
 {
-    /**
-     * Serialize null resource.
-     *
-     * @return null
-     */
-    public function null()
+    public function null(): array
     {
-        return null;
+        return [];
     }
 }
