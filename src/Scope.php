@@ -286,7 +286,7 @@ class Scope implements \JsonSerializable
             if (!empty($meta)) {
                 return $meta;
             }
-            return null;
+            return [];
         }
 
         return $data + $meta;

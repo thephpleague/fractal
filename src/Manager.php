@@ -67,9 +67,7 @@ class Manager
     protected $recursionLimit = 10;
 
     /**
-     * Serializer.
-     *
-     * @var SerializerAbstract
+     * @var SerializerAbstract|null
      */
     protected $serializer;
 
