@@ -16,73 +16,55 @@ namespace League\Fractal\Pagination;
  *
  * @author Thien Tran <fcduythien@gmail.com>
  * @author Nikolaos Dimopoulos <nikos@phalconphp.com>
- *
  */
 class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
 {
     /**
      * A slice of the result set to show in the pagination
-     *
-     * @var \stdClass
      */
-    private $paginator;
+    private \stdClass $paginator;
 
-    /**
-     * PhalconFrameworkPaginatorAdapter constructor.
-     *
-     * @param \stdClass $paginator
-     */
-    public function __construct($paginator)
+    public function __construct(\stdClass $paginator)
     {
         $this->paginator = $paginator;
     }
 
     /**
-     * Get the current page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return $this->paginator->current;
     }
 
     /**
-     * Get the last page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getLastPage()
+    public function getLastPage(): int
     {
         return $this->paginator->last;
     }
 
     /**
-     * Get the total.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getTotal()
+    public function getTotal(): int
     {
         return $this->paginator->total_items;
     }
 
     /**
-     * Get the count.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->paginator->total_pages;
     }
 
     /**
-     * Get the number per page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         // $this->paginator->items->count()
         // Because when we use raw sql have not this method
@@ -90,23 +72,17 @@ class PhalconFrameworkPaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the next.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getNext()
+    public function getNext(): int
     {
         return $this->paginator->next;
     }
 
     /**
-     * Get the url for the given page.
-     *
-     * @param int $page
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUrl($page)
+    public function getUrl(int $page): string
     {
         return (string) $page;
     }

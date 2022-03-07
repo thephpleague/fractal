@@ -20,12 +20,7 @@ use Zend\Paginator\Paginator;
  */
 class ZendFrameworkPaginatorAdapter implements PaginatorInterface
 {
-    /**
-     * The paginator instance.
-     *
-     * @var \Zend\Paginator\Paginator
-     */
-    protected $paginator;
+    protected Paginator $paginator;
 
     /**
      * The route generator.
@@ -34,98 +29,66 @@ class ZendFrameworkPaginatorAdapter implements PaginatorInterface
      */
     protected $routeGenerator;
 
-    /**
-     * Create a new zendframework pagination adapter.
-     *
-     * @param \Zend\Paginator\Paginator $paginator
-     * @param callable                  $routeGenerator
-     *
-     * @return void
-     */
-    public function __construct(Paginator $paginator, $routeGenerator)
+    public function __construct(Paginator $paginator, callable $routeGenerator)
     {
         $this->paginator = $paginator;
         $this->routeGenerator = $routeGenerator;
     }
 
     /**
-     * Get the current page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return $this->paginator->getCurrentPageNumber();
     }
 
     /**
-     * Get the last page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getLastPage()
+    public function getLastPage(): int
     {
         return $this->paginator->count();
     }
 
     /**
-     * Get the total.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getTotal()
+    public function getTotal(): int
     {
         return $this->paginator->getTotalItemCount();
     }
 
     /**
-     * Get the count.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->paginator->getCurrentItemCount();
     }
 
     /**
-     * Get the number per page.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->paginator->getItemCountPerPage();
     }
 
     /**
-     * Get the url for the given page.
-     *
-     * @param int $page
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUrl($page)
+    public function getUrl(int $page): string
     {
         return call_user_func($this->routeGenerator, $page);
     }
 
-    /**
-     * Get the paginator instance.
-     *
-     * @return \Zend\Paginator\Paginator
-     */
-    public function getPaginator()
+    public function getPaginator(): Paginator
     {
         return $this->paginator;
     }
 
-    /**
-     * Get the the route generator.
-     *
-     * @return callable
-     */
-    public function getRouteGenerator()
+    public function getRouteGenerator(): callable
     {
         return $this->routeGenerator;
     }
