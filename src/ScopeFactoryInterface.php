@@ -29,7 +29,7 @@ interface ScopeFactoryInterface
     public function createScopeFor(
         Manager $manager,
         ResourceInterface $resource,
-        string $scopeIdentifier = null
+        $scopeIdentifier = null
     );
 
     /**
@@ -43,6 +43,6 @@ interface ScopeFactoryInterface
         Manager $manager,
         Scope $parentScope,
         ResourceInterface $resource,
-        string $scopeIdentifier = null
+        $scopeIdentifier = null
     );
 }
