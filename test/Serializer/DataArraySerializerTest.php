@@ -355,7 +355,7 @@ class DataArraySerializerTest extends TestCase
         $this->assertSame($expected, $scope->toArray());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

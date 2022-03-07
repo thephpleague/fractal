@@ -15,7 +15,7 @@ class JsonApiSerializerTest extends TestCase
 {
     private $manager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->manager = new Manager();
         $this->manager->setSerializer(new JsonApiSerializer());
@@ -2794,7 +2794,7 @@ class JsonApiSerializerTest extends TestCase
         ];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

@@ -331,7 +331,7 @@ class ArraySerializerTest extends TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
