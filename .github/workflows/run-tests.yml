@@ -9,7 +9,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-20.04]
-        php: [7.2, 7.3, 7.4, 8.0]
+        php: [7.2, 7.3, 7.4, 8.0, 8.1]
 
     name: League - PHP ${{ matrix.php }} on ${{ matrix.os }}
 
