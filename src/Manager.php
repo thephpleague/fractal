@@ -177,7 +177,7 @@ class Manager
         }
 
         foreach ($includes as $include) {
-            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
+            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, '');
             list($allModifiersStr, $subRelations) = array_pad(explode('.', $allModifiersStr, 2), 2, null);
 
             // Trim it down to a cool level of recursion
