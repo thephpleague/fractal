@@ -28,22 +28,22 @@ class ScopeFactory implements ScopeFactoryInterface
 
     /**
      * @param Manager $manager
-     * @param Scope $parentScopeInstance
+     * @param Scope $parentScope
      * @param ResourceInterface $resource
      * @param string|null $scopeIdentifier
      * @return Scope
      */
     public function createChildScopeFor(
         Manager $manager,
-        Scope $parentScopeInstance,
+        Scope $parentScope,
         ResourceInterface $resource,
         $scopeIdentifier = null
     ): Scope {
         $scopeInstance = $this->createScopeFor($manager, $resource, $scopeIdentifier);
 
         // This will be the new children list of parents (parents parents, plus the parent)
-        $scopeArray = $parentScopeInstance->getParentScopes();
-        $scopeArray[] = $parentScopeInstance->getScopeIdentifier();
+        $scopeArray = $parentScope->getParentScopes();
+        $scopeArray[] = $parentScope->getScopeIdentifier();
 
         $scopeInstance->setParentScopes($scopeArray);
 

@@ -212,13 +212,13 @@ class JsonApiSerializer extends ArraySerializer
 
     /**
      * @param array $data
-     * @param array $includedData
+     * @param array $rawIncludedData
      *
      * @return array
      */
-    public function injectData($data, $includedData)
+    public function injectData($data, $rawIncludedData)
     {
-        $relationships = $this->parseRelationships($includedData);
+        $relationships = $this->parseRelationships($rawIncludedData);
 
         if (!empty($relationships)) {
             $data = $this->fillRelationships($data, $relationships);
@@ -432,7 +432,7 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Check if the objects are part of a collection or not
      *
-     * @param $includeObject
+     * @param array|object $includeObject
      *
      * @return array
      */
@@ -452,7 +452,7 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Sets the RootObjects, either as collection or not.
      *
-     * @param $data
+     * @param array $data
      */
     private function createRootObjects($data)
     {
@@ -467,9 +467,9 @@ class JsonApiSerializer extends ArraySerializer
     /**
      * Loops over the relationships of the provided data and formats it
      *
-     * @param $data
-     * @param $relationship
-     * @param $key
+     * @param array $data
+     * @param array $relationship
+     * @param string $key
      *
      * @return array
      */
@@ -484,9 +484,9 @@ class JsonApiSerializer extends ArraySerializer
 
 
     /**
-     * @param $data
-     * @param $relationship
-     * @param $key
+     * @param array $data
+     * @param array $relationship
+     * @param string $key
      *
      * @return array
      */

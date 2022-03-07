@@ -116,7 +116,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Get the transformer.
      *
-     * @return callable|TransformerAbstract
+     * @return callable|TransformerAbstract|null
      */
     public function getTransformer()
     {

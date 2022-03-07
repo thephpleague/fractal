@@ -115,7 +115,7 @@ abstract class TransformerAbstract
      * @param Scope $scope
      * @param mixed $data
      *
-     * @return array
+     * @return array|false
      */
     public function processIncludedResources(Scope $scope, $data)
     {
@@ -177,7 +177,7 @@ abstract class TransformerAbstract
      *
      * @throws \Exception
      *
-     * @return \League\Fractal\Resource\ResourceInterface
+     * @return \League\Fractal\Resource\ResourceInterface|false
      */
     protected function callIncludeMethod(Scope $scope, $includeName, $data)
     {

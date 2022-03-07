@@ -30,7 +30,7 @@ interface ResourceInterface
     /**
      * Get the transformer.
      *
-     * @return callable|\League\Fractal\TransformerAbstract
+     * @return callable|\League\Fractal\TransformerAbstract|null
      */
     public function getTransformer();
 
