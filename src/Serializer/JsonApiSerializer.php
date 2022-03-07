@@ -188,7 +188,12 @@ class JsonApiSerializer extends ArraySerializer
                 }
 
                 $includeObjects = $this->createIncludeObjects($includeObject);
-                list($serializedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObjects, $linkedIds, $serializedData);
+
+                list($serializedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey(
+                    $includeObjects,
+                    $linkedIds,
+                    $serializedData
+                );
             }
         }
 
@@ -402,7 +407,11 @@ class JsonApiSerializer extends ArraySerializer
         foreach ($data as $value) {
             foreach ($value as $includeObject) {
                 if (isset($includeObject['included'])) {
-                    list($includedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey($includeObject['included'], $linkedIds, $includedData);
+                    list($includedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey(
+                        $includeObject['included'],
+                        $linkedIds,
+                        $includedData
+                    );
                 }
             }
         }
@@ -598,7 +607,7 @@ class JsonApiSerializer extends ArraySerializer
         $resource['relationships'][$relationshipKey] = array_merge(
             [
                 'links' => [
-                    'self'   => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
+                    'self' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
                     'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
                 ]
             ],
