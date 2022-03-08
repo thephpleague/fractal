@@ -39,9 +39,9 @@ $ composer require league/fractal
 
 ## Requirements
 
-The following versions of PHP are supported by this version.
+The following versions of PHP are supported by this version:
 
-* >= PHP 7.4
+&gt;= PHP 7.4
 
 ## Documentation
 
