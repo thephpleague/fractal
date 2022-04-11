@@ -16,7 +16,7 @@ class DataArraySerializer extends ArraySerializer
     /**
      * {@inheritDoc}
      */
-    public function collection(string $resourceKey, array $data): array
+    public function collection(?string $resourceKey, array $data): array
     {
         return ['data' => $data];
     }
@@ -24,7 +24,7 @@ class DataArraySerializer extends ArraySerializer
     /**
      * {@inheritDoc}
      */
-    public function item(string $resourceKey, array $data): array
+    public function item(?string $resourceKey, array $data): array
     {
         return ['data' => $data];
     }

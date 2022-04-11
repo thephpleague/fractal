@@ -10,12 +10,12 @@ interface Serializer
     /**
      * Serialize a collection.
      */
-    public function collection(string $resourceKey, array $data): array;
+    public function collection(?string $resourceKey, array $data): array;
 
     /**
      * Serialize an item.
      */
-    public function item(string $resourceKey, array $data): array;
+    public function item(?string $resourceKey, array $data): array;
 
     /**
      * Serialize null resource.
