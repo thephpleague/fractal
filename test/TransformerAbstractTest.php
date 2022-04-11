@@ -74,6 +74,16 @@ class TransformerAbstractTest extends TestCase
         $this->assertSame($transformer->getCurrentScope(), $scope);
     }
 
+    /**
+     * @covers \League\Fractal\TransformerAbstract::getCurrentScope
+     */
+    public function testCanAccessScopeBeforeInitialization()
+    {
+        $transformer = $this->getMockForAbstractClass('League\Fractal\TransformerAbstract');
+        $currentScope = $transformer->getCurrentScope();
+        $this->assertNull($currentScope);
+    }
+
     public function testProcessEmbeddedResourcesNoAvailableIncludes()
     {
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();

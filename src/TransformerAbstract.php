@@ -38,7 +38,7 @@ abstract class TransformerAbstract
     /**
      * The transformer should know about the current scope, so we can fetch relevant params.
      */
-    protected ?Scope $currentScope;
+    protected ?Scope $currentScope = null;
 
     /**
      * Getter for availableIncludes.
