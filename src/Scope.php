@@ -319,11 +319,20 @@ class Scope implements \JsonSerializable
         $resourceKey = $this->resource->getResourceKey();
 
         if ($this->resource instanceof Collection) {
-            return $serializer->collection($resourceKey, $data);
+            if (!empty($resourceKey)) {
+                return $serializer->collection($resourceKey, $data);
+            }
+
+            return $serializer->collection(null, $data);
         }
 
         if ($this->resource instanceof Item) {
-            return $serializer->item($resourceKey, $data);
+            // this is where it breaks now.
+            if (!empty($resourceKey)) {
+                return $serializer->item($resourceKey, $data);
+            }
+
+            return $serializer->item(null, $data);
         }
 
         return $serializer->null();
