@@ -20,7 +20,7 @@ class ArraySerializer extends SerializerAbstract
     /**
      * {@inheritDoc}
      */
-    public function collection(string $resourceKey, array $data): array
+    public function collection(?string $resourceKey, array $data): array
     {
         return [$resourceKey ?: 'data' => $data];
     }
@@ -28,7 +28,7 @@ class ArraySerializer extends SerializerAbstract
     /**
      * {@inheritDoc}
      */
-    public function item(string $resourceKey, array $data): array
+    public function item(?string $resourceKey, array $data): array
     {
         return $data;
     }
