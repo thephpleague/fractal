@@ -1,3 +1,11 @@
+## Next
+
+### Enhancements
+- Add links for all available includes to `JsonApiSerializer` #331 - Thanks @matt-allan
+- Implement interface `\JsonSerializable` in Scopes to allow for direct usage with `json_encode()`
+
+
+
 ## 0.18.0 - 2019-05-09
 
 ### Enhancements

@@ -13,7 +13,7 @@ namespace League\Fractal;
 
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\DataArraySerializer;
-use League\Fractal\Serializer\SerializerAbstract;
+use League\Fractal\Serializer\Serializer;
 
 /**
  * Manager
@@ -26,59 +26,40 @@ class Manager
 {
     /**
      * Array of scope identifiers for resources to include.
-     *
-     * @var array
      */
-    protected $requestedIncludes = [];
+    protected array $requestedIncludes = [];
 
     /**
      * Array of scope identifiers for resources to exclude.
-     *
-     * @var array
      */
-    protected $requestedExcludes = [];
+    protected array $requestedExcludes = [];
 
     /**
      * Array of requested fieldsets.
-     *
-     * @var array
      */
-    protected $requestedFieldsets = [];
+    protected array $requestedFieldsets = [];
 
     /**
      * Array containing modifiers as keys and an array value of params.
-     *
-     * @var array
      */
-    protected $includeParams = [];
+    protected array $includeParams = [];
 
     /**
      * The character used to separate modifier parameters.
-     *
-     * @var string
      */
-    protected $paramDelimiter = '|';
+    protected string $paramDelimiter = '|';
 
     /**
      * Upper limit to how many levels of included data are allowed.
-     *
-     * @var int
      */
-    protected $recursionLimit = 10;
+    protected int $recursionLimit = 10;
 
-    /**
-     * Serializer.
-     *
-     * @var SerializerAbstract
-     */
-    protected $serializer;
+    protected ?Serializer $serializer = null;
 
     /**
      * Factory used to create new configured scopes.
-     *
-     * @var ScopeFactoryInterface
      */
-    private $scopeFactory;
+    private ScopeFactoryInterface $scopeFactory;
 
     public function __construct(ScopeFactoryInterface $scopeFactory = null)
     {
@@ -86,18 +67,13 @@ class Manager
     }
 
     /**
-     * Create Data.
-     *
      * Main method to kick this all off. Make a resource then pass it over, and use toArray()
-     *
-     * @param ResourceInterface $resource
-     * @param string            $scopeIdentifier
-     * @param Scope             $parentScopeInstance
-     *
-     * @return Scope
      */
-    public function createData(ResourceInterface $resource, $scopeIdentifier = null, Scope $parentScopeInstance = null)
-    {
+    public function createData(
+        ResourceInterface $resource,
+        ?string $scopeIdentifier = null,
+        Scope $parentScopeInstance = null
+    ): Scope {
         if ($parentScopeInstance !== null) {
             return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
         }
@@ -105,65 +81,40 @@ class Manager
         return $this->scopeFactory->createScopeFor($this, $resource, $scopeIdentifier);
     }
 
-    /**
-     * Get Include Params.
-     *
-     * @param string $include
-     *
-     * @return \League\Fractal\ParamBag
-     */
-    public function getIncludeParams($include)
+    public function getIncludeParams(string $include): ParamBag
     {
         $params = isset($this->includeParams[$include]) ? $this->includeParams[$include] : [];
 
         return new ParamBag($params);
     }
 
-    /**
-     * Get Requested Includes.
-     *
-     * @return array
-     */
-    public function getRequestedIncludes()
+    public function getRequestedIncludes(): array
     {
         return $this->requestedIncludes;
     }
 
-    /**
-     * Get Requested Excludes.
-     *
-     * @return array
-     */
-    public function getRequestedExcludes()
+    public function getRequestedExcludes(): array
     {
         return $this->requestedExcludes;
     }
 
-    /**
-     * Get Serializer.
-     *
-     * @return SerializerAbstract
-     */
-    public function getSerializer()
+    public function getSerializer(): Serializer
     {
-        if ($this->serializer === null) {
-            $this->setSerializer(new DataArraySerializer());
+        if (! $this->serializer) {
+            $this->serializer = new DataArraySerializer();
         }
 
         return $this->serializer;
     }
 
     /**
-     * Parse Include String.
-     *
      * @param array|string $includes Array or csv string of resources to include
-     *
-     * @return $this
      */
-    public function parseIncludes($includes)
+    public function parseIncludes($includes): self
     {
         // Wipe these before we go again
         $this->requestedIncludes = $this->includeParams = [];
+        $subRelations = '';
 
         if (is_string($includes)) {
             $includes = explode(',', $includes);
@@ -176,7 +127,9 @@ class Manager
         }
 
         foreach ($includes as $include) {
-            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
+            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, '');
+            $a = $allModifiersStr ? explode('.', $allModifiersStr, 2) : [''];
+            list($allModifiersStr, $subRelations) = array_pad($a, 2, null);
 
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
@@ -212,6 +165,10 @@ class Manager
             }
 
             $this->includeParams[$includeName] = $modifierArr;
+
+            if ($subRelations) {
+                $this->requestedIncludes[] = $this->trimToAcceptableRecursionLevel($includeName . '.' . $subRelations);
+            }
         }
 
         // This should be optional and public someday, but without it includes would never show up
@@ -226,10 +183,8 @@ class Manager
      * @param array $fieldsets Array of fields to include. It must be an array whose keys
      *                         are resource types and values an array or a string
      *                         of the fields to return, separated by a comma
-     *
-     * @return $this
      */
-    public function parseFieldsets(array $fieldsets)
+    public function parseFieldsets(array $fieldsets): self
     {
         $this->requestedFieldsets = [];
         foreach ($fieldsets as $type => $fields) {
@@ -242,25 +197,15 @@ class Manager
         }
         return $this;
     }
-
-    /**
-     * Get requested fieldsets.
-     *
-     * @return array
-     */
-    public function getRequestedFieldsets()
+    public function getRequestedFieldsets(): array
     {
         return $this->requestedFieldsets;
     }
 
     /**
      * Get fieldset params for the specified type.
-     *
-     * @param string $type
-     *
-     * @return \League\Fractal\ParamBag|null
      */
-    public function getFieldset($type)
+    public function getFieldset(string $type): ?ParamBag
     {
         return !isset($this->requestedFieldsets[$type]) ?
             null :
@@ -268,13 +213,9 @@ class Manager
     }
 
     /**
-     * Parse Exclude String.
-     *
      * @param array|string $excludes Array or csv string of resources to exclude
-     *
-     * @return $this
      */
-    public function parseExcludes($excludes)
+    public function parseExcludes($excludes): self
     {
         $this->requestedExcludes = [];
 
@@ -301,28 +242,14 @@ class Manager
         return $this;
     }
 
-    /**
-     * Set Recursion Limit.
-     *
-     * @param int $recursionLimit
-     *
-     * @return $this
-     */
-    public function setRecursionLimit($recursionLimit)
+    public function setRecursionLimit(int $recursionLimit): self
     {
         $this->recursionLimit = $recursionLimit;
 
         return $this;
     }
 
-    /**
-     * Set Serializer
-     *
-     * @param SerializerAbstract $serializer
-     *
-     * @return $this
-     */
-    public function setSerializer(SerializerAbstract $serializer)
+    public function setSerializer(Serializer $serializer): self
     {
         $this->serializer = $serializer;
 
@@ -330,16 +257,12 @@ class Manager
     }
 
     /**
-     * Auto-include Parents
-     *
      * Look at the requested includes and automatically include the parents if they
      * are not explicitly requested. E.g: [foo, bar.baz] becomes [foo, bar, bar.baz]
      *
      * @internal
-     *
-     * @return void
      */
-    protected function autoIncludeParents()
+    protected function autoIncludeParents(): void
     {
         $parsed = [];
 
@@ -359,18 +282,12 @@ class Manager
     }
 
     /**
-     * Trim to Acceptable Recursion Level
-     *
      * Strip off any requested resources that are too many levels deep, to avoid DiCaprio being chased
      * by trains or whatever the hell that movie was about.
      *
      * @internal
-     *
-     * @param string $includeName
-     *
-     * @return string
      */
-    protected function trimToAcceptableRecursionLevel($includeName)
+    protected function trimToAcceptableRecursionLevel(string $includeName): string
     {
         return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
     }

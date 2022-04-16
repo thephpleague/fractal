@@ -18,62 +18,41 @@ use League\Fractal\Resource\ResourceInterface;
 class ArraySerializer extends SerializerAbstract
 {
     /**
-     * Serialize a collection.
-     *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function collection($resourceKey, array $data)
+    public function collection(?string $resourceKey, array $data): array
     {
         return [$resourceKey ?: 'data' => $data];
     }
 
     /**
-     * Serialize an item.
-     *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function item($resourceKey, array $data)
+    public function item(?string $resourceKey, array $data): array
     {
         return $data;
     }
 
     /**
-     * Serialize null resource.
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function null()
+    public function null(): ?array
     {
         return [];
     }
 
     /**
-     * Serialize the included data.
-     *
-     * @param ResourceInterface $resource
-     * @param array             $data
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function includedData(ResourceInterface $resource, array $data)
+    public function includedData(ResourceInterface $resource, array $data): array
     {
         return $data;
     }
 
     /**
-     * Serialize the meta.
-     *
-     * @param array $meta
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function meta(array $meta)
+    public function meta(array $meta): array
     {
         if (empty($meta)) {
             return [];
@@ -83,21 +62,17 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
-     * Serialize the paginator.
-     *
-     * @param PaginatorInterface $paginator
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function paginator(PaginatorInterface $paginator)
+    public function paginator(PaginatorInterface $paginator): array
     {
-        $currentPage = (int) $paginator->getCurrentPage();
-        $lastPage = (int) $paginator->getLastPage();
+        $currentPage = $paginator->getCurrentPage();
+        $lastPage = $paginator->getLastPage();
 
         $pagination = [
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->getCount(),
-            'per_page' => (int) $paginator->getPerPage(),
+            'total' => $paginator->getTotal(),
+            'count' => $paginator->getCount(),
+            'per_page' => $paginator->getPerPage(),
             'current_page' => $currentPage,
             'total_pages' => $lastPage,
         ];
@@ -120,19 +95,15 @@ class ArraySerializer extends SerializerAbstract
     }
 
     /**
-     * Serialize the cursor.
-     *
-     * @param CursorInterface $cursor
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function cursor(CursorInterface $cursor)
+    public function cursor(CursorInterface $cursor): array
     {
         $cursor = [
             'current' => $cursor->getCurrent(),
             'prev' => $cursor->getPrev(),
             'next' => $cursor->getNext(),
-            'count' => (int) $cursor->getCount(),
+            'count' => $cursor->getCount(),
         ];
 
         return ['cursor' => $cursor];

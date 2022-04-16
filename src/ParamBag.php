@@ -16,17 +16,10 @@ namespace League\Fractal;
  */
 class ParamBag implements \ArrayAccess, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Create a new parameter bag instance.
-     *
-     * @param array $params
-     *
-     * @return void
      */
     public function __construct(array $params)
     {
@@ -36,11 +29,10 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Get parameter values out of the bag.
      *
-     * @param string $key
-     *
      * @return mixed
      */
-    public function get($key)
+    #[\ReturnTypeWillChange]
+    public function get(string $key)
     {
         return $this->__get($key);
     }
@@ -48,23 +40,18 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Get parameter values out of the bag via the property access magic method.
      *
-     * @param string $key
-     *
      * @return mixed
      */
-    public function __get($key)
+    #[\ReturnTypeWillChange]
+    public function __get(string $key)
     {
         return isset($this->params[$key]) ? $this->params[$key] : null;
     }
 
     /**
      * Check if a param exists in the bag via an isset() check on the property.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
-    public function __isset($key)
+    public function __isset(string $key): bool
     {
         return isset($this->params[$key]);
     }
@@ -72,14 +59,11 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Disallow changing the value of params in the data bag via property access.
      *
-     * @param string $key
      * @param mixed  $value
      *
      * @throws \LogicException
-     *
-     * @return void
      */
-    public function __set($key, $value)
+    public function __set(string $key, $value): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -87,13 +71,11 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
     /**
      * Disallow unsetting params in the data bag via property access.
      *
-     * @param string $key
-     *
      * @throws \LogicException
      *
      * @return void
      */
-    public function __unset($key)
+    public function __unset(string $key): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -102,10 +84,8 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      * Check if a param exists in the bag via an isset() and array access.
      *
      * @param string $key
-     *
-     * @return bool
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->__isset($key);
     }
@@ -117,6 +97,7 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->__get($key);
@@ -129,10 +110,8 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      * @param mixed  $value
      *
      * @throws \LogicException
-     *
-     * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
@@ -143,20 +122,16 @@ class ParamBag implements \ArrayAccess, \IteratorAggregate
      * @param string $key
      *
      * @throws \LogicException
-     *
-     * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         throw new \LogicException('Modifying parameters is not permitted');
     }
 
     /**
      * IteratorAggregate for iterating over the object like an array.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->params);
     }

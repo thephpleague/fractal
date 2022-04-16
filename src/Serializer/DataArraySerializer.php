@@ -14,37 +14,25 @@ namespace League\Fractal\Serializer;
 class DataArraySerializer extends ArraySerializer
 {
     /**
-     * Serialize a collection.
-     *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function collection($resourceKey, array $data)
+    public function collection(?string $resourceKey, array $data): array
     {
         return ['data' => $data];
     }
 
     /**
-     * Serialize an item.
-     *
-     * @param string $resourceKey
-     * @param array  $data
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function item($resourceKey, array $data)
+    public function item(?string $resourceKey, array $data): array
     {
         return ['data' => $data];
     }
 
     /**
-     * Serialize null resource.
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function null()
+    public function null(): ?array
     {
         return ['data' => []];
     }

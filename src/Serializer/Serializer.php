@@ -9,94 +9,60 @@ interface Serializer
 {
     /**
      * Serialize a collection.
-     *
-     * @param string $resourceKey
-     * @param array $data
-     *
-     * @return array
      */
-    public function collection($resourceKey, array $data);
+    public function collection(?string $resourceKey, array $data): array;
 
     /**
      * Serialize an item.
-     *
-     * @param string $resourceKey
-     * @param array $data
-     *
-     * @return array
      */
-    public function item($resourceKey, array $data);
+    public function item(?string $resourceKey, array $data): array;
 
     /**
      * Serialize null resource.
-     *
-     * @return array
      */
-    public function null();
+    public function null(): ?array;
 
     /**
      * Serialize the included data.
-     *
-     * @param ResourceInterface $resource
-     * @param array $data
-     *
-     * @return array
      */
-    public function includedData(ResourceInterface $resource, array $data);
+    public function includedData(ResourceInterface $resource, array $data): array;
 
     /**
      * Serialize the meta.
-     *
-     * @param array $meta
-     *
-     * @return array
      */
-    public function meta(array $meta);
+    public function meta(array $meta): array;
 
     /**
      * Serialize the paginator.
-     *
-     * @param PaginatorInterface $paginator
-     *
-     * @return array
      */
-    public function paginator(PaginatorInterface $paginator);
+    public function paginator(PaginatorInterface $paginator): array;
 
     /**
      * Serialize the cursor.
-     *
-     * @param CursorInterface $cursor
-     *
-     * @return array
      */
-    public function cursor(CursorInterface $cursor);
+    public function cursor(CursorInterface $cursor): array;
 
-    public function mergeIncludes($transformedData, $includedData);
+    public function mergeIncludes(array $transformedData, array $includedData): array;
+
+    public function injectAvailableIncludeData(array $data, array $availableIncludes): array;
 
     /**
      * Indicates if includes should be side-loaded.
-     *
-     * @return bool
      */
-    public function sideloadIncludes();
+    public function sideloadIncludes(): bool;
 
     /**
      * Hook for the serializer to inject custom data based on the relationships of the resource.
-     *
-     * @param array $data
-     * @param array $rawIncludedData
-     *
-     * @return array
      */
-    public function injectData($data, $rawIncludedData);
+    public function injectData(array $data, array $rawIncludedData): array;
 
     /**
      * Hook for the serializer to modify the final list of includes.
-     *
-     * @param array $includedData
-     * @param array $data
-     *
-     * @return array
      */
-    public function filterIncludes($includedData, $data);
+    public function filterIncludes(array $includedData, array $data): array;
+
+    /**
+     * Get the mandatory fields for the serializer
+     */
+    public function getMandatoryFields(): array;
 }

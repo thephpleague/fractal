@@ -5,11 +5,11 @@ use League\Fractal\TransformerAbstract;
 
 class NullIncludeBookTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = [
+    protected array $defaultIncludes = [
         'author',
     ];
 
-    public function transform()
+    public function transform(): array
     {
         return ['a' => 'b'];
     }
