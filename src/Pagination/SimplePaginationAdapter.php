@@ -4,7 +4,6 @@ namespace League\Fractal\Pagination;
 
 class SimplePaginationAdapter implements PaginatorInterface
 {
-
     /**
      * @var int The total number of items in this list
      */
@@ -49,50 +48,40 @@ class SimplePaginationAdapter implements PaginatorInterface
 
     /**
      * Get the current page.
-     *
-     * @return int
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return $this->current;
     }
 
     /**
      * Get the last page.
-     *
-     * @return int
      */
-    public function getLastPage()
+    public function getLastPage(): int
     {
-        return $this->total / $this->perPage;
+        return (int) floor($this->total / $this->perPage);
     }
 
     /**
      * Get the total.
-     *
-     * @return int
      */
-    public function getTotal()
+    public function getTotal(): int
     {
         return $this->total;
     }
 
     /**
      * Get the count.
-     *
-     * @return int
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->itemCount;
     }
 
     /**
      * Get the number per page.
-     *
-     * @return int
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->perPage;
     }
@@ -101,10 +90,8 @@ class SimplePaginationAdapter implements PaginatorInterface
      * Get the url for the given page.
      *
      * @param int $page
-     *
-     * @return string
      */
-    public function getUrl($page)
+    public function getUrl($page): string
     {
         return ($this->urlFactory)($page);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace League\Fractal\Serializer;
 
 use League\Fractal\Pagination\CursorInterface;

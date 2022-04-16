@@ -17,9 +17,8 @@ interface MetaDataInterface
     /**
      * Get the meta data.
      *
-     * @param string $metaKey
-     *
-     * @return array
+     * @return mixed
      */
-    public function getMetaValue($metaKey);
+    #[\ReturnTypeWillChange]
+    public function getMetaValue(string $metaKey);
 }
