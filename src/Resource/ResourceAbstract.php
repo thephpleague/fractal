@@ -24,17 +24,13 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
 
     /**
      * Array of meta data.
-     *
-     * @var array
      */
-    protected $meta = [];
+    protected array $meta = [];
 
     /**
      * The resource key.
-     *
-     * @var string|null
      */
-    protected $resourceKey;
+    protected ?string $resourceKey;
 
     /**
      * A callable to process the data attached to this resource.
@@ -44,13 +40,10 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
     protected $transformer;
 
     /**
-     * Create a new resource instance.
-     *
      * @param mixed                             $data
      * @param callable|TransformerAbstract|null $transformer
-     * @param string                            $resourceKey
      */
-    public function __construct($data = null, $transformer = null, $resourceKey = null)
+    public function __construct($data = null, $transformer = null, ?string $resourceKey = null)
     {
         $this->data = $data;
         $this->transformer = $transformer;
@@ -62,6 +55,7 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function getData()
     {
         return $this->data;
@@ -71,10 +65,8 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
      * Set the data.
      *
      * @param mixed $data
-     *
-     * @return $this
      */
-    public function setData($data)
+    public function setData($data): self
     {
          $this->data = $data;
 
@@ -83,10 +75,8 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
 
     /**
      * Get the meta data.
-     *
-     * @return array
      */
-    public function getMeta()
+    public function getMeta(): array
     {
         return $this->meta;
     }
@@ -94,23 +84,17 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
     /**
      * Get the meta data.
      *
-     * @param string $metaKey
-     *
-     * @return array
+     * @return mixed
      */
-    public function getMetaValue($metaKey)
+    #[\ReturnTypeWillChange]
+    public function getMetaValue(string $metaKey)
     {
         return $this->meta[$metaKey];
     }
 
-    /**
-     * Get the resource key.
-     *
-     * @return string
-     */
-    public function getResourceKey()
+    public function getResourceKey(): string
     {
-        return (string) $this->resourceKey;
+        return $this->resourceKey ?? '';
     }
 
     /**
@@ -127,10 +111,8 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
      * Set the transformer.
      *
      * @param callable|TransformerAbstract $transformer
-     *
-     * @return $this
      */
-    public function setTransformer($transformer)
+    public function setTransformer($transformer): self
     {
         $this->transformer = $transformer;
 
@@ -139,12 +121,8 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
 
     /**
      * Set the meta data.
-     *
-     * @param array $meta
-     *
-     * @return $this
      */
-    public function setMeta(array $meta)
+    public function setMeta(array $meta): self
     {
         $this->meta = $meta;
 
@@ -152,28 +130,18 @@ abstract class ResourceAbstract implements ResourceInterface, MetaDataInterface
     }
 
     /**
-     * Set the meta data.
+     * Set one meta data value.
      *
-     * @param string $metaKey
      * @param mixed  $metaValue
-     *
-     * @return $this
      */
-    public function setMetaValue($metaKey, $metaValue)
+    public function setMetaValue(string $metaKey, $metaValue): self
     {
         $this->meta[$metaKey] = $metaValue;
 
         return $this;
     }
 
-    /**
-     * Set the resource key.
-     *
-     * @param string $resourceKey
-     *
-     * @return $this
-     */
-    public function setResourceKey($resourceKey)
+    public function setResourceKey(string $resourceKey): self
     {
         $this->resourceKey = $resourceKey;
 

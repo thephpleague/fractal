@@ -35,7 +35,7 @@ class ParamBagTest extends TestCase
 
     public function testArrayAccessSetFails()
     {
-        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
+		$this->expectExceptionObject(new LogicException('Modifying parameters is not permitted'));
 
         $params = new ParamBag(['foo' => 'bar']);
 
@@ -44,7 +44,8 @@ class ParamBagTest extends TestCase
 
     public function testArrayAccessUnsetFails()
     {
-        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
+		$this->expectExceptionObject(new LogicException('Modifying parameters is not permitted'));
+
         $params = new ParamBag(['foo' => 'bar']);
 
         unset($params['foo']);
@@ -62,7 +63,8 @@ class ParamBagTest extends TestCase
 
     public function testObjectAccessSetFails()
     {
-        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
+		$this->expectExceptionObject(new LogicException('Modifying parameters is not permitted'));
+
         $params = new ParamBag(['foo' => 'bar']);
 
         $params->foo = 'someothervalue';
@@ -70,7 +72,8 @@ class ParamBagTest extends TestCase
 
     public function testObjectAccessUnsetFails()
     {
-        $this->expectException(LogicException::class, 'Modifying parameters is not permitted');
+		$this->expectExceptionObject(new LogicException('Modifying parameters is not permitted'));
+
         $params = new ParamBag(['foo' => 'bar']);
 
         unset($params->foo);

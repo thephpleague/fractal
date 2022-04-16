@@ -15,16 +15,15 @@ interface ResourceInterface
 {
     /**
      * Get the resource key.
-     *
-     * @return string
      */
-    public function getResourceKey();
+    public function getResourceKey(): string;
 
     /**
      * Get the data.
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function getData();
 
     /**
@@ -38,17 +37,18 @@ interface ResourceInterface
      * Set the data.
      *
      * @param mixed $data
-     *
-     * @return $this
      */
-    public function setData($data);
+    public function setData($data): self;
 
     /**
      * Set the transformer.
      *
      * @param callable|\League\Fractal\TransformerAbstract $transformer
-     *
-     * @return $this
      */
-    public function setTransformer($transformer);
+    public function setTransformer($transformer): self;
+
+    /**
+     * Get the meta data.
+     */
+    public function getMeta(): array;
 }

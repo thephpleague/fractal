@@ -74,6 +74,23 @@ class ScopeTest extends TestCase
         $this->assertSame(['data' => ['foo' => 'bar']], $scope->toArray());
     }
 
+    /**
+     * @covers \League\Fractal\Scope::jsonSerialize()
+     */
+    public function testJsonSerializable()
+    {
+        $manager = new Manager();
+
+        $resource = new Item(['foo' => 'bar'], function ($data) {
+            return $data;
+        });
+
+        $scope = new Scope($manager, $resource);
+
+        $this->assertInstanceOf('\JsonSerializable', $scope);
+        $this->assertEquals($scope->jsonSerialize(), $scope->toArray());
+    }
+
     public function testToJson()
     {
         $data = [
@@ -209,9 +226,9 @@ class ScopeTest extends TestCase
 
     public function testScopeRequiresConcreteImplementation()
     {
-        $this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 
-        $manager = new Manager();
+		$manager = new Manager();
         $manager->parseIncludes('book');
 
         $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', [
@@ -317,7 +334,7 @@ class ScopeTest extends TestCase
 
         $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
         $transformer->shouldReceive('transform')->once()->andReturn('simple string');
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
         $transformer->shouldNotReceive('getAvailableIncludes');
         $transformer->shouldNotReceive('getDefaultIncludes');
 
@@ -342,7 +359,7 @@ class ScopeTest extends TestCase
         $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
 
         $resource = new Item($this->simpleItem, $transformer);
         $scope = $manager->createData($resource);
@@ -358,7 +375,7 @@ class ScopeTest extends TestCase
         $transformer->shouldReceive('transform')->once()->andReturn(['foo' => 'bar']);
         $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
         $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturn([]);
+        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
 
         $resource = new Collection([['foo' => 'bar']], $transformer);
         $scope = $manager->createData($resource);
@@ -371,7 +388,7 @@ class ScopeTest extends TestCase
      */
     public function testCreateDataWithClassFuckKnows()
     {
-        $this->expectException(InvalidArgumentException::class, '$resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection');
+		$this->expectExceptionObject(new InvalidArgumentException('Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection'));
 
         $manager = new Manager();
 

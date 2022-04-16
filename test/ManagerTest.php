@@ -19,7 +19,7 @@ class ManagerTest extends TestCase
 
     public function testInvalidParseInclude()
     {
-        $this->expectException(InvalidArgumentException::class, 'The parseIncludes() method expects a string or an array. NULL given');
+		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. NULL given'));
 
         $manager = new Manager();
 
@@ -28,7 +28,7 @@ class ManagerTest extends TestCase
 
     public function testIceTParseInclude()
     {
-        $this->expectException(InvalidArgumentException::class, 'The parseIncludes() method expects a string or an array. integer given');
+		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. integer given'));
 
         $manager = new Manager();
 
@@ -52,6 +52,10 @@ class ManagerTest extends TestCase
         $manager->parseIncludes(['foo', 'foo', 'bar']);
         $this->assertSame(['foo', 'bar'], $manager->getRequestedIncludes());
 
+        $manager->parseIncludes(['foo.bar', 'foo:limit(10|1).bar']);
+        $this->assertSame(['foo', 'foo.bar'], $manager->getRequestedIncludes());
+        $this->assertSame(['10', '1'], $manager->getIncludeParams('foo')->get('limit'));
+
         // Do requests for `baz.bart` also request `baz`?
         $manager->parseIncludes(['foo.bar']);
         $this->assertSame(['foo', 'foo.bar'], $manager->getRequestedIncludes());
@@ -70,6 +74,17 @@ class ManagerTest extends TestCase
         $this->assertSame([''], $params['anotherparam']);
 
         $this->assertNull($params['totallymadeup']);
+
+        // Relation with params and sub relation
+        $manager->parseIncludes('foo:limit(5|1):order(name).bar,baz');
+
+        $params = $manager->getIncludeParams('foo');
+
+        $this->assertInstanceOf('League\Fractal\ParamBag', $params);
+
+        $this->assertSame(['5', '1'], $params['limit']);
+        $this->assertSame(['name'], $params['order']);
+        $this->assertSame(['foo', 'foo.bar', 'baz'], $manager->getRequestedIncludes());
     }
 
     public function testParseExcludeSelfie()
@@ -82,8 +97,7 @@ class ManagerTest extends TestCase
 
     public function testInvalidParseExclude()
     {
-        $this->expectException(InvalidArgumentException::class, 'The parseExcludes() method expects a string or an array. NULL given');
-
+		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. NULL given'));
 
         $manager = new Manager();
 
@@ -92,7 +106,7 @@ class ManagerTest extends TestCase
 
     public function testIceTParseExclude()
     {
-        $this->expectException(InvalidArgumentException::class, 'The parseExcludes() method expects a string or an array. integer given');
+		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. integer given'));
 
         $manager = new Manager();
 
@@ -144,9 +158,38 @@ class ManagerTest extends TestCase
             $manager->getRequestedIncludes()
         );
 
+        $manager->parseIncludes('a:limit(5|1).b.c.d.e.f.g.h.i.j.NEVER');
+
+        $this->assertSame(
+            [
+                'a',
+                'a.b',
+                'a.b.c',
+                'a.b.c.d',
+                'a.b.c.d.e',
+                'a.b.c.d.e.f',
+                'a.b.c.d.e.f.g',
+                'a.b.c.d.e.f.g.h',
+                'a.b.c.d.e.f.g.h.i',
+                'a.b.c.d.e.f.g.h.i.j',
+            ],
+            $manager->getRequestedIncludes()
+        );
+
         // Try setting to 3 and see what happens
         $manager->setRecursionLimit(3);
         $manager->parseIncludes('a.b.c.NEVER');
+
+        $this->assertSame(
+            [
+                'a',
+                'a.b',
+                'a.b.c',
+            ],
+            $manager->getRequestedIncludes()
+        );
+
+        $manager->parseIncludes('a:limit(5|1).b.c.NEVER');
 
         $this->assertSame(
             [
