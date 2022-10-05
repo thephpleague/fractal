@@ -95,6 +95,11 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf('League\Fractal\ParamBag', $params);
 
         $this->assertSame(['1'], $params['modifier']);
+
+        // Two sub relations with parent using modifier
+        $manager->parseIncludes('foo:modifier.bar,foo:modifier.baz');
+
+        $this->assertSame(['foo', 'foo.bar', 'foo.baz'], $manager->getRequestedIncludes());
     }
 
     public function testParseExcludeSelfie()
