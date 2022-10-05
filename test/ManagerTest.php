@@ -86,6 +86,15 @@ class ManagerTest extends TestCase
         $this->assertSame(['5', '1'], $params['limit']);
         $this->assertSame(['name'], $params['order']);
         $this->assertSame(['foo', 'foo.bar', 'baz'], $manager->getRequestedIncludes());
+
+        // The first relation modifier wins
+        $manager->parseIncludes('foo:modifier(1).bar,foo:modifier(2).baz');
+
+        $params = $manager->getIncludeParams('foo');
+
+        $this->assertInstanceOf('League\Fractal\ParamBag', $params);
+
+        $this->assertSame(['1'], $params['modifier']);
     }
 
     public function testParseExcludeSelfie()
