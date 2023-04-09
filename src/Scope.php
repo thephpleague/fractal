@@ -269,7 +269,7 @@ class Scope implements \JsonSerializable
         } elseif (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
-            $transformer->setCurrentScope($this);
+            $transformer->setCurrentScope($this->getCurrentScopeWithoutTransformer());
             $transformedData = $transformer->transform($data);
         }
 
@@ -353,7 +353,7 @@ class Scope implements \JsonSerializable
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
-            $transformer->setCurrentScope($this);
+            $transformer->setCurrentScope($this->getCurrentScopeWithoutTransformer());
             $transformedData = $transformer->transform($data);
         }
 
@@ -461,5 +461,18 @@ class Scope implements \JsonSerializable
     protected function getResourceType(): string
     {
         return $this->resource->getResourceKey();
+    }
+
+    /**
+     * Return current scope with null transformer (due to memory leak)
+     *
+     * @return Scope
+     */
+    private function getCurrentScopeWithoutTransformer(): Scope
+    {
+        $scopeWithoutTransformer = clone $this;
+        $scopeWithoutTransformer->getResource()->setTransformer(null);
+
+        return $scopeWithoutTransformer;
     }
 }
