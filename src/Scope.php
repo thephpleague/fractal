@@ -343,12 +343,16 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param TransformerAbstract|callable $transformer
-     * @param mixed                        $data
+     * @param TransformerAbstract|callable|null $transformer
+     * @param mixed                             $data
      */
     protected function fireTransformer($transformer, $data): array
     {
         $includedData = [];
+
+        if ($transformer === null) {
+            return [$data, $includedData];
+        }
 
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
