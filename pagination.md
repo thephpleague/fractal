@@ -182,7 +182,7 @@ API users do not try and do anything too clever with them. They just need to pas
 
 On the next request, we move the cursor forward.
 
- * Set `cursor` to `next` from the last response
+ * Set `current` to `next` from the last response
  * Set `previous` to `current` from the last response
  * `limit` is optional
  	* You can set it to `count` from the previous request to maintain the same limit
