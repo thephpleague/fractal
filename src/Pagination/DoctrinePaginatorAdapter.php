@@ -73,7 +73,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getCount(): int
     {
-        return $this->paginator->getIterator()->count();
+        return $this->paginator->count();
     }
 
     /**
