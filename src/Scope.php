@@ -18,6 +18,8 @@ use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\Serializer;
+use League\Fractal\Transformer\HasIncludesInterface;
+use League\Fractal\Transformer\ScopeAwareInterface;
 
 /**
  * Scope
@@ -26,19 +28,19 @@ use League\Fractal\Serializer\Serializer;
  * context. For example, the same resource could be attached to multiple scopes.
  * There are root scopes, parent scopes and child scopes.
  */
-class Scope implements \JsonSerializable
+class Scope implements \JsonSerializable, ScopeInterface
 {
     protected array $availableIncludes = [];
 
     protected ?string $scopeIdentifier;
 
-    protected Manager $manager;
+    protected ManagerInterface $manager;
 
     protected ResourceInterface $resource;
 
     protected array $parentScopes = [];
 
-    public function __construct(Manager $manager, ResourceInterface $resource, ?string $scopeIdentifier = null)
+    public function __construct(ManagerInterface $manager, ResourceInterface $resource, ?string $scopeIdentifier = null)
     {
         $this->manager = $manager;
         $this->resource = $resource;
@@ -50,7 +52,7 @@ class Scope implements \JsonSerializable
      *
      * @internal
      */
-    public function embedChildScope(string $scopeIdentifier, ResourceInterface $resource): Scope
+    public function embedChildScope(string $scopeIdentifier, ResourceInterface $resource): ScopeInterface
     {
         return $this->manager->createData($resource, $scopeIdentifier, $this);
     }
@@ -87,7 +89,7 @@ class Scope implements \JsonSerializable
         return $this->resource;
     }
 
-    public function getManager(): Manager
+    public function getManager(): ManagerInterface
     {
         return $this->manager;
     }
@@ -156,7 +158,7 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param string[] $parentScopes Value to set.
+     * @param list<string> $parentScopes Value to set.
      */
     public function setParentScopes(array $parentScopes): self
     {
@@ -170,7 +172,7 @@ class Scope implements \JsonSerializable
      */
     public function toArray(): ?array
     {
-        list($rawData, $rawIncludedData) = $this->executeResourceTransformers();
+        [$rawData, $rawIncludedData] = $this->executeResourceTransformers();
 
         $serializer = $this->manager->getSerializer();
 
@@ -269,8 +271,11 @@ class Scope implements \JsonSerializable
         } elseif (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
-            $transformer->setCurrentScope($this);
-            $transformedData = $transformer->transform($data);
+            if ($transformer instanceof ScopeAwareInterface) {
+                $transformer->setCurrentScope($this);
+            }
+            \assert(\method_exists($transformer, 'transform'));
+            $transformedData = $transformer->transform($data, $this);
         }
 
         return $transformedData;
@@ -289,10 +294,10 @@ class Scope implements \JsonSerializable
         $transformedData = $includedData = [];
 
         if ($this->resource instanceof Item) {
-            list($transformedData, $includedData[]) = $this->fireTransformer($transformer, $data);
+            [$transformedData, $includedData[]] = $this->fireTransformer($transformer, $data);
         } elseif ($this->resource instanceof Collection) {
             foreach ($data as $value) {
-                list($transformedData[], $includedData[]) = $this->fireTransformer($transformer, $value);
+                [$transformedData[], $includedData[]] = $this->fireTransformer($transformer, $value);
             }
         } elseif ($this->resource instanceof NullResource) {
             $transformedData = null;
@@ -343,7 +348,7 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param TransformerAbstract|callable $transformer
+     * @param object|callable $transformer
      * @param mixed                        $data
      */
     protected function fireTransformer($transformer, $data): array
@@ -353,8 +358,11 @@ class Scope implements \JsonSerializable
         if (is_callable($transformer)) {
             $transformedData = call_user_func($transformer, $data);
         } else {
-            $transformer->setCurrentScope($this);
-            $transformedData = $transformer->transform($data);
+            if ($transformer instanceof ScopeAwareInterface) {
+                $transformer->setCurrentScope($this);
+            }
+            \assert(\method_exists($transformer, 'transform'));
+            $transformedData = $transformer->transform($data, $this);
         }
 
         if ($this->transformerHasIncludes($transformer)) {
@@ -373,10 +381,9 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param \League\Fractal\TransformerAbstract $transformer
      * @param mixed                               $data
      */
-    protected function fireIncludedTransformers($transformer, $data): array
+    protected function fireIncludedTransformers(HasIncludesInterface $transformer, $data): array
     {
         $this->availableIncludes = $transformer->getAvailableIncludes();
 
@@ -388,11 +395,11 @@ class Scope implements \JsonSerializable
      *
      * @internal
      *
-     * @param TransformerAbstract|callable $transformer
+     * @param object|HasIncludesInterface|callable $transformer
      */
     protected function transformerHasIncludes($transformer): bool
     {
-        if (! $transformer instanceof TransformerAbstract) {
+        if (! $transformer instanceof HasIncludesInterface) {
             return false;
         }
 

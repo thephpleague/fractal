@@ -22,7 +22,7 @@ use League\Fractal\Serializer\Serializer;
  * with the most. The manager has various configurable options, and allows users
  * to create the "root scope" easily.
  */
-class Manager
+class Manager implements ManagerInterface
 {
     /**
      * Array of scope identifiers for resources to include.
@@ -71,9 +71,9 @@ class Manager
      */
     public function createData(
         ResourceInterface $resource,
-        ?string $scopeIdentifier = null,
-        Scope $parentScopeInstance = null
-    ): Scope {
+        ?string           $scopeIdentifier = null,
+        ScopeInterface    $parentScopeInstance = null
+    ): ScopeInterface {
         if ($parentScopeInstance !== null) {
             return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);
         }
@@ -197,6 +197,7 @@ class Manager
         }
         return $this;
     }
+
     public function getRequestedFieldsets(): array
     {
         return $this->requestedFieldsets;

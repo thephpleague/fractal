@@ -19,15 +19,15 @@ use League\Fractal\Resource\ResourceInterface;
 interface ScopeFactoryInterface
 {
     public function createScopeFor(
-        Manager $manager,
+        ManagerInterface  $manager,
         ResourceInterface $resource,
-        ?string $scopeIdentifier = null
-    ): Scope;
+        ?string           $scopeIdentifier = null
+    ): ScopeInterface;
 
     public function createChildScopeFor(
-        Manager $manager,
-        Scope $parentScope,
+        ManagerInterface  $manager,
+        ScopeInterface    $parentScope,
         ResourceInterface $resource,
-        ?string $scopeIdentifier = null
-    ): Scope;
+        ?string           $scopeIdentifier = null
+    ): ScopeInterface;
 }

@@ -213,7 +213,7 @@ class ManagerTest extends TestCase
 
         $rootScope = $manager->createData($resource);
 
-        $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
+        $this->assertInstanceOf('League\Fractal\ScopeInterface', $rootScope);
 
 
         $this->assertSame(['data' => ['foo' => 'bar']], $rootScope->toArray());
@@ -226,7 +226,7 @@ class ManagerTest extends TestCase
 
         $rootScope = $manager->createData($resource);
 
-        $this->assertInstanceOf('League\Fractal\Scope', $rootScope);
+        $this->assertInstanceOf('League\Fractal\ScopeInterface', $rootScope);
 
 
         $this->assertSame(['data' => [['foo' => 'bar']]], $rootScope->toArray());
