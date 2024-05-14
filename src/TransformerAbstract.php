@@ -13,7 +13,6 @@ namespace League\Fractal;
 
 use League\Fractal\Transformer\HasIncludesInterface;
 use League\Fractal\Transformer\HasIncludesTrait;
-use League\Fractal\Transformer\IncludeMethodBuildTrait;
 use League\Fractal\Transformer\ResourceCreateTrait;
 use League\Fractal\Transformer\ScopeAwareInterface;
 use League\Fractal\Transformer\ScopeAwareTrait;
@@ -31,7 +30,6 @@ use League\Fractal\Transformer\ScopeAwareTrait;
 abstract class TransformerAbstract implements HasIncludesInterface, ScopeAwareInterface
 {
     use HasIncludesTrait;
-    use IncludeMethodBuildTrait;
     use ResourceCreateTrait;
     use ScopeAwareTrait;
 }
