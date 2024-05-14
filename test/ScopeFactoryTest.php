@@ -25,7 +25,7 @@ class ScopeFactoryTest extends TestCase
 
         $scope = $sut->createScopeFor($manager, $resource, $scopeIdentifier);
 
-        $this->assertInstanceOf('League\\Fractal\\Scope', $scope);
+        $this->assertInstanceOf('League\\Fractal\\ScopeInterface', $scope);
         $this->assertSame($resource, $scope->getResource());
         $this->assertSame($scopeIdentifier, $scope->getScopeIdentifier());
     }
@@ -50,7 +50,7 @@ class ScopeFactoryTest extends TestCase
         $sut = $this->createSut();
         $scope = $sut->createChildScopeFor($manager, $scope, $resource, $scopeIdentifier);
 
-        $this->assertInstanceOf('League\\Fractal\\Scope', $scope);
+        $this->assertInstanceOf('League\\Fractal\\ScopeInterface', $scope);
         $this->assertSame($resource, $scope->getResource());
         $this->assertSame($scopeIdentifier, $scope->getScopeIdentifier());
         $this->assertEquals($expectedParentScopes, $scope->getParentScopes());

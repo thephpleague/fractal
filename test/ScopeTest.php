@@ -32,7 +32,7 @@ class ScopeTest extends TestCase
         $this->assertSame($scope->getScopeIdentifier(), 'book');
         $childScope = $scope->embedChildScope('author', $resource);
 
-        $this->assertInstanceOf('League\Fractal\Scope', $childScope);
+        $this->assertInstanceOf('League\Fractal\ScopeInterface', $childScope);
     }
 
     public function testGetManager()
