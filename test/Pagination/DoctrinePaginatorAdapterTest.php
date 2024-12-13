@@ -1,7 +1,7 @@
 <?php
 namespace League\Fractal\Test\Pagination;
 
-use Doctrine\ORM\Query;
+use ArrayIterator;
 use League\Fractal\Pagination\DoctrinePaginatorAdapter;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -28,10 +28,8 @@ class DoctrinePaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getQuery')->andReturn($query);
 
         //Mock the iterator of the paginator
-        $iterator = Mockery::mock('IteratorAggregate');
-        $iterator->shouldReceive('count')->andReturn($count);
+        $iterator = new ArrayIterator(range(1, $count));
         $paginator->shouldReceive('getIterator')->andReturn($iterator);
-
 
         $adapter = new DoctrinePaginatorAdapter($paginator, function ($page) {
             return 'http://example.com/foo?page='.$page;
