@@ -30,6 +30,7 @@ Fractal currently ships with the following adapters:
 * Laravel's `illuminate/pagination` package as `League\Fractal\Pagination\IlluminatePaginatorAdapter`
 * The `pagerfanta/pagerfanta` package as `League\Fractal\Pagination\PagerfantaPaginatorAdapter`
 * The Phalcon Paginator (`phalcon/cphalcon`) as `League\Fractal\Pagination\PhalconFrameworkPaginatorAdapter`
+* Laminas Paginator `laminas/laminas-paginator` package as `League\Fractal\Pagination\LaminasPaginatorAdapter`
 * Zend Framework's `zendframework/zend-paginator` package as `League\Fractal\Pagination\ZendFrameworkPaginatorAdapter`
 
 ### Laravel Pagination
