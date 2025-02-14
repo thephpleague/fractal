@@ -1,18 +1,12 @@
 <?php
 namespace League\Fractal\Test\Pagination;
 
-use League\Fractal\Pagination\ZendFrameworkPaginatorAdapter;
+use League\Fractal\Pagination\LaminasPaginatorAdapter;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-class ZendFrameworkPaginatorAdapterTest extends TestCase
+class LaminasFrameworkPaginatorAdapterTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        class_alias(\Laminas\Paginator\Adapter\ArrayAdapter::class, \Zend\Paginator\Adapter\ArrayAdapter::class);
-        class_alias(\Laminas\Paginator\Paginator::class, \Zend\Paginator\Paginator::class);
-    }
-
     public function testPaginationAdapter()
     {
         $items = [
@@ -23,7 +17,7 @@ class ZendFrameworkPaginatorAdapterTest extends TestCase
             'Item 41', 'Item 42', 'Item 43', 'Item 44', 'Item 45', 'Item 46', 'Item 47', 'Item 48', 'Item 49', 'Item 50',
         ];
 
-        $adapter = Mockery::mock('Zend\Paginator\Adapter\ArrayAdapter', [$items])->makePartial();
+        $adapter = Mockery::mock('Laminas\Paginator\Adapter\ArrayAdapter', [$items])->makePartial();
 
         $total = 50;
         $count = 10;
@@ -31,13 +25,13 @@ class ZendFrameworkPaginatorAdapterTest extends TestCase
         $currentPage = 2;
         $lastPage = 5;
 
-        $paginator = Mockery::mock('Zend\Paginator\Paginator', [$adapter])->makePartial();
+        $paginator = Mockery::mock('Laminas\Paginator\Paginator', [$adapter])->makePartial();
 
         $paginator->shouldReceive('getCurrentPageNumber')->andReturn($currentPage);
         $paginator->shouldReceive('count')->andReturn($lastPage);
         $paginator->shouldReceive('getItemCountPerPage')->andReturn($perPage);
 
-        $adapter = new ZendFrameworkPaginatorAdapter($paginator, function ($page) {
+        $adapter = new LaminasPaginatorAdapter($paginator, function ($page) {
             return 'http://example.com/foo?page='.$page;
         });
 
