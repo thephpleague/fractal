@@ -8,6 +8,7 @@
     errorBaseline="psalm.baseline.xml"
 >
     <projectFiles>
+        <file name="test/phpstan.php" />
         <directory name="src" />
         <ignoreFiles>
             <directory name="vendor" />

@@ -19,6 +19,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class DoctrinePaginatorAdapter implements PaginatorInterface
 {
+    use TraversableCountTrait;
+
     /**
      * The paginator instance.
      * @var  Paginator
@@ -73,7 +75,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getCount(): int
     {
-        return $this->paginator->getIterator()->count();
+        return $this->getTraversableCount($this->paginator->getIterator());
     }
 
     /**
@@ -93,7 +95,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
     }
 
     /**
-     * Get the the route generator.
+     * Get the route generator.
      */
     private function getRouteGenerator(): callable
     {
