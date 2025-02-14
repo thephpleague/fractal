@@ -37,7 +37,7 @@ jobs:
           php-version: 8.1
           extensions: apcu, redis
           coverage: none
-          tools: vimeo/psalm:4.22.0
+          tools: vimeo/psalm:4.30.0
 
       - name: Download dependencies
         uses: ramsey/composer-install@v1

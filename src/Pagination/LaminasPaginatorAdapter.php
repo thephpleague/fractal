@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the League\Fractal package.
  *
@@ -10,36 +11,24 @@
 
 namespace League\Fractal\Pagination;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Laminas\Paginator\Paginator;
 
 /**
- * A paginator adapter for doctrine pagination.
+ * A paginator adapter for laminas/laminas-paginator.
  *
- * @author Fraser Stockley <fraser.stockley@gmail.com>
+ * @author Abdul Malik Ikhsan <samsonasik@gmail.com>
  */
-class DoctrinePaginatorAdapter implements PaginatorInterface
+class LaminasPaginatorAdapter implements PaginatorInterface
 {
-    use PaginatorCountTrait;
-
-    /**
-     * The paginator instance.
-     * @var  Paginator
-     */
-    private $paginator;
+    protected Paginator $paginator;
 
     /**
      * The route generator.
      *
      * @var callable
      */
-    private $routeGenerator;
+    protected $routeGenerator;
 
-    /**
-     * Create a new DoctrinePaginatorAdapter.
-     * @param Paginator $paginator
-     * @param callable $routeGenerator
-     *
-     */
     public function __construct(Paginator $paginator, callable $routeGenerator)
     {
         $this->paginator = $paginator;
@@ -51,7 +40,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getCurrentPage(): int
     {
-        return (int) ($this->paginator->getQuery()->getFirstResult() / $this->paginator->getQuery()->getMaxResults()) + 1;
+        return $this->paginator->getCurrentPageNumber();
     }
 
     /**
@@ -59,7 +48,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getLastPage(): int
     {
-        return (int) ceil($this->getTotal() / $this->paginator->getQuery()->getMaxResults());
+        return $this->paginator->count();
     }
 
     /**
@@ -67,7 +56,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getTotal(): int
     {
-        return count($this->paginator);
+        return $this->paginator->getTotalItemCount();
     }
 
     /**
@@ -75,7 +64,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getCount(): int
     {
-        return $this->getTraversableCount($this->paginator->getIterator());
+        return $this->paginator->getCurrentItemCount();
     }
 
     /**
@@ -83,7 +72,7 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getPerPage(): int
     {
-        return $this->paginator->getQuery()->getMaxResults();
+        return $this->paginator->getItemCountPerPage();
     }
 
     /**
@@ -91,13 +80,15 @@ class DoctrinePaginatorAdapter implements PaginatorInterface
      */
     public function getUrl(int $page): string
     {
-        return call_user_func($this->getRouteGenerator(), $page);
+        return call_user_func($this->routeGenerator, $page);
     }
 
-    /**
-     * Get the route generator.
-     */
-    private function getRouteGenerator(): callable
+    public function getPaginator(): Paginator
+    {
+        return $this->paginator;
+    }
+
+    public function getRouteGenerator(): callable
     {
         return $this->routeGenerator;
     }

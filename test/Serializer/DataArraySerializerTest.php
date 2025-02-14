@@ -357,15 +357,6 @@ class DataArraySerializerTest extends TestCase
         $this->assertSame($expected, $scope->toArray());
     }
 
-    public function testCanPassNullValueToSerializer()
-    {
-        $testClass = new \stdClass();
-        $testClass->name = 'test';
-        $testClass->email = 'test@test.com';
-
-
-    }
-
     public function tearDown(): void
     {
         Mockery::close();
