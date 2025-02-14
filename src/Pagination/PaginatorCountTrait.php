@@ -2,8 +2,20 @@
 
 namespace League\Fractal\Pagination;
 
-trait TraversableCountTrait
+trait PaginatorCountTrait
 {
+    /**
+     * Safely get the count from an iterable
+     */
+    private function getIterableCount(iterable $iterable): int
+    {
+        if ($iterable instanceof \Traversable) {
+            return $this->getTraversableCount($iterable);
+        }
+
+        return count($iterable);
+    }
+
     /**
      * Safely get the count from a traversable
      */

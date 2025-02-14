@@ -19,7 +19,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class DoctrinePaginatorAdapter implements PaginatorInterface
 {
-    use TraversableCountTrait;
+    use PaginatorCountTrait;
 
     /**
      * The paginator instance.

@@ -20,6 +20,8 @@ use Pagerfanta\Pagerfanta;
  */
 class PagerfantaPaginatorAdapter implements PaginatorInterface
 {
+    use PaginatorCountTrait;
+
     protected Pagerfanta $paginator;
 
     /**
@@ -64,7 +66,7 @@ class PagerfantaPaginatorAdapter implements PaginatorInterface
      */
     public function getCount(): int
     {
-        return count($this->paginator->getCurrentPageResults());
+        return $this->getIterableCount($this->paginator->getCurrentPageResults());
     }
 
     /**
