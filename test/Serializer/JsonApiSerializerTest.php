@@ -87,6 +87,35 @@ class JsonApiSerializerTest extends TestCase
         $this->assertSame($expectedJson, $scope->toJson());
     }
 
+    public function testSerializingItemResourceWithNestedType()
+    {
+        $bookData = [
+            'id' => 1,
+            'type' => 'books',
+            'title' => 'Foo',
+            'year' => '1991',
+        ];
+
+        $resource = new Item($bookData, new JsonApiBookTransformer());
+        $scope = new Scope($this->manager, $resource);
+
+        $expected = [
+            'data' => [
+                'type' => 'books',
+                'id' => '1',
+                'attributes' => [
+                    'title' => 'Foo',
+                    'year' => 1991,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $scope->toArray());
+
+        $expectedJson = '{"data":{"type":"books","id":"1","attributes":{"title":"Foo","year":1991}}}';
+        $this->assertSame($expectedJson, $scope->toJson());
+    }
+
     public function testSerializingItemResourceWithHasOneInclude()
     {
         $this->manager->parseIncludes('author');

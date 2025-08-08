@@ -14,6 +14,7 @@ namespace League\Fractal\Serializer;
 use InvalidArgumentException;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\ResourceInterface;
+use UnexpectedValueException;
 
 class JsonApiSerializer extends ArraySerializer
 {
@@ -45,6 +46,11 @@ class JsonApiSerializer extends ArraySerializer
     public function item(?string $resourceKey, array $data): array
     {
         $id = $this->getIdFromData($data);
+        $resourceKey = $resourceKey ?? $data['type'];
+
+        if ($resourceKey === null) {
+            throw new UnexpectedValueException('The resource must have a key specified.');
+        }
 
         $resource = [
             'data' => [
@@ -54,7 +60,10 @@ class JsonApiSerializer extends ArraySerializer
             ],
         ];
 
-        unset($resource['data']['attributes']['id']);
+        unset(
+            $resource['data']['attributes']['id'],
+            $resource['data']['attributes']['type']
+        );
 
         if (isset($resource['data']['attributes']['links'])) {
             $custom_links = $data['links'];
