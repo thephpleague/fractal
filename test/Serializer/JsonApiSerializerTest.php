@@ -2626,7 +2626,7 @@ class JsonApiSerializerTest extends TestCase
         $this->assertSame(json_encode($expected), $scope->toJson());
     }
 
-    public function testEmptyAttributesIsObject()
+    public function testShouldNotIncludeEmptyAttributesOnResponse()
     {
         $manager = new Manager();
         $manager->setSerializer(new JsonApiSerializer());
@@ -2637,7 +2637,7 @@ class JsonApiSerializerTest extends TestCase
 
         $scope = new Scope($manager, $resource);
 
-        $expectedJson = '{"data":{"type":"resources","id":"1","attributes":{}}}';
+        $expectedJson = '{"data":{"type":"resources","id":"1"}}';
 
         $this->assertSame($expectedJson, $scope->toJson());
     }

@@ -67,7 +67,7 @@ class JsonApiSerializer extends ArraySerializer
         }
 
         if (empty($resource['data']['attributes'])) {
-            $resource['data']['attributes'] = (object) [];
+            unset($resource['data']['attributes']);
         }
 
         if ($this->shouldIncludeLinks()) {
