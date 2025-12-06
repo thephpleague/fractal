@@ -123,7 +123,7 @@ abstract class TransformerAbstract
         Scope $scope,
         $data,
         array $includedData,
-        string $include,
+        string $include
     ): array {
         if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
             $childScope = $scope->embedChildScope($include, $resource);

@@ -72,7 +72,7 @@ class Manager
     public function createData(
         ResourceInterface $resource,
         ?string $scopeIdentifier = null,
-        ?Scope $parentScopeInstance = null,
+        ?Scope $parentScopeInstance = null
     ): Scope {
         if ($parentScopeInstance !== null) {
             return $this->scopeFactory->createChildScopeFor($this, $parentScopeInstance, $resource, $scopeIdentifier);

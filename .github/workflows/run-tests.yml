@@ -8,15 +8,15 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-20.04]
-        php: [7.4, 8.0, 8.1, 8.2, 8.3, 8.4]
+        os: [ubuntu-latest]
+        php: [7.4, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5]
 
     name: League - PHP ${{ matrix.php }} on ${{ matrix.os }}
 
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -25,7 +25,7 @@ jobs:
           tools: phpcs, phpunit
 
       - name: Download dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
 
       - name: Run Tests
         run: vendor/bin/phpunit

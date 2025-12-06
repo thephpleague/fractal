@@ -403,7 +403,7 @@ class JsonApiSerializer extends ArraySerializer
         string $includeKey,
         array $relationships,
         array $includeObject,
-        string $key,
+        string $key
     ): array {
         $relationships = $this->addIncludekeyToRelationsIfNotSet($includeKey, $relationships);
 
@@ -506,7 +506,7 @@ class JsonApiSerializer extends ArraySerializer
     private function serializeIncludedObjectsWithCacheKey(
         array $includeObjects,
         array $linkedIds,
-        array $serializedData,
+        array $serializedData
     ): array {
         foreach ($includeObjects as $object) {
             $includeType = $object['type'];
