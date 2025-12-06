@@ -180,7 +180,7 @@ class Scope implements \JsonSerializable
         // serialize the included data and merge it with the data.
         if ($serializer->sideloadIncludes()) {
             //Filter out any relation that wasn't requested
-            $rawIncludedData = array_map(array($this, 'filterFieldsets'), $rawIncludedData);
+            $rawIncludedData = array_map([$this, 'filterFieldsets'], $rawIncludedData);
 
             $includedData = $serializer->includedData($this->resource, $rawIncludedData);
 
@@ -193,7 +193,7 @@ class Scope implements \JsonSerializable
                 // the objects that are sideloaded, it can do so now.
                 $includedData = $serializer->filterIncludes(
                     $includedData,
-                    $data
+                    $data,
                 );
             }
 
@@ -257,7 +257,7 @@ class Scope implements \JsonSerializable
     {
         if (! ($this->resource instanceof Primitive)) {
             throw new InvalidArgumentException(
-                'Argument $resource should be an instance of League\Fractal\Resource\Primitive'
+                'Argument $resource should be an instance of League\Fractal\Resource\Primitive',
             );
         }
 
@@ -300,7 +300,7 @@ class Scope implements \JsonSerializable
         } else {
             throw new InvalidArgumentException(
                 'Argument $resource should be an instance of League\Fractal\Resource\Item'
-                .' or League\Fractal\Resource\Collection'
+                . ' or League\Fractal\Resource\Collection',
             );
         }
 
@@ -427,8 +427,8 @@ class Scope implements \JsonSerializable
         $filterFieldset = array_flip(
             array_merge(
                 $serializer->getMandatoryFields(),
-                $requestedFieldset
-            )
+                $requestedFieldset,
+            ),
         );
         return array_intersect_key($data, $filterFieldset);
     }

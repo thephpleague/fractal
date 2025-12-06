@@ -1,6 +1,5 @@
 <?php
 
-
 namespace League\Fractal\Test\Stub;
 
 use League\Fractal\Serializer\ArraySerializer;

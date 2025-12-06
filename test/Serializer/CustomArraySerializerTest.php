@@ -66,7 +66,7 @@ class CustomArraySerializerTest extends TestCase
                 'author' => [
                     'data' => [
                         'name' => 'Dave',
-                    ]
+                    ],
                 ],
             ],
         ];

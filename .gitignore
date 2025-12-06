@@ -3,3 +3,4 @@ build
 vendor
 .phpunit.result.cache
 .idea
+.php-cs-fixer.cache

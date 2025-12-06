@@ -68,9 +68,9 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     public function setData($data): self
     {
-         $this->data = $data;
+        $this->data = $data;
 
-         return $this;
+        return $this;
     }
 
     /**

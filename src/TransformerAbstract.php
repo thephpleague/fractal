@@ -107,7 +107,7 @@ abstract class TransformerAbstract
                 $scope,
                 $data,
                 $includedData,
-                $include
+                $include,
             );
         }
 
@@ -123,7 +123,7 @@ abstract class TransformerAbstract
         Scope $scope,
         $data,
         array $includedData,
-        string $include
+        string $include,
     ): array {
         if ($resource = $this->callIncludeMethod($scope, $include, $data)) {
             $childScope = $scope->embedChildScope($include, $resource);
@@ -156,7 +156,7 @@ abstract class TransformerAbstract
         $params = $scope->getManager()->getIncludeParams($scopeIdentifier);
 
         // Check if the method name actually exists
-        $methodName = 'include'.str_replace(
+        $methodName = 'include' . str_replace(
             ' ',
             '',
             ucwords(str_replace(
@@ -165,9 +165,9 @@ abstract class TransformerAbstract
                 str_replace(
                     '-',
                     ' ',
-                    $includeName
-                )
-            ))
+                    $includeName,
+                ),
+            )),
         );
 
         $resource = call_user_func([$this, $methodName], $data, $params);
@@ -182,7 +182,7 @@ abstract class TransformerAbstract
                 __CLASS__,
                 $methodName,
                 'League\Fractal\Resource\ResourceInterface',
-                is_object($resource) ? get_class($resource) : gettype($resource)
+                is_object($resource) ? get_class($resource) : gettype($resource),
             ));
         }
 

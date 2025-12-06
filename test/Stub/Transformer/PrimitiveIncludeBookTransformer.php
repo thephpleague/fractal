@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test\Stub\Transformer;
+<?php
+
+namespace League\Fractal\Test\Stub\Transformer;
 
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
@@ -6,7 +8,7 @@ use League\Fractal\TransformerAbstract;
 class PrimitiveIncludeBookTransformer extends TransformerAbstract
 {
     protected array $defaultIncludes = [
-        'price'
+        'price',
     ];
 
     public function transform(): array

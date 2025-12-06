@@ -1,4 +1,5 @@
 <?php
+
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\LaminasPaginatorAdapter;
@@ -32,7 +33,7 @@ class LaminasFrameworkPaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getItemCountPerPage')->andReturn($perPage);
 
         $adapter = new LaminasPaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);

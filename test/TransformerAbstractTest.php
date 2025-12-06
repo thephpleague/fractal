@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test;
+<?php
+
+namespace League\Fractal\Test;
 
 use BadMethodCallException;
 use Exception;
@@ -112,7 +114,7 @@ class TransformerAbstractTest extends TestCase
      */
     public function testProcessEmbeddedResourcesInvalidAvailableEmbed()
     {
-		$this->expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
 
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
@@ -132,7 +134,7 @@ class TransformerAbstractTest extends TestCase
      */
     public function testProcessEmbeddedResourcesInvalidDefaultEmbed()
     {
-		$this->expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
 
         $transformer = m::mock('League\Fractal\TransformerAbstract')->makePartial();
 
@@ -245,7 +247,7 @@ class TransformerAbstractTest extends TestCase
      */
     public function testCallEmbedMethodReturnsCrap()
     {
-		$this->expectExceptionObject(new Exception('Invalid return value from League\Fractal\TransformerAbstract::includeBook().'));
+        $this->expectExceptionObject(new Exception('Invalid return value from League\Fractal\TransformerAbstract::includeBook().'));
 
         $manager = new Manager();
         $manager->parseIncludes('book');
@@ -367,8 +369,7 @@ class TransformerAbstractTest extends TestCase
     public function testItem()
     {
         $mock = m::mock('League\Fractal\TransformerAbstract');
-        $item = $mock->item([], function () {
-        });
+        $item = $mock->item([], function () {});
         $this->assertInstanceOf('League\Fractal\Resource\Item', $item);
     }
 
@@ -378,8 +379,7 @@ class TransformerAbstractTest extends TestCase
     public function testCollection()
     {
         $mock = m::mock('League\Fractal\TransformerAbstract');
-        $collection = $mock->collection([], function () {
-        });
+        $collection = $mock->collection([], function () {});
         $this->assertInstanceOf('League\Fractal\Resource\Collection', $collection);
     }
 

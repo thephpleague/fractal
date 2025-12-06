@@ -1,4 +1,5 @@
 <?php
+
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\ZendFrameworkPaginatorAdapter;
@@ -38,7 +39,7 @@ class ZendFrameworkPaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getItemCountPerPage')->andReturn($perPage);
 
         $adapter = new ZendFrameworkPaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf('League\Fractal\Pagination\PaginatorInterface', $adapter);

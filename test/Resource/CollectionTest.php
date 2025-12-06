@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test\Resource;
+<?php
+
+namespace League\Fractal\Test\Resource;
 
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
@@ -33,8 +35,7 @@ class CollectionTest extends TestCase
 
     public function testGetTransformer()
     {
-        $resource = new Collection($this->simpleCollection, function () {
-        });
+        $resource = new Collection($this->simpleCollection, function () {});
         $this->assertTrue(is_callable($resource->getTransformer()));
 
         $resource = new Collection($this->simpleCollection, 'SomeClass');

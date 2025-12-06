@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test;
+<?php
+
+namespace League\Fractal\Test;
 
 use InvalidArgumentException;
 use League\Fractal\Manager;
@@ -20,7 +22,7 @@ class ManagerTest extends TestCase
 
     public function testInvalidParseInclude()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. NULL given'));
+        $this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. NULL given'));
 
         $manager = new Manager();
 
@@ -29,7 +31,7 @@ class ManagerTest extends TestCase
 
     public function testIceTParseInclude()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. integer given'));
+        $this->expectExceptionObject(new InvalidArgumentException('The parseIncludes() method expects a string or an array. integer given'));
 
         $manager = new Manager();
 
@@ -98,7 +100,7 @@ class ManagerTest extends TestCase
 
     public function testInvalidParseExclude()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. NULL given'));
+        $this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. NULL given'));
 
         $manager = new Manager();
 
@@ -107,7 +109,7 @@ class ManagerTest extends TestCase
 
     public function testIceTParseExclude()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. integer given'));
+        $this->expectExceptionObject(new InvalidArgumentException('The parseExcludes() method expects a string or an array. integer given'));
 
         $manager = new Manager();
 
@@ -156,7 +158,7 @@ class ManagerTest extends TestCase
                 'a.b.c.d.e.f.g.h.i',
                 'a.b.c.d.e.f.g.h.i.j',
             ],
-            $manager->getRequestedIncludes()
+            $manager->getRequestedIncludes(),
         );
 
         $manager->parseIncludes('a:limit(5|1).b.c.d.e.f.g.h.i.j.NEVER');
@@ -174,7 +176,7 @@ class ManagerTest extends TestCase
                 'a.b.c.d.e.f.g.h.i',
                 'a.b.c.d.e.f.g.h.i.j',
             ],
-            $manager->getRequestedIncludes()
+            $manager->getRequestedIncludes(),
         );
 
         // Try setting to 3 and see what happens
@@ -187,7 +189,7 @@ class ManagerTest extends TestCase
                 'a.b',
                 'a.b.c',
             ],
-            $manager->getRequestedIncludes()
+            $manager->getRequestedIncludes(),
         );
 
         $manager->parseIncludes('a:limit(5|1).b.c.NEVER');
@@ -198,7 +200,7 @@ class ManagerTest extends TestCase
                 'a.b',
                 'a.b.c',
             ],
-            $manager->getRequestedIncludes()
+            $manager->getRequestedIncludes(),
         );
     }
 
@@ -240,12 +242,12 @@ class ManagerTest extends TestCase
 
         $fields = [
             'articles' => 'title,body',
-            'people' => 'name'
+            'people' => 'name',
         ];
 
         $expectedFieldset = [
             'articles' => ['title' , 'body'],
-            'people' => ['name']
+            'people' => ['name'],
         ];
 
         $manager->parseFieldsets($fields);

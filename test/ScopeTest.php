@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test;
+<?php
+
+namespace League\Fractal\Test;
 
 use InvalidArgumentException;
 use League\Fractal\Manager;
@@ -25,8 +27,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(['foo' => 'bar'], function () {
-        });
+        $resource = new Item(['foo' => 'bar'], function () {});
 
         $scope = new Scope($manager, $resource, 'book');
         $this->assertSame($scope->getScopeIdentifier(), 'book');
@@ -37,8 +38,7 @@ class ScopeTest extends TestCase
 
     public function testGetManager()
     {
-        $resource = new Item(['foo' => 'bar'], function () {
-        });
+        $resource = new Item(['foo' => 'bar'], function () {});
 
         $scope = new Scope(new Manager(), $resource, 'book');
 
@@ -47,8 +47,7 @@ class ScopeTest extends TestCase
 
     public function testGetResource()
     {
-        $resource = new Item(['foo' => 'bar'], function () {
-        });
+        $resource = new Item(['foo' => 'bar'], function () {});
 
         $scope = new Scope(new Manager(), $resource, 'book');
 
@@ -136,8 +135,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(['name' => 'Larry Ullman'], function () {
-        });
+        $resource = new Item(['name' => 'Larry Ullman'], function () {});
 
         $scope = new Scope($manager, $resource, 'book');
         $this->assertSame('book', $scope->getScopeIdentifier());
@@ -153,8 +151,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(['name' => 'Larry Ullman'], function () {
-        });
+        $resource = new Item(['name' => 'Larry Ullman'], function () {});
 
         $scope = new Scope($manager, $resource, 'book');
         $this->assertSame('book', $scope->getIdentifier());
@@ -170,8 +167,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(['name' => 'Larry Ullman'], function () {
-        });
+        $resource = new Item(['name' => 'Larry Ullman'], function () {});
 
         $scope = new Scope($manager, $resource, 'book');
 
@@ -225,9 +221,9 @@ class ScopeTest extends TestCase
 
     public function testScopeRequiresConcreteImplementation()
     {
-		$this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
-		$manager = new Manager();
+        $manager = new Manager();
         $manager->parseIncludes('book');
 
         $resource = Mockery::mock('League\Fractal\Resource\ResourceAbstract', [
@@ -313,8 +309,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $resource = new Item(['name' => 'Larry Ullman'], function () {
-        });
+        $resource = new Item(['name' => 'Larry Ullman'], function () {});
 
         $scope = new Scope($manager, $resource);
 
@@ -385,7 +380,7 @@ class ScopeTest extends TestCase
      */
     public function testCreateDataWithClassFuckKnows()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection'));
+        $this->expectExceptionObject(new InvalidArgumentException('Argument $resource should be an instance of League\Fractal\Resource\Item or League\Fractal\Resource\Collection'));
 
         $manager = new Manager();
 
@@ -417,7 +412,7 @@ class ScopeTest extends TestCase
         $paginator->shouldReceive('getCurrentPage')->once()->andReturn($currentPage);
         $paginator->shouldReceive('getLastPage')->once()->andReturn($lastPage);
         $paginator->shouldReceive('getUrl')->times(2)->andReturnUsing(function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $collection->setPaginator($paginator);
@@ -515,7 +510,7 @@ class ScopeTest extends TestCase
         $manager = new Manager();
         $manager->setSerializer(new ArraySerializer());
 
-        $resource = new Item(['price' => '49'], new PrimitiveIncludeBookTransformer);
+        $resource = new Item(['price' => '49'], new PrimitiveIncludeBookTransformer());
 
         $scope = new Scope($manager, $resource);
         $expected = [
@@ -529,10 +524,10 @@ class ScopeTest extends TestCase
     public function testNullResourceIncludeSuccess()
     {
         $manager = new Manager();
-        $manager->setSerializer(new ArraySerializerWithNull);
+        $manager->setSerializer(new ArraySerializerWithNull());
 
         // Send this stub junk, it has a specific format anyhow
-        $resource = new Item([], new NullIncludeBookTransformer);
+        $resource = new Item([], new NullIncludeBookTransformer());
 
         // Try without metadata
         $scope = new Scope($manager, $resource);
@@ -550,7 +545,7 @@ class ScopeTest extends TestCase
     public function testNullResourceDataAndJustMeta()
     {
         $manager = new Manager();
-        $manager->setSerializer(new ArraySerializerWithNull);
+        $manager->setSerializer(new ArraySerializerWithNull());
 
         $resource = new NullResource();
         $resource->setMeta(['foo' => 'bar']);
@@ -573,7 +568,7 @@ class ScopeTest extends TestCase
             function ($data) {
                 return $data;
             },
-            'resourceName'
+            'resourceName',
         );
 
         $scope = new Scope($manager, $resource);
@@ -587,16 +582,16 @@ class ScopeTest extends TestCase
         return [
             [
                 ['resourceName' => 'foo'],
-                ['data' => ['foo' => 'bar']]
+                ['data' => ['foo' => 'bar']],
             ],
             [
                 ['resourceName' => 'foo,baz'],
-                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']],
             ],
             [
                 ['resourceName' => 'inexistentField'],
-                ['data' => []]
-            ]
+                ['data' => []],
+            ],
         ];
     }
 
@@ -614,7 +609,7 @@ class ScopeTest extends TestCase
             function ($data) {
                 return $data;
             },
-            'resourceName'
+            'resourceName',
         );
 
         $manager = new Manager();
@@ -631,13 +626,13 @@ class ScopeTest extends TestCase
             //Don't request for mandatory field
             [
                 ['resourceName' => 'baz'],
-                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']],
             ],
             //Request required field anyway
             [
                 ['resourceName' => 'foo,baz'],
-                ['data' => ['foo' => 'bar', 'baz' => 'qux']]
-            ]
+                ['data' => ['foo' => 'bar', 'baz' => 'qux']],
+            ],
         ];
     }
 
@@ -651,7 +646,7 @@ class ScopeTest extends TestCase
         $resource = new Item(
             ['foo' => 'bar', 'baz' => 'qux'],
             $transformer,
-            'resourceName'
+            'resourceName',
         );
         $manager = new Manager();
         $scope = new Scope($manager, $resource);
@@ -668,13 +663,13 @@ class ScopeTest extends TestCase
             //Included relation was not requested
             [
                 ['resourceName' => 'foo'],
-                ['data' => ['foo' => 'bar']]
+                ['data' => ['foo' => 'bar']],
             ],
             //Included relation was requested
             [
                 ['resourceName' => 'foo,book', 'book' => 'yin'],
-                ['data' => ['foo' => 'bar', 'book' => ['yin' => 'yang']]]
-            ]
+                ['data' => ['foo' => 'bar', 'book' => ['yin' => 'yang']]],
+            ],
         ];
     }
 
@@ -689,13 +684,13 @@ class ScopeTest extends TestCase
         $serializer->shouldReceive('item')->andReturnUsing(
             function ($key, $data) {
                 return ['data' => $data];
-            }
+            },
         );
         $serializer->shouldReceive('includedData')->andReturnUsing(
             function ($key, $data) {
                 $data = array_pop($data);
                 return empty($data) ? [] : ['sideloaded' => $data];
-            }
+            },
         );
 
         $manager = new Manager();
@@ -717,13 +712,13 @@ class ScopeTest extends TestCase
             //Included relation was not requested
             [
                 ['resourceName' => 'foo'],
-                ['data' => ['foo' => 'bar']]
+                ['data' => ['foo' => 'bar']],
             ],
             //Included relation was requested
             [
                 ['resourceName' => 'foo,book', 'book' => 'yin'],
-                ['data' => ['foo' => 'bar'], 'sideloaded' => ['book' => ['yin' => 'yang']]]
-            ]
+                ['data' => ['foo' => 'bar'], 'sideloaded' => ['book' => ['yin' => 'yang']]],
+            ],
         ];
     }
 
@@ -739,7 +734,7 @@ class ScopeTest extends TestCase
         $transformer->shouldReceive('transform')->once()->andReturnUsing(
             function (array $data) {
                 return $data;
-            }
+            },
         );
         $transformer->shouldReceive('processIncludedResources')->once()->andReturn($transformResult);
         return $transformer;

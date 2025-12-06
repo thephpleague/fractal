@@ -163,7 +163,7 @@ class JsonApiSerializer extends ArraySerializer
                 list($serializedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey(
                     $includeObjects,
                     $linkedIds,
-                    $serializedData
+                    $serializedData,
                 );
             }
         }
@@ -258,8 +258,8 @@ class JsonApiSerializer extends ArraySerializer
 
     protected function isCollection(array $data): bool
     {
-        return array_key_exists('data', $data) &&
-            array_key_exists(0, $data['data']);
+        return array_key_exists('data', $data)
+            && array_key_exists(0, $data['data']);
     }
 
     protected function isNull(array $data): bool
@@ -311,7 +311,7 @@ class JsonApiSerializer extends ArraySerializer
     {
         if (!array_key_exists('id', $data)) {
             throw new InvalidArgumentException(
-                'JSON API resource objects MUST have a valid id'
+                'JSON API resource objects MUST have a valid id',
             );
         }
 
@@ -332,7 +332,7 @@ class JsonApiSerializer extends ArraySerializer
                     list($includedData, $linkedIds) = $this->serializeIncludedObjectsWithCacheKey(
                         $includeObject['included'],
                         $linkedIds,
-                        $includedData
+                        $includedData,
                     );
                 }
             }
@@ -403,7 +403,7 @@ class JsonApiSerializer extends ArraySerializer
         string $includeKey,
         array $relationships,
         array $includeObject,
-        string $key
+        string $key,
     ): array {
         $relationships = $this->addIncludekeyToRelationsIfNotSet($includeKey, $relationships);
 
@@ -495,9 +495,9 @@ class JsonApiSerializer extends ArraySerializer
                 'links' => [
                     'self' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
                     'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
-                ]
+                ],
             ],
-            $resource['relationships'][$relationshipKey]
+            $resource['relationships'][$relationshipKey],
         );
 
         return $resource;
@@ -506,7 +506,7 @@ class JsonApiSerializer extends ArraySerializer
     private function serializeIncludedObjectsWithCacheKey(
         array $includeObjects,
         array $linkedIds,
-        array $serializedData
+        array $serializedData,
     ): array {
         foreach ($includeObjects as $object) {
             $includeType = $object['type'];

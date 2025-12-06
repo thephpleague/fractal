@@ -13,7 +13,7 @@ class PaginatorCountTraitTest extends TestCase
     /** @before */
     public function before()
     {
-        $this->instance = new class() {
+        $this->instance = new class {
             use PaginatorCountTrait;
 
             public function getIterableCountPublic(iterable $iterable)

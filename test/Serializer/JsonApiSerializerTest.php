@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test\Serializer;
+<?php
+
+namespace League\Fractal\Test\Serializer;
 
 use InvalidArgumentException;
 use League\Fractal\Manager;
@@ -34,8 +36,8 @@ class JsonApiSerializerTest extends TestCase
                     'name' => 'Dave',
                 ],
                 'meta' => [
-                    'foo' => 'bar'
-                ]
+                    'foo' => 'bar',
+                ],
             ],
             [
                 'id' => 2,
@@ -46,8 +48,8 @@ class JsonApiSerializerTest extends TestCase
                     'name' => 'Bob',
                 ],
                 'meta' => [
-                    'bar' => 'baz'
-                ]
+                    'bar' => 'baz',
+                ],
             ],
         ];
 
@@ -64,8 +66,8 @@ class JsonApiSerializerTest extends TestCase
                         'year' => 1991,
                     ],
                     'meta' => [
-                        'foo' => 'bar'
-                    ]
+                        'foo' => 'bar',
+                    ],
                 ],
                 [
                     'type' => 'books',
@@ -75,8 +77,8 @@ class JsonApiSerializerTest extends TestCase
                         'year' => 1997,
                     ],
                     'meta' => [
-                        'bar' => 'baz'
-                    ]
+                        'bar' => 'baz',
+                    ],
                 ],
             ],
         ];
@@ -474,8 +476,8 @@ class JsonApiSerializerTest extends TestCase
                 'name' => 'Dave',
             ],
             'meta' => [
-                'something' => 'something'
-            ]
+                'something' => 'something',
+            ],
         ];
 
         $resource = new Item($bookData, new JsonApiBookTransformer(), 'books');
@@ -492,11 +494,11 @@ class JsonApiSerializerTest extends TestCase
                     'year' => 1991,
                 ],
                 'meta' => [
-                    'something' => 'something'
-                ]
+                    'something' => 'something',
+                ],
             ],
             'meta' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ];
 
@@ -1282,13 +1284,13 @@ class JsonApiSerializerTest extends TestCase
                         'author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author',
-                                'related' => 'http://example.com/books/2/author'
+                                'related' => 'http://example.com/books/2/author',
                             ],
                         ],
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
@@ -1350,13 +1352,13 @@ class JsonApiSerializerTest extends TestCase
                     'co-author' => [
                         'links' => [
                             'self' => 'http://example.com/books/1/relationships/co-author',
-                            'related' => 'http://example.com/books/1/co-author'
+                            'related' => 'http://example.com/books/1/co-author',
                         ],
                     ],
                     'author-with-meta' => [
                         'links' => [
                             'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                            'related' => 'http://example.com/books/1/author-with-meta'
+                            'related' => 'http://example.com/books/1/author-with-meta',
                         ],
                     ],
                 ],
@@ -1463,19 +1465,19 @@ class JsonApiSerializerTest extends TestCase
                         'author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author',
-                                'related' => 'http://example.com/books/1/author'
+                                'related' => 'http://example.com/books/1/author',
                             ],
                         ],
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -1494,19 +1496,19 @@ class JsonApiSerializerTest extends TestCase
                         'author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author',
-                                'related' => 'http://example.com/books/2/author'
+                                'related' => 'http://example.com/books/2/author',
                             ],
                         ],
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -1574,13 +1576,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -1609,13 +1611,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -1777,13 +1779,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -1808,13 +1810,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -1830,9 +1832,9 @@ class JsonApiSerializerTest extends TestCase
 
     public function testExceptionThrownIfResourceHasNoId()
     {
-		$this->expectExceptionObject(new InvalidArgumentException('JSON API resource objects MUST have a valid id'));
+        $this->expectExceptionObject(new InvalidArgumentException('JSON API resource objects MUST have a valid id'));
 
-		$bookData = [
+        $bookData = [
             'title' => 'Foo',
             'year' => '1991',
         ];
@@ -1855,13 +1857,13 @@ class JsonApiSerializerTest extends TestCase
                     'id' => 1,
                     'title' => 'Foo',
                     'year' => 1991,
-                    '_author' => ['id' => 1]
+                    '_author' => ['id' => 1],
                 ],
                 [
                     'id' => 2,
                     'title' => 'Bar',
                     'year' => 2015,
-                    '_author' => ['id' => 1]
+                    '_author' => ['id' => 1],
                 ],
             ],
         ];
@@ -2108,13 +2110,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -2139,13 +2141,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -2157,16 +2159,16 @@ class JsonApiSerializerTest extends TestCase
                     'count' => 2,
                     'per_page' => 2,
                     'current_page' => 2,
-                    'total_pages' => 5
-                ]
+                    'total_pages' => 5,
+                ],
             ],
             'links' => [
                 'self' => 'http://example.com/books/?page=2',
                 'first' => 'http://example.com/books/?page=1',
                 'prev' => 'http://example.com/books/?page=1',
                 'next' => 'http://example.com/books/?page=3',
-                'last' => 'http://example.com/books/?page=5'
-            ]
+                'last' => 'http://example.com/books/?page=5',
+            ],
         ];
 
         $this->assertSame($expected, $scope->toArray());
@@ -2247,13 +2249,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -2278,13 +2280,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -2296,15 +2298,15 @@ class JsonApiSerializerTest extends TestCase
                     'count' => 2,
                     'per_page' => 2,
                     'current_page' => 1,
-                    'total_pages' => 5
-                ]
+                    'total_pages' => 5,
+                ],
             ],
             'links' => [
                 'self' => 'http://example.com/books/?page=1',
                 'first' => 'http://example.com/books/?page=1',
                 'next' => 'http://example.com/books/?page=2',
-                'last' => 'http://example.com/books/?page=5'
-            ]
+                'last' => 'http://example.com/books/?page=5',
+            ],
         ];
 
         $this->assertSame($expected, $scope->toArray());
@@ -2385,13 +2387,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/co-author',
-                                'related' => 'http://example.com/books/1/co-author'
+                                'related' => 'http://example.com/books/1/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/1/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/1/author-with-meta'
+                                'related' => 'http://example.com/books/1/author-with-meta',
                             ],
                         ],
                     ],
@@ -2416,13 +2418,13 @@ class JsonApiSerializerTest extends TestCase
                         'co-author' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/co-author',
-                                'related' => 'http://example.com/books/2/co-author'
+                                'related' => 'http://example.com/books/2/co-author',
                             ],
                         ],
                         'author-with-meta' => [
                             'links' => [
                                 'self' => 'http://example.com/books/2/relationships/author-with-meta',
-                                'related' => 'http://example.com/books/2/author-with-meta'
+                                'related' => 'http://example.com/books/2/author-with-meta',
                             ],
                         ],
                     ],
@@ -2434,15 +2436,15 @@ class JsonApiSerializerTest extends TestCase
                     'count' => 2,
                     'per_page' => 2,
                     'current_page' => 5,
-                    'total_pages' => 5
-                ]
+                    'total_pages' => 5,
+                ],
             ],
             'links' => [
                 'self' => 'http://example.com/books/?page=5',
                 'first' => 'http://example.com/books/?page=1',
                 'prev' => 'http://example.com/books/?page=4',
-                'last' => 'http://example.com/books/?page=5'
-            ]
+                'last' => 'http://example.com/books/?page=5',
+            ],
         ];
 
         $this->assertSame($expected, $scope->toArray());
@@ -2495,13 +2497,13 @@ class JsonApiSerializerTest extends TestCase
                     'co-author' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/co-author',
-                            'related' => 'http://test.de/books/1/co-author'
+                            'related' => 'http://test.de/books/1/co-author',
                         ],
                     ],
                     'author-with-meta' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/author-with-meta',
-                            'related' => 'http://test.de/books/1/author-with-meta'
+                            'related' => 'http://test.de/books/1/author-with-meta',
                         ],
                     ],
                 ],
@@ -2551,13 +2553,13 @@ class JsonApiSerializerTest extends TestCase
                     'co-author' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/co-author',
-                            'related' => 'http://test.de/books/1/co-author'
+                            'related' => 'http://test.de/books/1/co-author',
                         ],
                     ],
                     'author-with-meta' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/author-with-meta',
-                            'related' => 'http://test.de/books/1/author-with-meta'
+                            'related' => 'http://test.de/books/1/author-with-meta',
                         ],
                     ],
                 ],
@@ -2610,13 +2612,13 @@ class JsonApiSerializerTest extends TestCase
                     'co-author' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/co-author',
-                            'related' => 'http://test.de/books/1/co-author'
+                            'related' => 'http://test.de/books/1/co-author',
                         ],
                     ],
                     'author-with-meta' => [
                         'links' => [
                             'self' => 'http://test.de/books/1/relationships/author-with-meta',
-                            'related' => 'http://test.de/books/1/author-with-meta'
+                            'related' => 'http://test.de/books/1/author-with-meta',
                         ],
                     ],
                 ],
@@ -2690,10 +2692,10 @@ class JsonApiSerializerTest extends TestCase
                         'type' => 'books',
                         'id' => '1',
                         'attributes' => [
-                            'title' => 'Foo'
-                        ]
-                    ]
-                ]
+                            'title' => 'Foo',
+                        ],
+                    ],
+                ],
             ],
             [
                 //Multiple fields
@@ -2704,10 +2706,10 @@ class JsonApiSerializerTest extends TestCase
                         'id' => '1',
                         'attributes' => [
                             'title' => 'Foo',
-                            'year' => 1991
-                        ]
-                    ]
-                ]
+                            'year' => 1991,
+                        ],
+                    ],
+                ],
             ],
             [
                 //Include 1st level relationship
@@ -2717,27 +2719,27 @@ class JsonApiSerializerTest extends TestCase
                         'type' => 'books',
                         'id' => '1',
                         'attributes' => [
-                            'title' => 'Foo'
+                            'title' => 'Foo',
                         ],
                         'relationships' => [
                             'author' => [
                                 'data' => [
                                     'type' => 'people',
-                                    'id' => '1'
-                                ]
-                            ]
-                        ]
+                                    'id' => '1',
+                                ],
+                            ],
+                        ],
                     ],
                     'included' => [
                         [
                             'type' => 'people',
                             'id' => '1',
                             'attributes' => [
-                                'name' => 'Dave'
-                            ]
-                        ]
-                    ]
-                ]
+                                'name' => 'Dave',
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 //Include 2nd level relationship
@@ -2747,49 +2749,49 @@ class JsonApiSerializerTest extends TestCase
                         'type' => 'books',
                         'id' => '1',
                         'attributes' => [
-                            'title' => 'Foo'
+                            'title' => 'Foo',
                         ],
                         'relationships' => [
                             'author' => [
                                 'data' => [
                                     'type' => 'people',
-                                    'id' => '1'
-                                ]
-                            ]
-                        ]
+                                    'id' => '1',
+                                ],
+                            ],
+                        ],
                     ],
                     'included' => [
                         [
                             'type' => 'books',
                             'id' => '2',
                             'attributes' => [
-                                'title' => 'Bar'
-                            ]
+                                'title' => 'Bar',
+                            ],
                         ],
                         [
                             'type' => 'people',
                             'id' => '1',
                             'attributes' => [
-                                'name' => 'Dave'
+                                'name' => 'Dave',
                             ],
                             'relationships' => [
                                 'published' => [
                                     'data' => [
                                         [
                                             'type' => 'books',
-                                            'id' => '1'
+                                            'id' => '1',
                                         ],
                                         [
                                             'type' => 'books',
-                                            'id' => '2'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                            'id' => '2',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

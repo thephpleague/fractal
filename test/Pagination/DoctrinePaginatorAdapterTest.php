@@ -1,4 +1,5 @@
 <?php
+
 namespace League\Fractal\Test\Pagination;
 
 use Doctrine\ORM\Query;
@@ -34,12 +35,12 @@ class DoctrinePaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getIterator')->andReturn($iterator);
 
         $adapter = new DoctrinePaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf(
             'League\Fractal\Pagination\PaginatorInterface',
-            $adapter
+            $adapter,
         );
 
         $this->assertSame($currentPage, $adapter->getCurrentPage());
@@ -49,11 +50,11 @@ class DoctrinePaginatorAdapterTest extends TestCase
         $this->assertSame($perPage, $adapter->getPerPage());
         $this->assertSame(
             'http://example.com/foo?page=1',
-            $adapter->getUrl(1)
+            $adapter->getUrl(1),
         );
         $this->assertSame(
             'http://example.com/foo?page=3',
-            $adapter->getUrl(3)
+            $adapter->getUrl(3),
         );
     }
 

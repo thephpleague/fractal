@@ -18,7 +18,7 @@ class ScopeFactory implements ScopeFactoryInterface
     public function createScopeFor(
         Manager $manager,
         ResourceInterface $resource,
-        ?string $scopeIdentifier = null
+        ?string $scopeIdentifier = null,
     ): Scope {
         return new Scope($manager, $resource, $scopeIdentifier);
     }
@@ -27,7 +27,7 @@ class ScopeFactory implements ScopeFactoryInterface
         Manager $manager,
         Scope $parentScope,
         ResourceInterface $resource,
-        ?string $scopeIdentifier = null
+        ?string $scopeIdentifier = null,
     ): Scope {
         $scopeInstance = $this->createScopeFor($manager, $resource, $scopeIdentifier);
 

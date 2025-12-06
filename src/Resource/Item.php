@@ -16,6 +16,4 @@ namespace League\Fractal\Resource;
  * other sort of intelligent result, DataMapper model, etc but could
  * be a basic array, object, or whatever you like.
  */
-class Item extends ResourceAbstract
-{
-}
+class Item extends ResourceAbstract {}

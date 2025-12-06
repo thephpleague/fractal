@@ -1,4 +1,5 @@
 <?php
+
 namespace League\Fractal\Test\Pagination;
 
 use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
@@ -32,12 +33,12 @@ class PagerfantaPaginatorAdapterTest extends TestCase
         $paginator->shouldReceive('getMaxPerPage')->andReturn($perPage);
 
         $adapter = new PagerfantaPaginatorAdapter($paginator, function ($page) {
-            return 'http://example.com/foo?page='.$page;
+            return 'http://example.com/foo?page=' . $page;
         });
 
         $this->assertInstanceOf(
             'League\Fractal\Pagination\PaginatorInterface',
-            $adapter
+            $adapter,
         );
 
         $this->assertSame($currentPage, $adapter->getCurrentPage());
@@ -47,11 +48,11 @@ class PagerfantaPaginatorAdapterTest extends TestCase
         $this->assertSame($perPage, $adapter->getPerPage());
         $this->assertSame(
             'http://example.com/foo?page=1',
-            $adapter->getUrl(1)
+            $adapter->getUrl(1),
         );
         $this->assertSame(
             'http://example.com/foo?page=3',
-            $adapter->getUrl(3)
+            $adapter->getUrl(3),
         );
     }
 

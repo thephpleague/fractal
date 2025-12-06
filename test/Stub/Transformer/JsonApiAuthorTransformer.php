@@ -1,4 +1,6 @@
-<?php namespace League\Fractal\Test\Stub\Transformer;
+<?php
+
+namespace League\Fractal\Test\Stub\Transformer;
 
 use League\Fractal\TransformerAbstract;
 
@@ -24,7 +26,7 @@ class JsonApiAuthorTransformer extends TransformerAbstract
         return $this->collection(
             $author['_published'],
             new JsonApiBookTransformer(),
-            'books'
+            'books',
         );
     }
 }
