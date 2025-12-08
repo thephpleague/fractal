@@ -134,10 +134,9 @@ class Manager
             // Trim it down to a cool level of recursion
             $includeName = $this->trimToAcceptableRecursionLevel($includeName);
 
-            if (in_array($includeName, $this->requestedIncludes)) {
-                continue;
+            if (!in_array($includeName, $this->requestedIncludes)) {
+                $this->requestedIncludes[] = $includeName;
             }
-            $this->requestedIncludes[] = $includeName;
 
             // No Params? Bored
             if ($allModifiersStr === null) {
@@ -164,10 +163,16 @@ class Manager
                 $modifierArr[$modifierName] = explode($this->paramDelimiter, $modifierParamStr);
             }
 
-            $this->includeParams[$includeName] = $modifierArr;
+            if (!isset($this->includeParams[$includeName])) {
+                $this->includeParams[$includeName] = $modifierArr;
+            }
 
             if ($subRelations) {
-                $this->requestedIncludes[] = $this->trimToAcceptableRecursionLevel($includeName . '.' . $subRelations);
+                $subRelationsIncludeName = $this->trimToAcceptableRecursionLevel($includeName . '.' . $subRelations);
+
+                if (!in_array($subRelationsIncludeName, $this->requestedIncludes)) {
+                    $this->requestedIncludes[] = $subRelationsIncludeName;
+                }
             }
         }
 
