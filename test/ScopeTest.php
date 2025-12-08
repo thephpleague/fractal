@@ -15,13 +15,16 @@ use League\Fractal\Test\Stub\ArraySerializerWithNull;
 use League\Fractal\Test\Stub\Transformer\DefaultIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\NullIncludeBookTransformer;
 use League\Fractal\Test\Stub\Transformer\PrimitiveIncludeBookTransformer;
+use League\Fractal\TransformerAbstract;
 use Mockery;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class ScopeTest extends TestCase
+class ScopeTest extends MockeryTestCase
 {
     protected $simpleItem = ['foo' => 'bar'];
     protected $simpleCollection = [['foo' => 'bar']];
+
+    protected TransformerAbstract $transformer;
 
     public function testEmbedChildScope()
     {
@@ -325,9 +328,8 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
-        $transformer->shouldReceive('transform')->once()->andReturn('simple string');
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
+        $this->transformer->return = 'simple string';
+        $transformer = Mockery::spy($this->transformer);
         $transformer->shouldNotReceive('getAvailableIncludes');
         $transformer->shouldNotReceive('getDefaultIncludes');
 
@@ -346,13 +348,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
-        $transformer->shouldReceive('transform')->once()->andReturn($this->simpleItem);
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
-
-        $resource = new Item($this->simpleItem, $transformer);
+        $resource = new Item($this->simpleItem, $this->transformer);
         $scope = $manager->createData($resource);
 
         $this->assertSame(['data' => $this->simpleItem], $scope->toArray());
@@ -362,13 +358,7 @@ class ScopeTest extends TestCase
     {
         $manager = new Manager();
 
-        $transformer = Mockery::mock('League\Fractal\TransformerAbstract');
-        $transformer->shouldReceive('transform')->once()->andReturn(['foo' => 'bar']);
-        $transformer->shouldReceive('getAvailableIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('getDefaultIncludes')->once()->andReturn([]);
-        $transformer->shouldReceive('setCurrentScope')->once()->andReturnSelf();
-
-        $resource = new Collection([['foo' => 'bar']], $transformer);
+        $resource = new Collection([['foo' => 'bar']], $this->transformer);
         $scope = $manager->createData($resource);
 
         $this->assertSame(['data' => [['foo' => 'bar']]], $scope->toArray());
@@ -722,9 +712,16 @@ class ScopeTest extends TestCase
         ];
     }
 
-    public function tearDown(): void
+    public function setUp(): void
     {
-        Mockery::close();
+        $this->transformer = new class extends TransformerAbstract {
+            public const RETURN_DATA = 'eeb2009e-a16e-4bcf-8ce7-e4782a520515';
+            public $return = self::RETURN_DATA;
+            public function transform($data)
+            {
+                return $this->return === self::RETURN_DATA ? $data : $this->return;
+            }
+        };
     }
 
     protected function createTransformerWithIncludedResource($resourceName, $transformResult)

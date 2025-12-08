@@ -264,13 +264,17 @@ class Scope implements \JsonSerializable
         $transformer = $this->resource->getTransformer();
         $data = $this->resource->getData();
 
-        if (null === $transformer) {
-            $transformedData = $data;
-        } elseif (is_callable($transformer)) {
-            $transformedData = call_user_func($transformer, $data);
-        } else {
-            $transformer->setCurrentScope($this);
-            $transformedData = $transformer->transform($data);
+        $this->setScope($transformer);
+        try {
+            if (null === $transformer) {
+                $transformedData = $data;
+            } elseif (is_callable($transformer)) {
+                $transformedData = call_user_func($transformer, $data);
+            } else {
+                $transformedData = $transformer->transform($data);
+            }
+        } finally {
+            $this->unsetScope($transformer);
         }
 
         return $transformedData;
@@ -350,21 +354,24 @@ class Scope implements \JsonSerializable
     {
         $includedData = [];
 
-        if (is_callable($transformer)) {
-            $transformedData = call_user_func($transformer, $data);
-        } else {
-            $transformer->setCurrentScope($this);
-            $transformedData = $transformer->transform($data);
+        $this->setScope($transformer);
+        try {
+            if (is_callable($transformer)) {
+                $transformedData = call_user_func($transformer, $data);
+            } else {
+                $transformedData = $transformer->transform($data);
+            }
+
+            if ($this->transformerHasIncludes($transformer)) {
+                $includedData = $this->fireIncludedTransformers($transformer, $data);
+                $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
+            }
+
+            //Stick only with requested fields
+            $transformedData = $this->filterFieldsets($transformedData);
+        } finally {
+            $this->unsetScope($transformer);
         }
-
-        if ($this->transformerHasIncludes($transformer)) {
-            $includedData = $this->fireIncludedTransformers($transformer, $data);
-            $transformedData = $this->manager->getSerializer()->mergeIncludes($transformedData, $includedData);
-        }
-
-        //Stick only with requested fields
-        $transformedData = $this->filterFieldsets($transformedData);
-
         return [$transformedData, $includedData];
     }
 
@@ -461,5 +468,19 @@ class Scope implements \JsonSerializable
     protected function getResourceType(): string
     {
         return $this->resource->getResourceKey();
+    }
+
+    protected function setScope($transformer): void
+    {
+        if ($transformer instanceof TransformerAbstract) {
+            $transformer->setCurrentScope($this);
+        }
+    }
+
+    protected function unsetScope($transformer): void
+    {
+        if ($transformer instanceof TransformerAbstract) {
+            $transformer->unsetCurrentScope();
+        }
     }
 }

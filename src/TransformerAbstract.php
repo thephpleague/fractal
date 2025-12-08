@@ -219,6 +219,13 @@ abstract class TransformerAbstract
         return $this;
     }
 
+    public function unsetCurrentScope(): self
+    {
+        $this->currentScope = null;
+
+        return $this;
+    }
+
     /**
      * Create a new primitive resource object.
      *
